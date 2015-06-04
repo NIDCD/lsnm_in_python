@@ -1,0 +1,873 @@
+if t == 0:
+
+    # reset MGN and A1 activity prior to stimulus presentation,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+
+if t == 200:
+
+    # turn attention to 'HI', as the input stimulus is about to be presented
+    modules['atts'][8][0][0][0] = 0.3
+
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][41][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 210:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][41][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 220:
+
+    modules['mgns'][8][0][42][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0
+
+if t == 230:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+ 
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 240:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][46][0] = 1.0
+
+if t == 250:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][46][0] = 0.0
+
+    modules['mgns'][8][0][46][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 260:
+
+    modules['mgns'][8][0][46][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+    
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0	
+
+if t == 270:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 280:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+    
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 290:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+    
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][41][0] = 1.0
+
+if t == 300:
+
+# interstimulus interval
+
+    # reset MGN and A1 activity prior to stimulus presentation,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+
+# insterstimulus interval
+                
+if t == 500:
+
+    # insert the input stimulus into MGN
+    modules['mgns'][8][0][41][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 510:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][41][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 520:
+
+    modules['mgns'][8][0][42][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0
+
+if t == 530:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+ 
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 540:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][46][0] = 1.0
+
+if t == 550:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][46][0] = 0.0
+
+    modules['mgns'][8][0][46][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 560:
+
+    modules['mgns'][8][0][46][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+    
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0	
+
+if t == 570:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 580:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+    
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 590:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][41][0] = 1.0
+
+if t == 600:
+
+    # ################# INTERTRIAL INTERVAL STARTS #############
+    # reset activity in all units at the end of a trial,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+	    modules['ea2u'][8][x][y][0] = 0.0
+	    modules['ea2d'][8][x][y][0] = 0.0
+	    modules['ea2c'][8][x][y][0] = 0.0
+	    modules['ia2u'][8][x][y][0] = 0.0
+	    modules['ia2d'][8][x][y][0] = 0.0
+	    modules['ia2c'][8][x][y][0] = 0.0
+
+    for x in range(modules['estg'][0]):
+        for y in range(modules['estg'][1]):
+	    modules['estg'][8][x][y][0] = 0.0
+	    modules['istg'][8][x][y][0] = 0.0
+	    modules['exfs'][8][x][y][0] = 0.0
+	    modules['infs'][8][x][y][0] = 0.0
+	    modules['efd1'][8][x][y][0] = 0.0
+	    modules['ifd1'][8][x][y][0] = 0.0
+	    modules['efd2'][8][x][y][0] = 0.0
+	    modules['ifd2'][8][x][y][0] = 0.0
+	    modules['exfr'][8][x][y][0] = 0.0
+	    modules['infr'][8][x][y][0] = 0.0
+            
+    # turn attention to 'LOW', as the current trial has ended
+    modules['atts'][8][0][0][0] = 0.05
+    ################ INTERTRIAL INTERVAL ENDS #################
+
+if t == 1000:
+
+    # turn attention to 'HI', as the input stimulus is about to be presented
+    modules['atts'][8][0][0][0] = 0.3
+
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][68][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1010:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][67][0] = 0.0
+    modules['mgns'][8][0][68][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1020:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0
+
+if t == 1030:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+ 
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 1040:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][63][0] = 1.0
+
+if t == 1050:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][63][0] = 0.0
+
+    modules['mgns'][8][0][63][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 1060:
+
+    modules['mgns'][8][0][63][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+    
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0	
+
+if t == 1070:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+    
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][66][0] = 1.0
+
+if t == 1080:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][66][0] = 0.0
+    
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1090:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+    
+    modules['mgns'][8][0][67][0] = 1.0
+    modules['mgns'][8][0][68][0] = 1.0
+
+if t == 1100:
+
+# interstimulus interval
+
+    # reset MGN and A1 activity prior to stimulus presentation,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+
+# insterstimulus interval
+                
+if t == 1300:
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][68][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1310:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][67][0] = 0.0
+    modules['mgns'][8][0][68][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1320:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0
+
+if t == 1330:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+ 
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 1340:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][63][0] = 1.0
+
+if t == 1350:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][63][0] = 0.0
+
+    modules['mgns'][8][0][63][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 1360:
+
+    modules['mgns'][8][0][63][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+    
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0	
+
+if t == 1370:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+    
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][66][0] = 1.0
+
+if t == 1380:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][66][0] = 0.0
+    
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 1390:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+    
+    modules['mgns'][8][0][67][0] = 1.0
+    modules['mgns'][8][0][68][0] = 1.0
+
+if t == 1400:
+    ############## INTERTRIAL INTERVAL STARTS ##################
+    # reset activity in all units at the end of a trial,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+	    modules['ea2u'][8][x][y][0] = 0.0
+	    modules['ea2d'][8][x][y][0] = 0.0
+	    modules['ea2c'][8][x][y][0] = 0.0
+	    modules['ia2u'][8][x][y][0] = 0.0
+	    modules['ia2d'][8][x][y][0] = 0.0
+	    modules['ia2c'][8][x][y][0] = 0.0
+
+    for x in range(modules['estg'][0]):
+        for y in range(modules['estg'][1]):
+	    modules['estg'][8][x][y][0] = 0.0
+	    modules['istg'][8][x][y][0] = 0.0
+	    modules['exfs'][8][x][y][0] = 0.0
+	    modules['infs'][8][x][y][0] = 0.0
+	    modules['efd1'][8][x][y][0] = 0.0
+	    modules['ifd1'][8][x][y][0] = 0.0
+	    modules['efd2'][8][x][y][0] = 0.0
+	    modules['ifd2'][8][x][y][0] = 0.0
+	    modules['exfr'][8][x][y][0] = 0.0
+	    modules['infr'][8][x][y][0] = 0.0
+            
+    # turn attention to 'LOW', as the current trial has ended
+    modules['atts'][8][0][0][0] = 0.05
+    ############## INTERTRIAL INTERVAL ENDS #################
+if t == 1800:
+
+    # turn attention to 'HI', as the input stimulus is about to be presented
+    modules['atts'][8][0][0][0] = 0.3
+
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][41][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 1810:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][41][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 1820:
+
+    modules['mgns'][8][0][42][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0
+
+if t == 1830:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+ 
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 1840:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][46][0] = 1.0
+
+if t == 1850:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][46][0] = 0.0
+
+    modules['mgns'][8][0][46][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 1860:
+
+    modules['mgns'][8][0][46][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+    
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0	
+
+if t == 1870:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 1880:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+    
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 1890:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+    
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][41][0] = 1.0
+
+if t == 1900:
+
+# interstimulus interval
+
+    # reset MGN and A1 activity prior to stimulus presentation,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+
+# insterstimulus interval
+
+if t == 2100:
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][68][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2110:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][67][0] = 0.0
+    modules['mgns'][8][0][68][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2120:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0
+
+if t == 2130:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+ 
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 2140:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][63][0] = 1.0
+
+if t == 2150:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][63][0] = 0.0
+
+    modules['mgns'][8][0][63][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 2160:
+
+    modules['mgns'][8][0][63][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+    
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0	
+
+if t == 2170:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+    
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][66][0] = 1.0
+
+if t == 2180:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][66][0] = 0.0
+    
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2190:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+    
+    modules['mgns'][8][0][67][0] = 1.0
+    modules['mgns'][8][0][68][0] = 1.0
+
+if t == 2200:
+    ############## INTERTRIAL INTERVAL STARTS ##################
+    # reset activity in all units at the end of a trial,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+	    modules['ea2u'][8][x][y][0] = 0.0
+	    modules['ea2d'][8][x][y][0] = 0.0
+	    modules['ea2c'][8][x][y][0] = 0.0
+	    modules['ia2u'][8][x][y][0] = 0.0
+	    modules['ia2d'][8][x][y][0] = 0.0
+	    modules['ia2c'][8][x][y][0] = 0.0
+
+    for x in range(modules['estg'][0]):
+        for y in range(modules['estg'][1]):
+	    modules['estg'][8][x][y][0] = 0.0
+	    modules['istg'][8][x][y][0] = 0.0
+	    modules['exfs'][8][x][y][0] = 0.0
+	    modules['infs'][8][x][y][0] = 0.0
+	    modules['efd1'][8][x][y][0] = 0.0
+	    modules['ifd1'][8][x][y][0] = 0.0
+	    modules['efd2'][8][x][y][0] = 0.0
+	    modules['ifd2'][8][x][y][0] = 0.0
+	    modules['exfr'][8][x][y][0] = 0.0
+	    modules['infr'][8][x][y][0] = 0.0
+            
+    # turn attention to 'LOW', as the current trial has ended
+    modules['atts'][8][0][0][0] = 0.05
+    ############## INTERTRIAL INTERVAL ENDS #################
+
+if t == 2600:
+
+    # turn attention to 'HI', as the input stimulus is about to be presented
+    modules['atts'][8][0][0][0] = 0.3
+
+
+    # start inserting the input stimulus into MGN
+    modules['mgns'][8][0][68][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2610:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][67][0] = 0.0
+    modules['mgns'][8][0][68][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2620:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0
+
+if t == 2630:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+ 
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 2640:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][63][0] = 1.0
+
+if t == 2650:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][63][0] = 0.0
+
+    modules['mgns'][8][0][63][0] = 1.0
+    modules['mgns'][8][0][64][0] = 1.0
+
+if t == 2660:
+
+    modules['mgns'][8][0][63][0] = 0.0
+    modules['mgns'][8][0][64][0] = 0.0
+    
+    modules['mgns'][8][0][64][0] = 1.0
+    modules['mgns'][8][0][65][0] = 1.0	
+
+if t == 2670:
+
+    modules['mgns'][8][0][64][0] = 0.0
+    modules['mgns'][8][0][65][0] = 0.0
+    
+    modules['mgns'][8][0][65][0] = 1.0
+    modules['mgns'][8][0][66][0] = 1.0
+
+if t == 2680:
+
+    modules['mgns'][8][0][65][0] = 0.0
+    modules['mgns'][8][0][66][0] = 0.0
+    
+    modules['mgns'][8][0][66][0] = 1.0
+    modules['mgns'][8][0][67][0] = 1.0
+
+if t == 2690:
+
+    modules['mgns'][8][0][66][0] = 0.0
+    modules['mgns'][8][0][67][0] = 0.0
+    
+    modules['mgns'][8][0][67][0] = 1.0
+    modules['mgns'][8][0][68][0] = 1.0
+
+if t == 2700:
+
+# interstimulus interval
+
+    # reset MGN and A1 activity prior to stimulus presentation,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+
+# insterstimulus interval
+                
+if t == 2900:
+
+    # insert the input stimulus into MGN
+    modules['mgns'][8][0][41][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 2910:
+
+    # reset prior unit activation
+    modules['mgns'][8][0][41][0] = 0.0
+    modules['mgns'][8][0][42][0] = 0.0
+
+    # insert current unit activation
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 2920:
+
+    modules['mgns'][8][0][42][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0
+
+if t == 2930:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+ 
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 2940:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][46][0] = 1.0
+
+if t == 2950:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][46][0] = 0.0
+
+    modules['mgns'][8][0][46][0] = 1.0
+    modules['mgns'][8][0][45][0] = 1.0
+
+if t == 2960:
+
+    modules['mgns'][8][0][46][0] = 0.0
+    modules['mgns'][8][0][45][0] = 0.0
+    
+    modules['mgns'][8][0][45][0] = 1.0
+    modules['mgns'][8][0][44][0] = 1.0	
+
+if t == 2970:
+
+    modules['mgns'][8][0][45][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][44][0] = 1.0
+    modules['mgns'][8][0][43][0] = 1.0
+
+if t == 2980:
+
+    modules['mgns'][8][0][44][0] = 0.0
+    modules['mgns'][8][0][43][0] = 0.0
+    
+    modules['mgns'][8][0][43][0] = 1.0
+    modules['mgns'][8][0][42][0] = 1.0
+
+if t == 2990:
+
+    modules['mgns'][8][0][43][0] = 0.0
+    modules['mgns'][8][0][44][0] = 0.0
+    
+    modules['mgns'][8][0][42][0] = 1.0
+    modules['mgns'][8][0][41][0] = 1.0
+
+if t == 3000:
+
+    # ################# INTERTRIAL INTERVAL STARTS #############
+    # reset activity in all units at the end of a trial,
+    # just to make sure any 'spontaneous activity' is dealt with
+    for x in range(modules['mgns'][0]):
+        for y in range(modules['mgns'][1]):
+            modules['mgns'][8][x][y][0] = 0.0
+	    modules['ea1u'][8][x][y][0] = 0.0
+	    modules['ea1d'][8][x][y][0] = 0.0 
+	    modules['ia1u'][8][x][y][0] = 0.0
+	    modules['ia1d'][8][x][y][0] = 0.0
+	    modules['ea2u'][8][x][y][0] = 0.0
+	    modules['ea2d'][8][x][y][0] = 0.0
+	    modules['ea2c'][8][x][y][0] = 0.0
+	    modules['ia2u'][8][x][y][0] = 0.0
+	    modules['ia2d'][8][x][y][0] = 0.0
+	    modules['ia2c'][8][x][y][0] = 0.0
+
+    for x in range(modules['estg'][0]):
+        for y in range(modules['estg'][1]):
+	    modules['estg'][8][x][y][0] = 0.0
+	    modules['istg'][8][x][y][0] = 0.0
+	    modules['exfs'][8][x][y][0] = 0.0
+	    modules['infs'][8][x][y][0] = 0.0
+	    modules['efd1'][8][x][y][0] = 0.0
+	    modules['ifd1'][8][x][y][0] = 0.0
+	    modules['efd2'][8][x][y][0] = 0.0
+	    modules['ifd2'][8][x][y][0] = 0.0
+	    modules['exfr'][8][x][y][0] = 0.0
+	    modules['infr'][8][x][y][0] = 0.0
+            
+    # turn attention to 'LOW', as the current trial has ended
+    modules['atts'][8][0][0][0] = 0.05
+    ################ INTERTRIAL INTERVAL ENDS #################
+

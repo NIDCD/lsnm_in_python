@@ -55,3 +55,11 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Ignore python data files (too large)
+*.npy
+
+# Emacs backups
+*#
+*.#*
+*~
