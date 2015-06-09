@@ -47,21 +47,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load data files
-lgns = np.loadtxt('../../output/lgns.out')
-efd1 = np.loadtxt('../../output/efd1.out')
-efd2 = np.loadtxt('../../output/efd2.out')
-ev1h = np.loadtxt('../../output/ev1h.out')
-ev1v = np.loadtxt('../../output/ev1v.out')
-ev4c = np.loadtxt('../../output/ev4c.out')
-ev4h = np.loadtxt('../../output/ev4h.out')
-ev4v = np.loadtxt('../../output/ev4v.out')
-exfr = np.loadtxt('../../output/exfr.out')
-exfs = np.loadtxt('../../output/exfs.out')
-exss = np.loadtxt('../../output/exss.out')
+lgns = np.loadtxt('../simulator/output/lgns.out')
+efd1 = np.loadtxt('../simulator/output/efd1.out')
+efd2 = np.loadtxt('../simulator/output/efd2.out')
+ev1h = np.loadtxt('../simulator/output/ev1h.out')
+ev1v = np.loadtxt('../simulator/output/ev1v.out')
+ev4c = np.loadtxt('../simulator/output/ev4c.out')
+ev4h = np.loadtxt('../simulator/output/ev4h.out')
+ev4v = np.loadtxt('../simulator/output/ev4v.out')
+exfr = np.loadtxt('../simulator/output/exfr.out')
+exfs = np.loadtxt('../simulator/output/exfs.out')
+exss = np.loadtxt('../simulator/output/exss.out')
 
-tvb_v1 = np.loadtxt('../../output/ev1h_tvb.out')
-tvb_st = np.loadtxt('../../output/exss_tvb.out')
-tvb_pf = np.loadtxt('../../output/exfs_tvb.out')
+tvb_v1 = np.loadtxt('../simulator/output/ev1h_tvb.out')
+tvb_st = np.loadtxt('../simulator/output/exss_tvb.out')
+tvb_pf = np.loadtxt('../simulator/output/exfs_tvb.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = lgns.shape[0]
