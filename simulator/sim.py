@@ -48,7 +48,7 @@
 import re
 
 # import random function modules
-import random
+import random as rdm
 
 # import math function modules
 import math
@@ -257,7 +257,7 @@ class TaskThread(QtCore.QThread):
 
         global noise
 
-        # load a TVB simulation of a 74-node brain and uses it to provide variability
+        # load a TVB simulation of a 998-node brain and uses it to provide variability
         # to an LSNM visual model network. It runs a simulation of the LSNM visual
         # network and writes out neural activities for each LSNM node and -relevant-
         # TVB nodes. Plots output as well.
@@ -268,13 +268,13 @@ class TaskThread(QtCore.QThread):
         # 'np.load' if you just need to load that data file onto a numpy array
         # The data file contains an array of 5 dimensions as follows:
         # [timestep, state_variable_E, state_variable_I, node_number, mode]
-        #RawData = np.load("wilson_cowan_brain_74_nodes.npy")
+        #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
 
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
 
         # define length of TVB simulation in ms
-        simulation_length = 6500
+        TVB_simulation_length = 6500
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
@@ -289,8 +289,8 @@ class TaskThread(QtCore.QThread):
                                     a_e=1.2, a_i=1, b_e=2.8, b_i=4, c_e=1, c_i=1,
                                     P=0, Q=0)
 
-        # now load white matter connectivity (74 ROI matrix from TVB demo set)
-        white_matter = connectivity.Connectivity(load_default=True)
+        # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
+        white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
         #white_matter.configure()
 
         # Define the transmission speed of white matter tracts (4 mm/ms)
@@ -341,22 +341,38 @@ class TaskThread(QtCore.QThread):
         # The TVB brain areas where our LSNM units are going to be embedded it
         # hardcoded for now, but will be included in as an option in the LSNM GUI.
         
-        # LSNM V1 module is embedded into TVB rV1 (node 72 in TVB)
-        # LSNM A1 module is embedded into TVB rA1 (node 37 in TVB)
-        # LSNM IT module is embedded into TVB rTCi (node 68 in TVB, i.e., inferior temporal cortex)
-        # LSNM STG module is embedded into TVB rTCs (node 70 in TVB, i.e., superior temporal cortex)
-        # LSNM FS module is embedded into TVB rPFCvl (node 60 in TVB, i.e., ventrolateral prefrontal cortex)
-        # create a dictionary linking LSNM modules and TVB nodes
-        lsnm_tvb_link = {'ev1v': 72,
-                         'ev1h': 72,
-                         'ea1u': 37,
-                         'ea1d': 37,
-                         'exss': 68,
-                         'estg': 70,
-                         'exfs': 60 }
+        # create a python dictionary of LSNM modules to be embedded and their corresponding
+        # Talairach coordinates (from Haxby et al, 1995).
+        # The Talairach coordinates below will be used to find the closest Talairach coordinates
+        # in the TVB connectome nodes. The closest TVB node will be used as a 'host' node to
+        # embed a given LSNM module
+        lsnm_tvb_link = {'ev1v': [18, -88, 8],
+                         'iv1v': [18, -88, 8],
+                         'ev1h': [18, -88, 8],
+                         'iv1h': [18, -88, 8],
+                         'ev4v': [30, -72, -12],
+                         'iv4v': [30, -72, -12],
+                         'ev4c': [30, -72, -12],
+                         'iv4c': [30, -72, -12],
+                         'ev4h': [30, -72, -12],
+                         'iv4h': [30, -72, -12],
+                         'exss': [28, -36, -8],
+                         'inss': [28, -36, -8],
+                         'efd1': [42, 26, 20],
+                         'ifd1': [42, 26, 20],
+                         'efd2': [42, 26, 20],
+                         'ifd2': [42, 26, 20],
+                         'exfs': [42, 26, 20],
+                         'infs': [42, 26, 20],
+                         'exfr': [42, 26, 20],
+                         'infr': [42, 26, 20] }
 
-        # declare a gain for the link from TVB to LSNM
-        lsnm_tvb_gain = 0.001
+        # now we are going to find the nodes in TVB that are closest to the LSNM modules above
+        
+
+        # declare a gain for the link from TVB to LSNM (around which normally distributed
+        # random numbers will be generated)
+        lsnm_tvb_gain = 0.0005
 
         # declare a integration interval for the 'integrated' synaptic activity,
         # for fMRI computation, in number of timesteps.
@@ -585,7 +601,7 @@ class TaskThread(QtCore.QThread):
         # the following 'for loop' is the main loop of the TVB simulation with the parameters
         # defined above. Note that the LSNM simulator is literally embedded into the TVB
         # simulation and both run concurrently, timestep by timestep.
-        for raw in TVB_sim(simulation_length=simulation_length):
+        for raw in TVB_sim(simulation_length=TVB_simulation_length):
 
             # let the user know the percentage of simulation that has elapsed
             self.notifyProgress.emit(int(round(t*sim_percentage,0)))
@@ -681,8 +697,10 @@ class TaskThread(QtCore.QThread):
                                 value = RawData[0, tvb_conn[i]]
                                 value =  value[0]
                                 
-                                # calculate a incoming weight by applying a gain into the LSNM unit
-                                weight = wm[i] * lsnm_tvb_gain
+                                # calculate a incoming weight by applying a gain into the LSNM unit.
+                                # the gain applied is a random number with a gaussian distribution
+                                # centered around the value of lsnm_tvb_gain
+                                weight = wm[i] * rdm.gauss(lsnm_tvb_gain,lsnm_tvb_gain/4)
                                 value_x_weight = value * weight
                         
                                 # ... and add the incoming value_x_weight to the summed synaptic
