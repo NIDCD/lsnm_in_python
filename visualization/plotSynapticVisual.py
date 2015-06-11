@@ -48,22 +48,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('../../output/ev1h_synaptic.out')
-ev1v = np.loadtxt('../../output/ev1v_synaptic.out')
-iv1h = np.loadtxt('../../output/iv1h_synaptic.out')
-iv1v = np.loadtxt('../../output/iv1v_synaptic.out')
+ev1h = np.loadtxt('../simulator/output/ev1h_synaptic.out')
+ev1v = np.loadtxt('../simulator/output/ev1v_synaptic.out')
+iv1h = np.loadtxt('../simulator/output/iv1h_synaptic.out')
+iv1v = np.loadtxt('../simulator/output/iv1v_synaptic.out')
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('../../output/exss_synaptic.out')
-inss = np.loadtxt('../../output/inss_synaptic.out')
+exss = np.loadtxt('../simulator/output/exss_synaptic.out')
+inss = np.loadtxt('../simulator/output/inss_synaptic.out')
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('../../output/efd1_synaptic.out')
-ifd1 = np.loadtxt('../../output/ifd1_synaptic.out')
+efd1 = np.loadtxt('../simulator/output/efd1_synaptic.out')
+ifd1 = np.loadtxt('../simulator/output/ifd1_synaptic.out')
 
 # Load R synaptic activity data files into a numpy array
-#exfr = np.loadtxt('../../output/exfr_synaptic.out')
-#infr = np.loadtxt('../../output/infr_synaptic.out')
+exfr = np.loadtxt('../simulator/output/exfr_synaptic.out')
+infr = np.loadtxt('../simulator/output/infr_synaptic.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
@@ -75,7 +75,7 @@ t = np.arange(0, timesteps, 1)
 v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1)
 it = np.sum(exss + inss, axis = 1)
 d1 = np.sum(efd1 + ifd1, axis = 1)
-#fr = np.sum(exfr + infr, axis = 1)
+fr = np.sum(exfr + infr, axis = 1)
 
 # Set up plot
 plt.figure(1)
@@ -86,7 +86,7 @@ plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 plt.plot(t, v1)
 plt.plot(t, it)
 plt.plot(t, d1)
-#plt.plot(t, fr)
+plt.plot(t, fr)
 
 # Show the plot on the screen
 plt.show()

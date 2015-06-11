@@ -36,7 +36,10 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 25 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 25 2015
+#
+#   Based on computer code originally developed by Malle Tagamets and
+#   Barry Horwitz (Tagamets and Horwitz, 1998)
 # **************************************************************************/
 
 # sim.py
@@ -384,35 +387,29 @@ class TaskThread(QtCore.QThread):
 
         print '\rIncoming units from TVB are: '
 
-        print '\rInto ' + white_matter.region_labels[72],
+        print '\rInto ' + white_matter.region_labels[345],
         print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[72])]
+        print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
         print 'with the following weights: ',
-        print white_matter.weights[72][np.nonzero(white_matter.weights[72])]
+        print white_matter.weights[72][np.nonzero(white_matter.weights[345])]
         
-        print '\rInto ' + white_matter.region_labels[68],
+        print '\rInto ' + white_matter.region_labels[393],
         print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[68])]
+        print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
         print 'with the following weights: ',
-        print white_matter.weights[68][np.nonzero(white_matter.weights[68])]
+        print white_matter.weights[68][np.nonzero(white_matter.weights[393])]
         
-        print '\rInto ' + white_matter.region_labels[60],
+        print '\rInto ' + white_matter.region_labels[413],
         print ': ',        
-        print white_matter.region_labels[np.nonzero(white_matter.weights[60])]
+        print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
         print 'with the following weights: ',
-        print white_matter.weights[60][np.nonzero(white_matter.weights[60])]
+        print white_matter.weights[60][np.nonzero(white_matter.weights[413])]
         
-        print '\rInto ' + white_matter.region_labels[37],
+        print '\rInto ' + white_matter.region_labels[74],
         print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[37])]
+        print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
         print 'with the following weights: ',
-        print white_matter.weights[37][np.nonzero(white_matter.weights[37])]
-        
-        print '\rInto ' + white_matter.region_labels[70],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[70])]
-        print 'with the following weights: ',
-        print white_matter.weights[70][np.nonzero(white_matter.weights[70])]
+        print white_matter.weights[70][np.nonzero(white_matter.weights[74])]
         
 
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################

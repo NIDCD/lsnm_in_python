@@ -57,4 +57,6 @@ have the following installed on your local machine or server:
      instructions on how to install python modules locally when
      you don't have 'write' permission to global-site packages (e.g.,
      you are only a user in a Unix system an do not have a 'root'
-     or 'su' password.
+     or 'su' password. If the ‘Alternate installation’ does not work, please
+     refer to the “Installing Python modules” in the lsnm_in_python
+     wiki page.

@@ -38,7 +38,9 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 17 2015  
+#   Last updated by Antonio Ulloa on April 17 2015
+#
+#   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
 # fmriVisual.py
