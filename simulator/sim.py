@@ -341,31 +341,29 @@ class TaskThread(QtCore.QThread):
         # The TVB brain areas where our LSNM units are going to be embedded it
         # hardcoded for now, but will be included in as an option in the LSNM GUI.
         
-        # create a python dictionary of LSNM modules to be embedded and their corresponding
-        # Talairach coordinates (from Haxby et al, 1995).
-        # The Talairach coordinates below will be used to find the closest Talairach coordinates
-        # in the TVB connectome nodes. The closest TVB node will be used as a 'host' node to
-        # embed a given LSNM module
-        lsnm_tvb_link = {'ev1v': [18, -88, 8],
-                         'iv1v': [18, -88, 8],
-                         'ev1h': [18, -88, 8],
-                         'iv1h': [18, -88, 8],
-                         'ev4v': [30, -72, -12],
-                         'iv4v': [30, -72, -12],
-                         'ev4c': [30, -72, -12],
-                         'iv4c': [30, -72, -12],
-                         'ev4h': [30, -72, -12],
-                         'iv4h': [30, -72, -12],
-                         'exss': [28, -36, -8],
-                         'inss': [28, -36, -8],
-                         'efd1': [42, 26, 20],
-                         'ifd1': [42, 26, 20],
-                         'efd2': [42, 26, 20],
-                         'ifd2': [42, 26, 20],
-                         'exfs': [42, 26, 20],
-                         'infs': [42, 26, 20],
-                         'exfr': [42, 26, 20],
-                         'infr': [42, 26, 20] }
+        # create a python dictionary of LSNM modules and the location of the corresponding
+        # TVB node in which the TVB node is to be embedded. In other words, the closest TVB node
+        # is  used as a 'host' node to embed a given LSNM module
+        lsnm_tvb_link = {'ev1v': 345,
+                         'iv1v': 345,
+                         'ev1h': 345,
+                         'iv1h': 345,
+                         'ev4v': 393,
+                         'iv4v': 393,
+                         'ev4c': 393,
+                         'iv4c': 393,
+                         'ev4h': 393,
+                         'iv4h': 393,
+                         'exss': 413,
+                         'inss': 413,
+                         'efd1': 74,
+                         'ifd1': 74,
+                         'efd2': 74,
+                         'ifd2': 74,
+                         'exfs': 74,
+                         'infs': 74,
+                         'exfr': 74,
+                         'infr': 74 }
 
         # now we are going to find the nodes in TVB that are closest to the LSNM modules above
         

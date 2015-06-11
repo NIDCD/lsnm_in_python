@@ -51,6 +51,8 @@
 # of the simulation and are written out to a data file that can be accessed
 # later.
 #
+# Additionnally, it find closest TVB nodes given a set of LSNM module locations
+# in Talairach coordinates
 
 from tvb.simulator.lab import *
 
@@ -119,12 +121,22 @@ RawData = numpy.array(raw_data)
 # write output dimension to the console
 print RawData.shape
 
-print white_matter.centres
+d_v1 = ds.cdist([(18, -88, 8)], white_matter.centres, 'euclidean')
+closest = d_v1[0].argmin()
+print closest, white_matter.centres[closest]
 
-d = ds.cdist([(18, -88, 8)], white_matter.centres, 'euclidean')
+d_v4 = ds.cdist([(30, -72, -12)], white_matter.centres, 'euclidean')
+closest = d_v4[0].argmin()
+print closest, white_matter.centres[closest]
 
-closest = d[0].argmin()
-print white_matter.centres[closest]
+d_it = ds.cdist([(28, -36, -8)], white_matter.centres, 'euclidean')
+closest = d_it[0].argmin()
+print closest, white_matter.centres[closest]
+
+d_pf= ds.cdist([(42, 26, 20)], white_matter.centres, 'euclidean')
+closest = d_pf[0].argmin()
+print closest, white_matter.centres[closest]
+
 
 # Save the array to a file for future use
 FILE_NAME = "wilson_cowan_brain_998_nodes.npy"
