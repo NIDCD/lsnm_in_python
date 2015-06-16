@@ -46,6 +46,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from scipy import signal
+
 # Load data files
 lgns = np.loadtxt('../simulator/output/lgns.out')
 efd1 = np.loadtxt('../simulator/output/efd1.out')
@@ -67,6 +69,13 @@ tvb_pf = np.loadtxt('../simulator/output/exfs_tvb.out')
 # Extract number of timesteps from one of the matrices
 timesteps = lgns.shape[0]
 
+print lgns.shape[0]
+decimated_tvb_v1 = signal.decimate(tvb_v1, 10)
+decimated_tvb_v4 = signal.decimate(tvb_v4, 10)
+decimated_tvb_it = signal.decimate(tvb_it, 10)
+decimated_tvb_pf = signal.decimate(tvb_pf, 10)
+
+
 # Contruct a numpy array of timesteps (data points provided in data file)
 t = np.arange(0, timesteps, 1)
 
@@ -86,6 +95,7 @@ plt.ylabel('LGN', rotation='horizontal', horizontalalignment='right')
 # Plot V1 module
 ax = plt.subplot(15,1,2)
 ax.plot(t, ev1h)
+ax.plot(t, decimated_tvb_v1)
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlim(0,timesteps)
@@ -187,6 +197,23 @@ plt.ylabel('TVB_rPF', rotation='horizontal', horizontalalignment='right')
 
 
 plt.xlabel('Timesteps (i.e., Data points)')
+
+
+plt.figure(2)
+plt.plot(t, ev1h)
+plt.plot(t, decimated_tvb_v1)
+
+plt.figure(3)
+plt.plot(t, ev4h)
+plt.plot(t, decimated_tvb_v4)
+
+plt.figure(4)
+plt.plot(t, exss)
+plt.plot(t, decimated_tvb_it)
+
+plt.figure(5)
+plt.plot(t, exfs)
+plt.plot(t, decimated_tvb_pf)
 
 # Show the plot on the screen
 plt.show()

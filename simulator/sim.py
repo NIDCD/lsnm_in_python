@@ -739,11 +739,13 @@ class TaskThread(QtCore.QThread):
                 fs_dict_synaptic[m].write('\n')
 
             # also write neural activity of TVB host nodes to output files at the current
-            # time step
-            for host_node in lsnm_tvb_link.keys():
-                host_node_value = RawData[0, lsnm_tvb_link[host_node]]
-                host_node_value = host_node_value[0]
-                fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
+            # time step, but ONLY IF a given number of timesteps has elapsed (integration
+            # interval)
+            if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                for host_node in lsnm_tvb_link.keys():
+                    host_node_value = RawData[0, lsnm_tvb_link[host_node]]
+                    host_node_value = host_node_value[0]
+                    fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
                             
 
             
