@@ -95,7 +95,7 @@ plt.ylabel('LGN', rotation='horizontal', horizontalalignment='right')
 # Plot V1 module
 ax = plt.subplot(15,1,2)
 ax.plot(t, ev1h)
-ax.plot(t, decimated_tvb_v1)
+ax.plot(t, tvb_v1)
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlim(0,timesteps)
@@ -201,19 +201,19 @@ plt.xlabel('Timesteps (i.e., Data points)')
 
 plt.figure(2)
 plt.plot(t, ev1h)
-plt.plot(t, decimated_tvb_v1)
+plt.plot(t, tvb_v1)
 
 plt.figure(3)
 plt.plot(t, ev4h)
-plt.plot(t, decimated_tvb_v4)
+plt.plot(t, tvb_v4)
 
 plt.figure(4)
 plt.plot(t, exss)
-plt.plot(t, decimated_tvb_it)
+plt.plot(t, tvb_it)
 
 plt.figure(5)
 plt.plot(t, exfs)
-plt.plot(t, decimated_tvb_pf)
+plt.plot(t, tvb_pf)
 
 # Show the plot on the screen
 plt.show()
