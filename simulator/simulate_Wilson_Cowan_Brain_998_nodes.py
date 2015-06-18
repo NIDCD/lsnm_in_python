@@ -35,7 +35,8 @@
 #
 #   This file (simulate_Wilson_Cowan_Brain_998_nodes.py) was created on 04/29/15,
 #   based on 'generate_region_demo_data.py' by Stuart A. Knock and
-#            'region_deterministic_bnm_wc.py' by Paula Sanz-Leon
+#            'region_deterministic_bnm_wc.py' by Paula Sanz-Leon, and
+#            'firing_rate_clamp' by Michael Marmaduke Woodman
 #
 #   This program makes use of The Virtual Brain library toolbox, downloaded
 #   from the TVB GitHub page.
@@ -60,25 +61,32 @@ import scipy.spatial.distance as ds
 
 import numpy as np
 
+class WilsonCowanPositive(models.WilsonCowan):
+    "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
+    "only allows positive values at integration time. In other words, it clamps state"
+    "variables to > 0 when a stochastic integration is used"
+    def dfun(self, state_variables, coupling, local_coupling):
+        state_variables[state_variables < 0.0] = 0.0
+        return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
+
 # white matter transmission speed in mm/ms
 speed = 4.0
 
 # define length of simulation in ms
-simulation_length = 1
+simulation_length = 300
 
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
 global_coupling_strength = 0.0042
 
-
 # define the population model to be used and state variables to be collected.
 # the parameters below were taken from in Sanz-Leon et al (2015), table 11,
 # case 'a' 
-WC = models.WilsonCowan(variables_of_interest=['E','I'],
-                        r_i=1, r_e=1, k_e=1, k_i=1, tau_e=10, tau_i=10,
-                        c_ee=12, c_ei=4, c_ie=13, c_ii=11, alpha_e=1, alpha_i=1,
-                        a_e=1.2, a_i=1, b_e=2.8, b_i=4, c_e=1, c_i=1,
-                        P=0, Q=0)
+#WC = models.WilsonCowan(variables_of_interest=['E','I'],
+#                        r_i=1, r_e=1, k_e=1, k_i=1, tau_e=10, tau_i=10,
+#                        c_ee=12, c_ei=4, c_ie=13, c_ii=11, alpha_e=1, alpha_i=1,
+#                        a_e=1.2, a_i=1, b_e=2.8, b_i=4, c_e=1, c_i=1,
+#                        P=0, Q=0)
 
 # Define connectivity to be used (998 ROI matrix from TVB demo set)
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -90,18 +98,14 @@ white_matter.speed = numpy.array([speed])
 white_matter_coupling = coupling.Linear(a=global_coupling_strength)
 
 #Initialise an Integrator
-# set numpy's seed
-my_seed = 13
-my_random_state = numpy.random.RandomState(my_seed)
-hiss = noise.Additive(nsig=0.08)
-heunint = integrators.EulerStochastic(dt=2 ** -2, noise=hiss)
+heunint = integrators.EulerStochastic(dt=0.1, noise=noise.Additive(nsig=0.01))
 heunint.configure()
 
 # Define a monitor to be used (i.e., simulated data to be collected)
 what_to_watch = monitors.SubSample(period=5.0)
 
 # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
-sim = simulator.Simulator(model=WC, connectivity=white_matter,
+sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
                           coupling=white_matter_coupling,
                           integrator=heunint, monitors=what_to_watch)
 
@@ -118,9 +122,14 @@ for raw in sim(simulation_length=simulation_length):
 # Convert data list to a numpy array
 RawData = numpy.array(raw_data)
 
+# zero out negative values in array
+#RawData = RawData.clip(min=0)
+
 # write output dimension to the console
 print RawData.shape
 
+# the following lines of code find the closest Hagmann's brain node to a given
+# set of Talairach coordinates
 d_v1 = ds.cdist([(18, -88, 8)], white_matter.centres, 'euclidean')
 closest = d_v1[0].argmin()
 print closest, white_matter.centres[closest]

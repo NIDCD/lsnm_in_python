@@ -36,7 +36,10 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 25 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 25 2015
+#
+#   Based on computer code originally developed by Malle Tagamets and
+#   Barry Horwitz (Tagamets and Horwitz, 1998)
 # **************************************************************************/
 
 # sim.py
@@ -44,8 +47,13 @@
 # Simulates delayed match-to-sample experiment using Wilson-Cowan neuronal
 # population model.
 
+# import regular expression modules (useful for reading weight files)
 import re
-import random
+
+# import random function modules
+import random as rdm
+
+# import math function modules
 import math
 
 # the following modules are imported from TVB library
@@ -55,17 +63,19 @@ from tvb.simulator.plot.tools import *
 import tvb.simulator.plot.timeseries_interactive as ts_int
 # end of TVB modules import
 
-from matplotlib.figure import Figure
+# import 'pyplot' modules to visualize outputs
+import matplotlib.pyplot as plt
 
-# import the Qt4Agg FigureCanvas object
-from matplotlib.backends.backend_qt4agg \
-    import FigureCanvasQTAgg as FigureCanvas
-
+# import 'numpy' module, which contains useful matrix functions
 import numpy as np
 
+# import 'sys' module, which gives you access to file read/write functions
 import sys
+
+# import 'PyQt4' modules, which give you access to GUI functions
 from PyQt4 import QtGui, QtCore
 
+# create a class that will allow us to print output to our GUI widget
 class MyStream(QtCore.QObject):
 
     message = QtCore.pyqtSignal(str)
@@ -87,7 +97,7 @@ class LSNM(QtGui.QWidget):
 
     def initUI(self):
 
-        # the following three global variables will names of text files that contain
+        # the following three global variables are names of text files that contain
         # model definition, list of network weights, and experimental script to be
         # simulated
         model=''
@@ -140,19 +150,22 @@ class LSNM(QtGui.QWidget):
         # define the action to be taken if Run button is clicked on
         runButton.clicked.connect(self.onStart)
     
-        # define progress bar so user can see simulation progress status
+        # define output display to keep user updated with simulation progress status
         self.runTextEdit = QtGui.QTextEdit()
         layout.addWidget(self.runTextEdit, 1, 3)
-        #self.progressBar = QtGui.QProgressBar(self)
-        #self.progressBar.setRange(0,100)
-        #layout.addWidget(self.progressBar, 1, 3)
-        
+
+        # define progress bar to keep user informed of simulation progress status
+        self.progressBar = QtGui.QProgressBar(self)
+        self.progressBar.setRange(0,100)
+        layout.addWidget(self.progressBar, 2, 3)
+                        
         # create a push button object labeled 'Exit'
         exitButton = QtGui.QPushButton('Quit LSNM', self)
         layout.addWidget(exitButton, 2, 0)
         # define the action to be taken if Exit button is clicked on
         exitButton.clicked.connect(QtCore.QCoreApplication.instance().quit)
 
+        # define the main thread as the main simulation code
         self.myLongTask = TaskThread()
         self.myLongTask.notifyProgress.connect(self.onProgress)
                 
@@ -160,7 +173,7 @@ class LSNM(QtGui.QWidget):
         self.setLayout(layout)
 
         # set main window's size
-        self.setGeometry(0, 0, 1000, 1000)
+        self.setGeometry(0, 0, 1300, 600)
 
         # set window's title
         self.setWindowTitle('Large-Scale Neural Modeling (LSNM)')
@@ -212,11 +225,10 @@ class LSNM(QtGui.QWidget):
     @QtCore.pyqtSlot()
     def onStart(self):
         self.myLongTask.start()
-        
-    def onProgress(self, i):
-        pass
-        #self.progressBar.setValue(i)
 
+    def onProgress(self, i):
+        self.progressBar.setValue(i)    
+        
     def closeEvent(self, event):
 
         # display a message box to confirm user really intended to quit current session
@@ -234,6 +246,13 @@ class LSNM(QtGui.QWidget):
         self.runTextEdit.moveCursor(QtGui.QTextCursor.End)
         self.runTextEdit.insertPlainText(message)
 
+class WilsonCowanPositive(models.WilsonCowan):
+    "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
+    "only allows positive values at integration time. In other words, it clamps state"
+    "variables to > 0 when a stochastic integration is used"
+    def dfun(self, state_variables, coupling, local_coupling):
+        state_variables[state_variables < 0.0] = 0.0
+        return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
             
 class TaskThread(QtCore.QThread):
 
@@ -244,43 +263,161 @@ class TaskThread(QtCore.QThread):
     
     def run(self):
             
-        # load a TVB simulation of a 74-node brain and uses it to provide variability
+        print 'Building network...'
+
+        global noise
+
+        # load a TVB simulation of a 998-node brain and uses it to provide variability
         # to an LSNM visual model network. It runs a simulation of the LSNM visual
         # network and writes out neural activities for each LSNM node and -relevant-
         # TVB nodes. Plots output as well.
 
         ########## THE FOLLOWING SIMULATES TVB NETWORK'S #######################
         # The TVB Wilson Cowan simulation has been preprocessed and it is located
-        # in an 'npy' data file. Thus, we just need to load that data file onto
-        # a numpy array
+        # in an 'npy' data file. Thus, erase the commments from the following
+        # 'np.load' if you just need to load that data file onto a numpy array
         # The data file contains an array of 5 dimensions as follows:
         # [timestep, state_variable_E, state_variable_I, node_number, mode]
-        RawData = np.load("wilson_cowan_brain_74_nodes.npy")
+        #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
+
+        # define white matter transmission speed in mm/ms for TVB simulation
+        TVB_speed = 4.0
+
+        # define length of TVB simulation in ms
+        TVB_simulation_length = 6500
+
+        # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
+        # 3rd column, 3rd row
+        TVB_global_coupling_strength = 0.0042
+
+        # define the population model to be used and state variables to be collected.
+        # the parameters below were taken from in Sanz-Leon et al (2015), table 11,
+        # case 'a' 
+        TVB_WC = models.WilsonCowan(variables_of_interest=['E','I'],
+                                    r_i=1, r_e=1, k_e=1, k_i=1, tau_e=10, tau_i=10,
+                                    c_ee=12, c_ei=4, c_ie=13, c_ii=11, alpha_e=1, alpha_i=1,
+                                    a_e=1.2, a_i=1, b_e=2.8, b_i=4, c_e=1, c_i=1,
+                                    P=0, Q=0)
+
+        # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
+        white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
+        #white_matter.configure()
+
+        # Define the transmission speed of white matter tracts (4 mm/ms)
+        white_matter.speed = numpy.array([TVB_speed])
+
+        # Define the coupling function between white matter tracts and brain regions
+        white_matter_coupling = coupling.Linear(a=TVB_global_coupling_strength)
+
+        #Initialise an Integrator
+        # set numpy's seed
+        my_seed = 13
+        my_random_state = numpy.random.RandomState(my_seed)
+        hiss = noise.Additive(nsig=0.08)
+        heunint = integrators.EulerStochastic(dt=2 ** -2, noise=hiss)
+        heunint.configure()
+
+        # Define a monitor to be used for TVB simulation (i.e., which simulated data is
+        # going to be collected
+        #what_to_watch = monitors.Raw(variables_of_interest=['E','I'])
+        what_to_watch = monitors.SubSample(period=5.0)
+        
+        # Initialize a TVB simulator
+        TVB_sim = simulator.Simulator(model=TVB_WC, connectivity=white_matter,
+                                      coupling=white_matter_coupling,
+                                      integrator=heunint, monitors=what_to_watch)
+
+        TVB_sim.configure()
 
         # sample TVB raw data array to extract 220 data points (for plotting only)
-        RAW = RawData[::400]    # round(88000 / 220) = 400
+        #RAW = RawData[::400]    # round(88000 / 220) = 400
 
-        # sample TVB raw data array file to extract 1100 data points 
-        RawData = RawData[::80] # round(8800 / 1100) = 80
-
-        print RawData.shape
+        # define the simulation time in total number of timesteps
+        # Each timestep is roughly equivalent to 5ms
+        # (each trial is 4400 timesteps long x 12 trials = 52800)
+        LSNM_simulation_time = 1300
         
-        # Extract area 72 time series (rV1), and 
-        # Extract area 68 time series (rTCi, aka IT, inferior temporal cortex), and
-        # Extract area 55 time series (rPFCdl, dorsolateral prefrontal cortex), and
-        # create a dictionary of nonspecific module time series
-        nonspecific_units = {'env1':RawData[:,0,72],
-                             'inv1':RawData[:,1,72],
-                             'enit':RawData[:,0,68],
-                             'init':RawData[:,1,68],
-                             'enpf':RawData[:,0,55],
-                             'inpf':RawData[:,1,55] }
+        # sample TVB raw data array file to extract 1100 data points
+        # (only use if you are loading a preprocessed TVB simulation)
+        #TVB_sampling_rate = int(round(88000 / simulation_time))
+        #RawData = RawData[::TVB_sampling_rate]
 
-        # now load white matter connectivity
-        white_matter = connectivity.Connectivity(load_default=True)
-        white_matter.configure()
+        # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
+        # we are assuming that each simulation timestep is equivalent to 5 milliseconds
+        # of real time. 
+        
+        # print RawData.shape
+        
+        # The TVB brain areas where our LSNM units are going to be embedded it
+        # hardcoded for now, but will be included in as an option in the LSNM GUI.
+        
+        # create a python dictionary of LSNM modules and the location of the corresponding
+        # TVB node in which the TVB node is to be embedded. In other words, the closest TVB node
+        # is  used as a 'host' node to embed a given LSNM module
+        lsnm_tvb_link = {'ev1v': 345,
+                         'iv1v': 345,
+                         'ev1h': 345,
+                         'iv1h': 345,
+                         'ev4v': 393,
+                         'iv4v': 393,
+                         'ev4c': 393,
+                         'iv4c': 393,
+                         'ev4h': 393,
+                         'iv4h': 393,
+                         'exss': 413,
+                         'inss': 413,
+                         'efd1': 74,
+                         'ifd1': 74,
+                         'efd2': 74,
+                         'ifd2': 74,
+                         'exfs': 74,
+                         'infs': 74,
+                         'exfr': 74,
+                         'infr': 74 }
 
-        print white_matter.region_labels
+        # now we are going to find the nodes in TVB that are closest to the LSNM modules above
+        
+
+        # declare a gain for the link from TVB to LSNM (around which normally distributed
+        # random numbers will be generated)
+        lsnm_tvb_gain = 0.0005
+
+        # declare a integration interval for the 'integrated' synaptic activity,
+        # for fMRI computation, in number of timesteps.
+        # The same variable is used to know how often we are going to write to
+        # output files
+        synaptic_interval = 10
+                
+        # print which brain areas from TVB we are using,
+        # as well as 'first degree' connections of the TVB areas listed
+        # the folowing printout is only for informational purposes
+
+        print '\rIncoming units from TVB are: '
+
+        print '\rInto ' + white_matter.region_labels[345],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
+        print 'with the following weights: ',
+        print white_matter.weights[72][np.nonzero(white_matter.weights[345])]
+        
+        print '\rInto ' + white_matter.region_labels[393],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
+        print 'with the following weights: ',
+        print white_matter.weights[68][np.nonzero(white_matter.weights[393])]
+        
+        print '\rInto ' + white_matter.region_labels[413],
+        print ': ',        
+        print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
+        print 'with the following weights: ',
+        print white_matter.weights[60][np.nonzero(white_matter.weights[413])]
+        
+        print '\rInto ' + white_matter.region_labels[74],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
+        print 'with the following weights: ',
+        print white_matter.weights[70][np.nonzero(white_matter.weights[74])]
+        
 
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the neural network
@@ -312,8 +449,9 @@ class TaskThread(QtCore.QThread):
 
         # add a list of units to each module, using the module dimensions specified
         # in the input file (x_dim * y_dim) and initialize all units in each module to 'initial_value'
-        # It also adds two extra elements per each unit to store sum of inbititory and sum
-        # of excitatory activity at the current time step. It also add an empty list, '[]', to store
+        # It also adds three extra elements per each unit to store (1) sum of all incoming activity,
+        # (2) sum of inbititory, and (3) sum
+        # of excitatory activity, at the current time step. It also add an empty list, '[]', to store
         # list of outgoing weights
         for module in modules:
             # remove initial value from the list
@@ -322,9 +460,9 @@ class TaskThread(QtCore.QThread):
             y_dim = module[2]
     
             # create a matrix for each unit in the module, to contain unit value,
-            # sum of excitatory inputs, sum of inhibitory inputs, and connection
-            # weights
-            unit_matrix = [[[initial_value, 0, 0, []] for x in range(y_dim)] for y in range(x_dim)]
+            # total sum of inputs, sum of excitatory inputs, sum of inhibitory inputs,
+            # and connection weights
+            unit_matrix = [[[initial_value, 0.0, 0.0, 0.0, []] for x in range(y_dim)] for y in range(x_dim)]
 
             # now append that matrix to the current module
             module.append(unit_matrix)
@@ -360,7 +498,8 @@ class TaskThread(QtCore.QThread):
         # context manager for file I/O
         for file in weight_files:
             with open(file) as f:
-            # read the whole file and store it in a string
+
+                # read the whole file and store it in a string
                 whole_thing = f.read()
         
                 # find which module is connected to which module
@@ -410,48 +549,66 @@ class TaskThread(QtCore.QThread):
                 # to a zero-based format (as used in Python)
                 for connection in whole_thing:
                     for destination in connection[1]:
-                        modules[origin_module][8][connection[0][0]-1][connection[0][1]-1][3].append (
+                        modules[origin_module][8][connection[0][0]-1][connection[0][1]-1][4].append (
                             [destination_module,        # insert name of destination module
                             destination[0][0]-1,         # insert x coordinate of destination unit
                             destination[0][1]-1,         # insert y coordinate of destination unit
                             destination[1]])           # insert connection weight
                         synapse_count += 1
 
-        # write the values over time of all units to an output data file in text format
-        fs=[]
+        # the following stores values over time of all units (electrical activity, synaptic activity,
+        # and tvb activity) to output data files in text format
 
+        fs_neuronal = []
+        fs_synaptic = []
+        fs_tvb      = []
+        
+
+        # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
             # open one output file per module
-            fs.append(open('./output/' + module + '.out', 'w'))
+            fs_neuronal.append(open('./output/' + module + '.out', 'w'))
+            fs_synaptic.append(open('./output/' + module + '_synaptic.out', 'w'))
+
+        # ...for TVB node activities, open one output file per 'host' node to record timeseries
+        # TVB 'host' nodes
+        for host_tvb_node in lsnm_tvb_link.keys():
+            fs_tvb.append(open('./output/' + host_tvb_node + '_tvb.out', 'w'))
+        
     
         # create a dictionary so that each module name is associated with one output file
-        fs_dict = dict(zip(modules.keys(),fs))
+        fs_dict_neuronal = dict(zip(modules.keys(), fs_neuronal))
+        fs_dict_synaptic = dict(zip(modules.keys(), fs_synaptic))
 
-        # initialize number of timesteps for simulation
-        simulation_time = 1100
-        sim_percentage = 100.0/simulation_time
-
+        # also create a dictionary for host TVB node activity output files
+        fs_dict_tvb = dict(zip(lsnm_tvb_link.keys(), fs_tvb)) 
+        
         # open the file with the experimental script and store the script in a string
         with open(script) as s:
             experiment_script = s.read()
-        
-        # run the simulation for the number of timesteps given
-        for t in range(simulation_time):
-
-            self.notifyProgress.emit(int(t*sim_percentage))
             
-            # write the neural activity to output file of each unit at timestep t.
-            # The reason we write to the outut files before we do any computations is that we
-            # want to keep track of the initial values of each units in all modules
-            for m in modules.keys():
-                for x in range(modules[m][0]):
-                    for y in range(modules[m][1]):
-                        fs_dict[m].write(repr(modules[m][8][x][y][0]) + ' ')
-                # finally, insert a newline character so we can start next set of units on a
-                # new line
-                fs_dict[m].write('\n')
+        # initialize number of timesteps for simulation
+        sim_percentage = 100.0/LSNM_simulation_time
 
-            # run the experimental script given in script file
+        # run the simulation for the number of timesteps given
+        print '\r Running simulation...'
+
+        # uncomment the following line and subsititute in the for loop below if you want
+        # LSNM to drive the whole simulation
+        #for t in range(LSNM_simulation_time):
+
+        # initialize timestep counter for LSNM timesteps
+        t = 0
+
+        # the following 'for loop' is the main loop of the TVB simulation with the parameters
+        # defined above. Note that the LSNM simulator is literally embedded into the TVB
+        # simulation and both run concurrently, timestep by timestep.
+        for raw in TVB_sim(simulation_length=TVB_simulation_length):
+
+            # let the user know the percentage of simulation that has elapsed
+            self.notifyProgress.emit(int(round(t*sim_percentage,0)))
+            
+            # run the experimental script given by user's script file
             exec(experiment_script)
                     
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
@@ -463,13 +620,14 @@ class TaskThread(QtCore.QThread):
                         # we are going to do the following only for those units in the network that
                         # have weights that project to other units elsewhere
 
-                        # extract value of origin unit (unit projecting weights elsewhere
+                        # extract value of origin unit (unit projecting weights elsewhere)
                         origin_unit = modules[m][8][x][y][0]
                 
-                        for w in modules[m][8][x][y][3]:
+                        for w in modules[m][8][x][y][4]:
                         
-                            # First, find outgoing weights for all units and (except for those that do not
-                            # have outgoing weights, in which case do nothing) and compute weight * value
+                            # First, find outgoing weights for all destination units and (except
+                            # for those that do not
+                            # have outgoing weights, in which case do nothing) compute weight * value
                             # at destination units
                             dest_module = w[0]
                             x_dest = w[1]
@@ -477,21 +635,134 @@ class TaskThread(QtCore.QThread):
                             weight = w[3]
                             value_x_weight = origin_unit * weight 
                         
-                            # Now, accumulate store those values at the destination units data structure,
-                            # to be used later during neural activity computation
+                            # Now, accumulate (i.e., 'integrate') & store those values at the
+                            # destination units data structure,
+                            # to be used later during neural activity computation.
+                            # Note: Keep track of inhibitory and excitatory input summation
+                            # separately, as shown below:
                             if value_x_weight > 0:
-                                modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
-                            else:
                                 modules[dest_module][8][x_dest][y_dest][2] += value_x_weight
+                            else:
+                                modules[dest_module][8][x_dest][y_dest][3] += value_x_weight
+
+                            # ... but also keep track of the total input summation, as shown
+                            # below. The reason for this is that we need the input summation
+                            # to each neuronal population unit AT EACH TIME STEP, as well as
+                            # the excitatory and inhibitory input summations accumulated OVER
+                            # A NUMBER OF TIMESTEPS (that number is usually 10). We call such
+                            # accumulation of inputs
+                            # over a number of timesteps the 'integrated synaptic activity'
+                            # and it is used to compute fMRI and MEG.
+                            modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
+
+            # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
+            # Brain, and adds the product of each TVB -> LSNM unit value times their respective
+            # connection weight (provided by white matter tract weights) to the sum of excitatory
+            # activities of each embedded LSNM unit. THIS IS THE STEP
+            # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION IS SO FAR
+            # UNIDIRECTIONAL TVB -> LSNM, but will add a feedback connection soon.
+            # Please note that whereas the previous 'for loop' goes though the network updating
+            # unit sum of activities at destination units, the 'for loop' below goes through the
+            # network updating the sum of activities of the CURRENT unit
+
+            # we are going to do the following only for those modules/units in the LSNM
+            # network that have connections from TVB nodes
+            for m in lsnm_tvb_link.keys():
+                if modules.has_key(m):
+
+                    # extract TVB node number where module is embedded
+                    tvb_node = lsnm_tvb_link[m]
+
+                    # extract TVB node numbers that are conected to TVB node above
+                    tvb_conn = np.nonzero(white_matter.weights[tvb_node])
+                    # extract the numpy array from it
+                    tvb_conn = tvb_conn[0]
+
+                    # build a numpy array of weights from TVB connections to TVB homologous nodes
+                    wm = white_matter.weights[tvb_node][tvb_conn]
+                    
+                    # now go through all the units of current LSNM modules...
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
+
+                            # do the following for each white matter connection to current LSNM unit
+                            for i in range(tvb_conn.size):
+                                
+                                # extract the value of TVB node from preprocessed raw time series
+                                # uncomment if you want to use preprocessed TVB timeseries
+                                #value =  RawData[t, 0, tvb_conn[i]]
+
+                                # convert current TVB electrical activity to a numpy array 
+                                RawData = numpy.array(raw[0][1])
+
+                                # extract value of TVB node
+                                value = RawData[0, tvb_conn[i]]
+                                value =  value[0]
+                                
+                                # calculate a incoming weight by applying a gain into the LSNM unit.
+                                # the gain applied is a random number with a gaussian distribution
+                                # centered around the value of lsnm_tvb_gain
+                                weight = wm[i] * rdm.gauss(lsnm_tvb_gain,lsnm_tvb_gain/4)
+                                value_x_weight = value * weight
+                        
+                                # ... and add the incoming value_x_weight to the summed synaptic
+                                # activity of the current unit
+                                if value_x_weight > 0:
+                                    modules[m][8][x][y][2] += value_x_weight
+                                else:
+                                    modules[m][8][x][y][3] += value_x_weight
+                                # ... but store the total of inputs separately as well
+                                modules[m][8][x][y][1] += value_x_weight
 
             # the following variable will keep track of total number of units in the network
             unit_count = 0
+
+
+            # write the neural and synaptic activity to output files of each unit at a given
+            # timestep interval, given by the variable <synaptic interval>.
+            # The reason we write to the output files before we do any computations is that we
+            # want to keep track of the initial values of each unit in all modules
+            for m in modules.keys():
+                for x in range(modules[m][0]):
+                    for y in range(modules[m][1]):
+                        
+                        # Write out neural and integrated synaptic activity, and reset
+                        # integrated synaptic activity, but ONLY IF a given number of timesteps
+                        # has elapsed (integration interval)
+                        if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                            # write out neural activity first...
+                            fs_dict_neuronal[m].write(repr(modules[m][8][x][y][0]) + ' ')
+                            # now calculate and write out synaptic activity...
+                            synaptic = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
+                            fs_dict_synaptic[m].write(repr(synaptic) + ' ')
+                            # ...finally, reset synaptic activity (but not neural activity).
+                            modules[m][8][x][y][2] = 0.0
+                            modules[m][8][x][y][3] = 0.0                            
+
+                        
+                # finally, insert a newline character so we can start next set of units on a
+                # new line
+                fs_dict_neuronal[m].write('\n')
+                fs_dict_synaptic[m].write('\n')
+
+            # also write neural activity of TVB host nodes to output files at the current
+            # time step, but ONLY IF a given number of timesteps has elapsed (integration
+            # interval)
+            if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                for host_node in lsnm_tvb_link.keys():
+                    host_node_value = RawData[0, lsnm_tvb_link[host_node]]
+                    host_node_value = host_node_value[0]
+                    fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
                             
+
+            
             # the following 'for loop' computes the neural activity at each unit in the network,
             # depending on their 'activation rule'
             for m in modules.keys():
                 for x in range(modules[m][0]):
                     for y in range(modules[m][1]):
+                        # if the current module is an LSNM unit, use in-house wilson-cowan
+                        # algorithm below (based on original Tagamets and Horwitz, 1995)
                         if modules[m][2] == 'wilson_cowan':
                         
                             # extract Wilson-Cowan parameters from the list
@@ -501,8 +772,8 @@ class TaskThread(QtCore.QThread):
                             decay = modules[m][5]
                             Delta = modules[m][4] 
 
-                            # compute weighted sum of excitatory and inhibitory input to current unit
-                            in_value = modules[m][8][x][y][1] + modules[m][8][x][y][2]
+                            # compute input to current unit
+                            in_value = modules[m][8][x][y][1]
 
                             # now subtract the threshold parameter from that sum
                             in_value = in_value - threshold
@@ -516,28 +787,31 @@ class TaskThread(QtCore.QThread):
                             # now multiply by parameter K and apply sigmoid function e
                             sigmoid = 1.0 / (1.0 + math.exp(-K * in_value))
                         
-                            # now multiply by delta parameter and subtract decay parameter
+                            # now multiply sigmoid by delta parameter, subtract decay parameter,
+                            # ... and add all to current value of unit (x, y) in module m
                             modules[m][8][x][y][0] += Delta * sigmoid - decay * modules[m][8][x][y][0]
 
                             # now reset the sum of excitatory and inhibitory weigths at each unit,
                             # since we only need it for the current timestep (new sums of excitatory and
                             # inhibitory unit activations will be computed at the next time step)
                             modules[m][8][x][y][1] = 0.0
-                            modules[m][8][x][y][2] = 0.0
-
-                        elif modules[m][2] == 'tvb':
-
-                            modules[m][8][x][y][0] = nonspecific_units[m][t]
                             
                         unit_count += 1
-        
-        for f in fs:
+                        
+            # increase the number of timesteps
+            t = t + 1
+                        
+        # be safe and close output files properly
+        for f in fs_neuronal:
+            f.close()
+        for f in fs_synaptic:
+            f.close()
+        for f in fs_tvb:
             f.close()
 
-        # print out total number of units and synapses
-        print 'Total number of unit: {}'.format(unit_count)
-        print 'Total number of synapses: {}'.format(synapse_count)
-    
+        print '\r Simulation Finished.'
+        print '\r Output data files saved.'
+
         
 def main():
     
@@ -546,8 +820,6 @@ def main():
 
     # create a widget window called "lsnm"
     lsnm = LSNM()
-
-    lsnm.resize(640, 480)
 
     lsnm.show()
 
