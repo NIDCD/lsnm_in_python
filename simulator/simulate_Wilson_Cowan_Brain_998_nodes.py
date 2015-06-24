@@ -65,7 +65,7 @@ class WilsonCowanPositive(models.WilsonCowan):
     "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
     "only allows positive values at integration time. In other words, it clamps state"
     "variables to > 0 when a stochastic integration is used"
-    def dfun(self, state_variables, coupling, local_coupling):
+    def dfun(self, state_variables, coupling, local_coupling=0.0):
         state_variables[state_variables < 0.0] = 0.0
         return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
 
@@ -98,11 +98,12 @@ white_matter.speed = numpy.array([speed])
 white_matter_coupling = coupling.Linear(a=global_coupling_strength)
 
 #Initialise an Integrator
-heunint = integrators.EulerStochastic(dt=0.1, noise=noise.Additive(nsig=0.01))
+heunint = integrators.EulerStochastic(dt=1, noise=noise.Additive(nsig=0.01))
 heunint.configure()
 
 # Define a monitor to be used (i.e., simulated data to be collected)
-what_to_watch = monitors.SubSample(period=5.0)
+#what_to_watch = monitors.SubSample(period=5.0)
+what_to_watch = monitors.Raw()
 
 # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
 sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
