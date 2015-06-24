@@ -308,11 +308,11 @@ class TaskThread(QtCore.QThread):
         what_to_watch = monitors.Raw()
         
         # Initialize a TVB simulator
-        TVB_sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
-                                      coupling=white_matter_coupling,
-                                      integrator=heunint, monitors=what_to_watch)
+        sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
+                                  coupling=white_matter_coupling,
+                                  integrator=heunint, monitors=what_to_watch)
 
-        TVB_sim.configure()
+        sim.configure()
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
@@ -585,7 +585,7 @@ class TaskThread(QtCore.QThread):
         # the following 'for loop' is the main loop of the TVB simulation with the parameters
         # defined above. Note that the LSNM simulator is literally embedded into the TVB
         # simulation and both run concurrently, timestep by timestep.
-        for raw in TVB_sim(simulation_length=TVB_simulation_length):
+        for raw in sim(simulation_length=TVB_simulation_length):
 
             # let the user know the percentage of simulation that has elapsed
             self.notifyProgress.emit(int(round(t*sim_percentage,0)))
