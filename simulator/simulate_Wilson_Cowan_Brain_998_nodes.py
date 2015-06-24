@@ -73,7 +73,7 @@ class WilsonCowanPositive(models.WilsonCowan):
 speed = 4.0
 
 # define length of simulation in ms
-simulation_length = 300
+simulation_length = 6500
 
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
@@ -98,7 +98,7 @@ white_matter.speed = numpy.array([speed])
 white_matter_coupling = coupling.Linear(a=global_coupling_strength)
 
 #Initialise an Integrator
-heunint = integrators.EulerStochastic(dt=1, noise=noise.Additive(nsig=0.01))
+heunint = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
 heunint.configure()
 
 # Define a monitor to be used (i.e., simulated data to be collected)
@@ -122,9 +122,6 @@ for raw in sim(simulation_length=simulation_length):
 
 # Convert data list to a numpy array
 RawData = numpy.array(raw_data)
-
-# zero out negative values in array
-#RawData = RawData.clip(min=0)
 
 # write output dimension to the console
 print RawData.shape
