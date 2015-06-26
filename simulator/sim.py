@@ -544,7 +544,8 @@ class TaskThread(QtCore.QThread):
         fs_neuronal = []
         fs_synaptic = []
         fs_tvb      = []
-        
+
+        raw_data = []
 
         # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
@@ -587,6 +588,10 @@ class TaskThread(QtCore.QThread):
         # simulation and both run concurrently, timestep by timestep.
         for raw in sim(simulation_length=TVB_simulation_length):
 
+            # TMP
+            raw_data.append(raw[0][1])
+            # END OF TMP
+            
             # let the user know the percentage of simulation that has elapsed
             self.notifyProgress.emit(int(round(t*sim_percentage,0)))
             
@@ -791,6 +796,13 @@ class TaskThread(QtCore.QThread):
         for f in fs_tvb:
             f.close()
 
+        # TMP    
+        RawData = numpy.array(raw_data)
+        # Save the array to a file for future use
+        FILE_NAME = "hagmanns_brain_998.npy"
+        numpy.save(FILE_NAME, RawData)
+        # END OF TMP
+            
         print '\r Simulation Finished.'
         print '\r Output data files saved.'
 
