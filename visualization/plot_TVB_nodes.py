@@ -50,9 +50,9 @@ import matplotlib.pyplot as pl
 RawData = np.load("../simulator/hagmanns_brain_998.npy")
 
 pl.plot(RawData[:,0,345])
-#pl.plot(RawData[:,0,393])
-#pl.plot(RawData[:,0,413])
-#pl.plot(RawData[:,0,74])
-#pl.grid(True)
+pl.plot(RawData[:,0,393])
+pl.plot(RawData[:,0,413])
+pl.plot(RawData[:,0,74])
+pl.grid(True)
 
 pl.show()
