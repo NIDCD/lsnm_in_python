@@ -70,11 +70,6 @@ tvb_pf = np.loadtxt('../simulator/output/exfs_tvb.out')
 timesteps = lgns.shape[0]
 
 print lgns.shape[0]
-decimated_tvb_v1 = signal.decimate(tvb_v1, 10)
-decimated_tvb_v4 = signal.decimate(tvb_v4, 10)
-decimated_tvb_it = signal.decimate(tvb_it, 10)
-decimated_tvb_pf = signal.decimate(tvb_pf, 10)
-
 
 # Contruct a numpy array of timesteps (data points provided in data file)
 t = np.arange(0, timesteps, 1)
