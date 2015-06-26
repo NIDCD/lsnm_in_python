@@ -47,7 +47,7 @@
 import numpy as np
 import matplotlib.pyplot as pl
 
-RawData = np.load("../simulator/wilson_cowan_brain_998_nodes.npy")
+RawData = np.load("../simulator/hagmanns_brain_998.npy")
 
 pl.plot(RawData[:,0,345])
 #pl.plot(RawData[:,0,393])
