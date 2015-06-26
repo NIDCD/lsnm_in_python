@@ -545,7 +545,9 @@ class TaskThread(QtCore.QThread):
         fs_synaptic = []
         fs_tvb      = []
 
+        # TMP
         raw_data = []
+        # END OF TMP
 
         # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
@@ -588,6 +590,8 @@ class TaskThread(QtCore.QThread):
         # simulation and both run concurrently, timestep by timestep.
         for raw in sim(simulation_length=TVB_simulation_length):
 
+            # convert current TVB connectome electrical activity to a numpy array 
+            RawData = numpy.array(raw[0][1])
             # TMP
             raw_data.append(raw[0][1])
             # END OF TMP
@@ -679,12 +683,9 @@ class TaskThread(QtCore.QThread):
                                 # uncomment if you want to use preprocessed TVB timeseries
                                 #value =  RawData[t, 0, tvb_conn[i]]
 
-                                # convert current TVB electrical activity to a numpy array 
-                                RawData = numpy.array(raw[0][1])
-
                                 # extract value of TVB node
                                 value = RawData[0, tvb_conn[i]]
-                                value =  value[0]
+                                value =  value[0]                                
                                 
                                 # calculate a incoming weight by applying a gain into the LSNM unit.
                                 # the gain applied is a random number with a gaussian distribution
