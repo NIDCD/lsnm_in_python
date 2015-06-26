@@ -738,11 +738,10 @@ class TaskThread(QtCore.QThread):
             # interval)
             if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
                 for host_node in lsnm_tvb_link.keys():
-                    host_node_value = RawData[0, lsnm_tvb_link[host_node]]
-                    host_node_value = host_node_value[0]
+                    #host_node_value = RawData[0, lsnm_tvb_link[host_node]]
+                    #host_node_value = host_node_value[0]
+                    host_node_value = raw[0][1][lsnm_tvb_link[host_node]][0]
                     fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
-                            
-
             
             # the following 'for loop' computes the neural activity at each unit in the network,
             # depending on their 'activation rule'
