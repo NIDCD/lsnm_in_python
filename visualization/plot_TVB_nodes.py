@@ -49,10 +49,10 @@ import matplotlib.pyplot as pl
 
 RawData = np.load("../simulator/wilson_cowan_brain_998_nodes.npy")
 
-pl.plot(RawData[:,0,345], 'k')
-pl.plot(RawData[:,0,393], 'k')
-pl.plot(RawData[:,0,413], 'k')
-pl.plot(RawData[:,0,74], 'k')
+pl.plot(RawData[:,0,345])
+pl.plot(RawData[:,0,393])
+pl.plot(RawData[:,0,413])
+pl.plot(RawData[:,0,74])
 pl.grid(True)
 
 pl.show()

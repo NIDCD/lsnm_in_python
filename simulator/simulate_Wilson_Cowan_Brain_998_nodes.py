@@ -102,7 +102,6 @@ heunint = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
 heunint.configure()
 
 # Define a monitor to be used (i.e., simulated data to be collected)
-#what_to_watch = monitors.SubSample(period=5.0)
 what_to_watch = monitors.Raw()
 
 # Initialise a Simulator -- Model, Connectivity, Integrator, and Monitors.
