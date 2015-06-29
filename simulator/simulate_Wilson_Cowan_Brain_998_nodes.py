@@ -61,6 +61,8 @@ import scipy.spatial.distance as ds
 
 import numpy as np
 
+import matplotlib.pyplot as pl
+
 class WilsonCowanPositive(models.WilsonCowan):
     "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
     "only allows positive values at integration time. In other words, it clamps state"
@@ -78,15 +80,6 @@ simulation_length = 6500
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
 global_coupling_strength = 0.0042
-
-# define the population model to be used and state variables to be collected.
-# the parameters below were taken from in Sanz-Leon et al (2015), table 11,
-# case 'a' 
-#WC = models.WilsonCowan(variables_of_interest=['E','I'],
-#                        r_i=1, r_e=1, k_e=1, k_i=1, tau_e=10, tau_i=10,
-#                        c_ee=12, c_ei=4, c_ie=13, c_ii=11, alpha_e=1, alpha_i=1,
-#                        a_e=1.2, a_i=1, b_e=2.8, b_i=4, c_e=1, c_i=1,
-#                        P=0, Q=0)
 
 # Define connectivity to be used (998 ROI matrix from TVB demo set)
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -119,11 +112,26 @@ for raw in sim(simulation_length=simulation_length):
         raw_time.append(raw[0][0]) 
         raw_data.append(raw[0][1])
 
+        
+        #print raw_data[-1][0][345]
+        #RawData = numpy.array(raw[0][1])
+        #print RawData[0,345]
+        #raw_test = raw[0][1]
+        #print raw_test[0][345]
+
+set_printoptions(threshold=nan)
+print raw_data[:][0][0][345]
+        
 # Convert data list to a numpy array
-RawData = numpy.array(raw_data)
+#RawData = numpy.array(raw_data)
+
+#print RawData[:,0,345]
+
+#pl.plot(RawData[:,0,345])
+#pl.show()
 
 # write output dimension to the console
-print RawData.shape
+#print RawData.shape
 
 # the following lines of code find the closest Hagmann's brain node to a given
 # set of Talairach coordinates
@@ -145,5 +153,5 @@ print closest, white_matter.centres[closest]
 
 
 # Save the array to a file for future use
-FILE_NAME = "wilson_cowan_brain_998_nodes.npy"
-numpy.save(FILE_NAME, RawData)
+#FILE_NAME = "wilson_cowan_brain_998_nodes.npy"
+#numpy.save(FILE_NAME, RawData)
