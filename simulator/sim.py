@@ -545,10 +545,6 @@ class TaskThread(QtCore.QThread):
         fs_synaptic = []
         fs_tvb      = []
 
-        # TMP
-        raw_data = []
-        # END OF TMP
-
         # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
             # open one output file per module
@@ -592,9 +588,6 @@ class TaskThread(QtCore.QThread):
 
             # convert current TVB connectome electrical activity to a numpy array 
             RawData = numpy.array(raw[0][1])
-            # TMP
-            raw_data.append(raw[0][1])
-            # END OF TMP
             
             # let the user know the percentage of simulation that has elapsed
             self.notifyProgress.emit(int(round(t*sim_percentage,0)))
@@ -685,7 +678,9 @@ class TaskThread(QtCore.QThread):
 
                                 # extract value of TVB node
                                 value = RawData[0, tvb_conn[i]]
-                                value =  value[0]                                
+                                value =  value[0]
+                                # clamps negative node values to zero
+                                value = max(value, 0)
                                 
                                 # calculate a incoming weight by applying a gain into the LSNM unit.
                                 # the gain applied is a random number with a gaussian distribution
@@ -741,6 +736,8 @@ class TaskThread(QtCore.QThread):
                     #host_node_value = RawData[0, lsnm_tvb_link[host_node]]
                     #host_node_value = host_node_value[0]
                     host_node_value = raw[0][1][0][lsnm_tvb_link[host_node]][0]
+                    # clamp node value to zero
+                    host_node_value = max(host_node_value, 0)
                     fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
             
             # the following 'for loop' computes the neural activity at each unit in the network,
@@ -796,12 +793,6 @@ class TaskThread(QtCore.QThread):
         for f in fs_tvb:
             f.close()
 
-        # TMP    
-        RawData = numpy.array(raw_data)
-        # Save the array to a file for future use
-        FILE_NAME = "hagmanns_brain_998.npy"
-        numpy.save(FILE_NAME, RawData)
-        # END OF TMP
             
         print '\r Simulation Finished.'
         print '\r Output data files saved.'

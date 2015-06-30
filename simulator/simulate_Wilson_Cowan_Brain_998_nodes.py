@@ -112,26 +112,15 @@ for raw in sim(simulation_length=simulation_length):
         raw_time.append(raw[0][0]) 
         raw_data.append(raw[0][1])
 
-        
-        #print raw_data[-1][0][345]
-        #RawData = numpy.array(raw[0][1])
-        #print RawData[0,345]
-        #raw_test = raw[0][1]
-        #print raw_test[0][345]
-
-set_printoptions(threshold=nan)
-print raw_data[:][0][0][345]
-        
 # Convert data list to a numpy array
-#RawData = numpy.array(raw_data)
+RawData = numpy.array(raw_data)
 
-#print RawData[:,0,345]
-
-#pl.plot(RawData[:,0,345])
-#pl.show()
+pl.figure('RawData')
+pl.plot(RawData[:,0,345])
+pl.show()
 
 # write output dimension to the console
-#print RawData.shape
+print RawData.shape
 
 # the following lines of code find the closest Hagmann's brain node to a given
 # set of Talairach coordinates
@@ -153,5 +142,5 @@ print closest, white_matter.centres[closest]
 
 
 # Save the array to a file for future use
-#FILE_NAME = "wilson_cowan_brain_998_nodes.npy"
-#numpy.save(FILE_NAME, RawData)
+FILE_NAME = "wilson_cowan_brain_998_nodes.npy"
+numpy.save(FILE_NAME, RawData)
