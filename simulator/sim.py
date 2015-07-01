@@ -355,7 +355,32 @@ class TaskThread(QtCore.QThread):
                          'exfs': 74,
                          'infs': 74,
                          'exfr': 74,
-                         'infr': 74 }
+                         'infr': 74
+                         }
+        
+        # the following are the TVB -> LSNM auditory connections
+        # uncomment if simulating auditory processing
+        #lsnm_tvb_link = {'ea1d': 474,
+        #                 'ia1d': 474,
+        #                 'ea1u': 474,
+        #                 'ia1u': 474,
+        #                 'ea2d': 470,
+        #                 'ia2d': 470,
+        #                 'ea2c': 470,
+        #                 'ia2c': 470,
+        #                 'ea2u': 470,
+        #                 'ia2u': 470,
+        #                 'estg': 470,
+        #                 'istg': 470,
+        #                 'efd1': 44,
+        #                 'ifd1': 44,
+        #                 'efd2': 44,
+        #                 'ifd2': 44,
+        #                 'exfs': 44,
+        #                 'infs': 44,
+        #                 'exfr': 44,
+        #                 'infr': 44
+        #}
 
         # now we are going to find the nodes in TVB that are closest to the LSNM modules above
         
