@@ -260,13 +260,14 @@ if t == 3100:
     # turn attention to 'LO', as the current trial has ended
     modules['atts'][8][0][0][0] = 0.05
 
-
+################# CONTROL BLOCK OF 3 TRIALS (MATCH, MISMATCH, MATCH ###########
+################# DEGRADED SHAPES ARE PRESENTED AND LOW ATTENTION IS USED ##############
 # now we present S1 by manually inserting it into the MGN module and leaving S1 there
 # for 200 timesteps (1 second).
 if t == 3500:
 
     # turn attention to 'HI', as the input stimulus has just been presented
-    modules['atts'][8][0][0][0] = 0.3
+    modules['atts'][8][0][0][0] = 0.05
 
     # reset D1 prior to each trial
     for x in range(modules['exss'][0]):
@@ -279,23 +280,25 @@ if t == 3500:
             modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
-    # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = 0.7
-    modules['lgns'][8][3][1][0] = 0.7
-    modules['lgns'][8][3][2][0] = 0.7
-    modules['lgns'][8][3][3][0] = 0.7
-    modules['lgns'][8][3][4][0] = 0.7
-    modules['lgns'][8][3][5][0] = 0.7
-    modules['lgns'][8][3][6][0] = 0.7
-    modules['lgns'][8][3][7][0] = 0.7
-    modules['lgns'][8][3][8][0] = 0.7
-    modules['lgns'][8][2][6][0] = 0.7
-    modules['lgns'][8][2][7][0] = 0.7
-    modules['lgns'][8][1][6][0] = 0.7
-    modules['lgns'][8][1][7][0] = 0.7
-    modules['lgns'][8][0][6][0] = 0.7
-    modules['lgns'][8][0][7][0] = 0.7
-
+    # the following is an 'O' shape
+    modules['lgns'][8][4][3][0] = 0.7
+    modules['lgns'][8][4][4][0] = 0.7
+    modules['lgns'][8][4][5][0] = 0.7
+    modules['lgns'][8][4][6][0] = 0.7
+    modules['lgns'][8][4][7][0] = 0.7
+    modules['lgns'][8][4][8][0] = 0.7
+    modules['lgns'][8][8][3][0] = 0.7
+    modules['lgns'][8][8][4][0] = 0.7
+    modules['lgns'][8][8][5][0] = 0.7
+    modules['lgns'][8][8][6][0] = 0.7
+    modules['lgns'][8][8][7][0] = 0.7
+    modules['lgns'][8][8][8][0] = 0.7
+    modules['lgns'][8][5][3][0] = 0.7
+    modules['lgns'][8][6][3][0] = 0.7
+    modules['lgns'][8][7][3][0] = 0.7
+    modules['lgns'][8][5][8][0] = 0.7
+    modules['lgns'][8][6][8][0] = 0.7
+    modules['lgns'][8][7][8][0] = 0.7    
 
 # What follows now is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 3700:
@@ -351,8 +354,6 @@ if t == 4200:
     # turn attention to 'LO', as the current trial has ended
     modules['atts'][8][0][0][0] = 0.05
 
-################# CONTROL BLOCK OF 4 TRIALS (MATCH, MATCH, MISMATCH, MISMATCH ###########
-################# DEGRADED SHAPES ARE PRESENTED AND LOW ATTENTION IS USED ##############
 # now we present S1 by manually inserting it into the MGN module and leaving S1 there
 # for 200 timesteps (1 second).
 if t == 4600:

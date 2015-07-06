@@ -112,17 +112,14 @@ ax.set_xlim(0,timesteps)
 plt.ylabel('V4c', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(5,1,5)
-l1 = ax.plot(t, tvb_v4, color='b', linewidth=2)
-l2 = ax.plot(t, ev4v, color='r')
+ax.plot(t, tvb_v4, color='b', linewidth=2)
+ax.plot(t, ev4v, color='r')
 ax.set_yticks([0, 0.5, 1])
 ax.set_xlim(0,timesteps)
 plt.ylabel('V4v', rotation='horizontal', horizontalalignment='right')
 
-ax.set_xlabel('Non-specific')
-
 plt.tight_layout()
 
-ax.legend(bbox_to_anchor=(1.05, 0), loc='lower left', borderaxespad=0.)
 
 # start a second figure 
 plt.figure(2, facecolor='white')
