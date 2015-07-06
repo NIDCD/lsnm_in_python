@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 25 2015
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 1 2015
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -284,7 +284,7 @@ class TaskThread(QtCore.QThread):
         TVB_speed = 4.0
 
         # define length of TVB simulation in ms
-        TVB_simulation_length = 6500
+        TVB_simulation_length = 17500
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
@@ -317,7 +317,7 @@ class TaskThread(QtCore.QThread):
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
         # (each trial is 4400 timesteps long x 12 trials = 52800)
-        LSNM_simulation_time = 1300
+        LSNM_simulation_time = 3500
         
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
@@ -382,9 +382,10 @@ class TaskThread(QtCore.QThread):
         #                 'infr': 44
         #}
 
-        # now we are going to find the nodes in TVB that are closest to the LSNM modules above
+        # generate copy of dictionary of TVB host nodes to store synaptic activities of
+        # each host node
+        tvb_syn = dict.fromkeys(lsnm_tvb_link, 0.0)
         
-
         # declare a gain for the link from TVB to LSNM (around which normally distributed
         # random numbers will be generated)
         lsnm_tvb_gain = 0.0005
@@ -563,12 +564,12 @@ class TaskThread(QtCore.QThread):
                             destination[1]])           # insert connection weight
                         synapse_count += 1
 
-        # the following stores values over time of all units (electrical activity, synaptic activity,
-        # and tvb activity) to output data files in text format
-
+        # the following files store values over time of all units (electrical activity, synaptic activity,
+        # TVB activity, and TVB synaptic acivity) to output data files in text format
         fs_neuronal = []
         fs_synaptic = []
         fs_tvb      = []
+        fs_tvb_syn  = []
 
         # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
@@ -577,17 +578,18 @@ class TaskThread(QtCore.QThread):
             fs_synaptic.append(open('./output/' + module + '_synaptic.out', 'w'))
 
         # ...for TVB node activities, open one output file per 'host' node to record timeseries
-        # TVB 'host' nodes
+        # TVB 'host' nodes and another file for TVB host synaptic activities
         for host_tvb_node in lsnm_tvb_link.keys():
             fs_tvb.append(open('./output/' + host_tvb_node + '_tvb.out', 'w'))
-        
+            fs_tvb_syn.append(open('./output/' + host_tvb_node + '_tvb_syn.out', 'w'))
     
         # create a dictionary so that each module name is associated with one output file
         fs_dict_neuronal = dict(zip(modules.keys(), fs_neuronal))
         fs_dict_synaptic = dict(zip(modules.keys(), fs_synaptic))
 
         # also create a dictionary for host TVB node activity output files
-        fs_dict_tvb = dict(zip(lsnm_tvb_link.keys(), fs_tvb)) 
+        fs_dict_tvb = dict(zip(lsnm_tvb_link.keys(), fs_tvb))
+        fs_dict_tvb_syn = dict(zip(lsnm_tvb_link.keys(), fs_tvb_syn))
         
         # open the file with the experimental script and store the script in a string
         with open(script) as s:
@@ -664,6 +666,20 @@ class TaskThread(QtCore.QThread):
                             # and it is used to compute fMRI and MEG.
                             modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
 
+                            
+            # the following loop adds TVB neural activity of a number of timesteps given by the
+            # variable 'synaptic_interval'
+            for host_node in lsnm_tvb_link.keys():
+                
+                host_node_value = raw[0][1][0][lsnm_tvb_link[host_node]][0]
+
+                # clips node value to edges of interval [0, 1]
+                host_node_value = max(host_node_value, 0)
+                host_node_value = min(host_node_value, 1)
+                    
+                tvb_syn[host_node] += host_node_value
+
+                
             # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
             # Brain, and adds the product of each TVB -> LSNM unit value times their respective
             # connection weight (provided by white matter tract weights) to the sum of excitatory
@@ -677,6 +693,7 @@ class TaskThread(QtCore.QThread):
             # we are going to do the following only for those modules/units in the LSNM
             # network that have connections from TVB nodes
             for m in lsnm_tvb_link.keys():
+
                 if modules.has_key(m):
 
                     # extract TVB node number where module is embedded
@@ -704,10 +721,11 @@ class TaskThread(QtCore.QThread):
                                 # extract value of TVB node
                                 value = RawData[0, tvb_conn[i]]
                                 value =  value[0]
-                                # clamps negative node values to zero
+                                # clips TVB node value to edges of interval [0, 1]
                                 value = max(value, 0)
+                                value = min(value, 1)
                                 
-                                # calculate a incoming weight by applying a gain into the LSNM unit.
+                                # calculate an incoming weight by applying a gain into the LSNM unit.
                                 # the gain applied is a random number with a gaussian distribution
                                 # centered around the value of lsnm_tvb_gain
                                 weight = wm[i] * rdm.gauss(lsnm_tvb_gain,lsnm_tvb_gain/4)
@@ -721,7 +739,8 @@ class TaskThread(QtCore.QThread):
                                     modules[m][8][x][y][3] += value_x_weight
                                 # ... but store the total of inputs separately as well
                                 modules[m][8][x][y][1] += value_x_weight
-
+                                        
+                                
             # the following variable will keep track of total number of units in the network
             unit_count = 0
 
@@ -761,9 +780,15 @@ class TaskThread(QtCore.QThread):
                     #host_node_value = RawData[0, lsnm_tvb_link[host_node]]
                     #host_node_value = host_node_value[0]
                     host_node_value = raw[0][1][0][lsnm_tvb_link[host_node]][0]
-                    # clamp node value to zero
+                    # clip node value to edges of interval [0,1]
                     host_node_value = max(host_node_value, 0)
+                    host_node_value = min(host_node_value, 1)
+                    # write out TVB node value to output file
                     fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
+                    #write out synaptic activity of TVB node to output file
+                    fs_dict_tvb_syn[host_node].write(repr(tvb_syn[host_node]) + ' ')
+                    # reset TVB synaptic activity
+                    tvb_syn[host_node] = 0.0
             
             # the following 'for loop' computes the neural activity at each unit in the network,
             # depending on their 'activation rule'
@@ -816,6 +841,8 @@ class TaskThread(QtCore.QThread):
         for f in fs_synaptic:
             f.close()
         for f in fs_tvb:
+            f.close()
+        for f in fs_tvb_syn:
             f.close()
 
             

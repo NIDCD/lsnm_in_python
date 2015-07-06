@@ -6,7 +6,7 @@
 if t == 200:
 
     # turn attention to 'HI', as the input stimulus has just been presented
-    modules['atts'][8][0][0][0] = 0.15
+    modules['atts'][8][0][0][0] = 0.3
 
     # reset D1 prior to each trial
     for x in range(modules['efd1'][0]):
@@ -99,7 +99,7 @@ if t == 900:
 if t == 1300:
 
     # turn attention to 'HI', as the input stimulus has just been presented
-    modules['atts'][8][0][0][0] = 0.15
+    modules['atts'][8][0][0][0] = 0.3
 
     # reset LGN activity prior to stimulus presentation
     for x in range(modules['lgns'][0]):
@@ -107,22 +107,25 @@ if t == 1300:
             modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
-    # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = 0.7
-    modules['lgns'][8][3][1][0] = 0.7
-    modules['lgns'][8][3][2][0] = 0.7
-    modules['lgns'][8][3][3][0] = 0.7
-    modules['lgns'][8][3][4][0] = 0.7
-    modules['lgns'][8][3][5][0] = 0.7
-    modules['lgns'][8][3][6][0] = 0.7
-    modules['lgns'][8][3][7][0] = 0.7
-    modules['lgns'][8][3][8][0] = 0.7
-    modules['lgns'][8][2][6][0] = 0.7
-    modules['lgns'][8][2][7][0] = 0.7
-    modules['lgns'][8][1][6][0] = 0.7
-    modules['lgns'][8][1][7][0] = 0.7
-    modules['lgns'][8][0][6][0] = 0.7
-    modules['lgns'][8][0][7][0] = 0.7
+    # the following is an 'O' shape
+    modules['lgns'][8][4][3][0] = 0.7
+    modules['lgns'][8][4][4][0] = 0.7
+    modules['lgns'][8][4][5][0] = 0.7
+    modules['lgns'][8][4][6][0] = 0.7
+    modules['lgns'][8][4][7][0] = 0.7
+    modules['lgns'][8][4][8][0] = 0.7
+    modules['lgns'][8][8][3][0] = 0.7
+    modules['lgns'][8][8][4][0] = 0.7
+    modules['lgns'][8][8][5][0] = 0.7
+    modules['lgns'][8][8][6][0] = 0.7
+    modules['lgns'][8][8][7][0] = 0.7
+    modules['lgns'][8][8][8][0] = 0.7
+    modules['lgns'][8][5][3][0] = 0.7
+    modules['lgns'][8][6][3][0] = 0.7
+    modules['lgns'][8][7][3][0] = 0.7
+    modules['lgns'][8][5][8][0] = 0.7
+    modules['lgns'][8][6][8][0] = 0.7
+    modules['lgns'][8][7][8][0] = 0.7
                     
 # What follows not is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 1500:
@@ -163,7 +166,7 @@ if t == 1800:
 if t == 2000:
              
     # reset D1 prior to each trial
-    for x in range(modules['exss'][0]):
+    for x in range(modules['efd1'][0]):
     	for y in range(modules['efd1'][1]):
 	    modules['efd1'][8][x][y][0] = 0.25
 	    
@@ -180,7 +183,7 @@ if t == 2000:
 if t == 2400:
 
     # turn attention to 'HI', as the input stimulus has just been presented
-    modules['atts'][8][0][0][0] = 0.15
+    modules['atts'][8][0][0][0] = 0.3
 
     # reset LGN activity prior to stimulus presentation
     for x in range(modules['lgns'][0]):
@@ -188,25 +191,22 @@ if t == 2400:
             modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
-    # the following is an 'O' shape
-    modules['lgns'][8][4][3][0] = 0.7
-    modules['lgns'][8][4][4][0] = 0.7
-    modules['lgns'][8][4][5][0] = 0.7
-    modules['lgns'][8][4][6][0] = 0.7
-    modules['lgns'][8][4][7][0] = 0.7
-    modules['lgns'][8][4][8][0] = 0.7
-    modules['lgns'][8][8][3][0] = 0.7
-    modules['lgns'][8][8][4][0] = 0.7
-    modules['lgns'][8][8][5][0] = 0.7
-    modules['lgns'][8][8][6][0] = 0.7
-    modules['lgns'][8][8][7][0] = 0.7
-    modules['lgns'][8][8][8][0] = 0.7
-    modules['lgns'][8][5][3][0] = 0.7
-    modules['lgns'][8][6][3][0] = 0.7
-    modules['lgns'][8][7][3][0] = 0.7
-    modules['lgns'][8][5][8][0] = 0.7
-    modules['lgns'][8][6][8][0] = 0.7
-    modules['lgns'][8][7][8][0] = 0.7
+    # the following is an 'T' shape
+    modules['lgns'][8][3][0][0] = 0.7
+    modules['lgns'][8][3][1][0] = 0.7
+    modules['lgns'][8][3][2][0] = 0.7
+    modules['lgns'][8][3][3][0] = 0.7
+    modules['lgns'][8][3][4][0] = 0.7
+    modules['lgns'][8][3][5][0] = 0.7
+    modules['lgns'][8][3][6][0] = 0.7
+    modules['lgns'][8][3][7][0] = 0.7
+    modules['lgns'][8][3][8][0] = 0.7
+    modules['lgns'][8][2][6][0] = 0.7
+    modules['lgns'][8][2][7][0] = 0.7
+    modules['lgns'][8][1][6][0] = 0.7
+    modules['lgns'][8][1][7][0] = 0.7
+    modules['lgns'][8][0][6][0] = 0.7
+    modules['lgns'][8][0][7][0] = 0.7
     
 # What follows is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 2600:
@@ -266,7 +266,7 @@ if t == 3100:
 if t == 3500:
 
     # turn attention to 'HI', as the input stimulus has just been presented
-    modules['atts'][8][0][0][0] = 0.15
+    modules['atts'][8][0][0][0] = 0.3
 
     # reset D1 prior to each trial
     for x in range(modules['exss'][0]):

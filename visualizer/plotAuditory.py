@@ -47,17 +47,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load data files
-mgns = np.loadtxt('../../output/mgns.out')
-efd1 = np.loadtxt('../../output/efd1.out')
-efd2 = np.loadtxt('../../output/efd2.out')
-ea1d = np.loadtxt('../../output/ea1d.out')
-ea1u = np.loadtxt('../../output/ea1u.out')
-ea2d = np.loadtxt('../../output/ea2d.out')
-ea2u = np.loadtxt('../../output/ea2u.out')
-ea2c = np.loadtxt('../../output/ea2c.out')
-exfr = np.loadtxt('../../output/exfr.out')
-exfs = np.loadtxt('../../output/exfs.out')
-estg = np.loadtxt('../../output/estg.out')
+mgns = np.loadtxt('../auditory_model/output/mgns.out')
+efd1 = np.loadtxt('../auditory_model/output/efd1.out')
+efd2 = np.loadtxt('../auditory_model/output/efd2.out')
+ea1d = np.loadtxt('../auditory_model/output/ea1d.out')
+ea1u = np.loadtxt('../auditory_model/output/ea1u.out')
+ea2d = np.loadtxt('../auditory_model/output/ea2d.out')
+ea2u = np.loadtxt('../auditory_model/output/ea2u.out')
+ea2c = np.loadtxt('../auditory_model/output/ea2c.out')
+exfr = np.loadtxt('../auditory_model/output/exfr.out')
+exfs = np.loadtxt('../auditory_model/output/exfs.out')
+estg = np.loadtxt('../auditory_model/output/estg.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = mgns.shape[0]
