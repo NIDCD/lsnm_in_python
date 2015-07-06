@@ -1,3 +1,8 @@
+# The following script replicates the results of Horwitz, Warner et al (2005), Figure 3
+# There are 6 trials total: 3 DMS trials and 3 control trials
+# The DMS trials are MATCH, MISMATCH, MATCH. The attention parameter in DMS trials is 0.3
+# The control trials are 'passive viewing': degraded shapes are presented and low attention (0.05)
+# is used.
 # the first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in Horwitz
 # et al (2005)
 
@@ -364,7 +369,7 @@ if t == 4600:
     # reset D1 prior to each trial
     for x in range(modules['efd1'][0]):
     	for y in range(modules['efd1'][1]):
-	    modules['efd1'][8][x][y][0] = 0.3
+	    modules['efd1'][8][x][y][0] = 0.2
 	    
     # reset LGNS activity prior to stimulus presentation
     for x in range(modules['lgns'][0]):
@@ -433,7 +438,7 @@ if t == 5300:
     # reset D1 prior to each trial
     for x in range(modules['efd1'][0]):
     	for y in range(modules['efd1'][1]):
-	    modules['efd1'][8][x][y][0] = 0.25
+	    modules['efd1'][8][x][y][0] = 0.2
 	    
     # turn off input stimulus but leave small level of activity there
     for x in range(modules['lgns'][0]):
@@ -510,3 +515,17 @@ if t == 6200:
                      
 # what follows now is an intertrial interval of 400 timesteps (2 second), which includes
 # the response period.
+if t == 6400:
+             
+    # reset D1 prior to each trial
+    for x in range(modules['efd1'][0]):
+    	for y in range(modules['efd1'][1]):
+	    modules['efd1'][8][x][y][0] = 0.2
+	    
+    # turn off input stimulus but leave small level of activity there
+    for x in range(modules['lgns'][0]):
+        for y in range(modules['lgns'][1]):
+            modules['lgns'][8][x][y][0] = 0.05
+
+    # turn attention to 'LO', as the current trial has ended
+    modules['atts'][8][0][0][0] = 0.05

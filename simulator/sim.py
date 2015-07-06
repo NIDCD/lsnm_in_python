@@ -284,7 +284,7 @@ class TaskThread(QtCore.QThread):
         TVB_speed = 4.0
 
         # define length of TVB simulation in ms
-        TVB_simulation_length = 33000
+        TVB_simulation_length = 34000
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
@@ -317,7 +317,7 @@ class TaskThread(QtCore.QThread):
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
         # (each trial is 4400 timesteps long x 12 trials = 52800)
-        LSNM_simulation_time = 6600
+        LSNM_simulation_time = 6800
         
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
