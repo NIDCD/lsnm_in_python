@@ -1,11 +1,18 @@
-# The following script replicates the results of Horwitz, Warner et al (2005), Figure 3
+# The following script replicates the results of Horwitz, Warner et al (2005), Figure 3.
+#
 # There are 6 trials total: 3 DMS trials and 3 control trials
+#
 # The DMS trials are MATCH, MISMATCH, MATCH. The attention parameter in DMS trials is 0.3
 # The control trials are 'passive viewing': degraded shapes are presented and low attention (0.05)
 # is used.
-# the first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in Horwitz
+#
+# The first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in Horwitz
 # et al (2005)
-
+#
+# To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
+# we are assuming that each simulation timestep is equivalent to 5 milliseconds
+# of real time. 
+                
 # now we present S1 by manually inserting it into the MGN module and leaving S1 there
 # for 200 timesteps (1 second).
 if t == 200:
@@ -286,24 +293,24 @@ if t == 3500:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'O' shape
-    modules['lgns'][8][4][3][0] = 0.55
-    modules['lgns'][8][4][4][0] = 0.55
-    modules['lgns'][8][4][5][0] = 0.55
-    modules['lgns'][8][4][6][0] = 0.55
-    modules['lgns'][8][4][7][0] = 0.55
-    modules['lgns'][8][4][8][0] = 0.55
-    modules['lgns'][8][8][3][0] = 0.55
-    modules['lgns'][8][8][4][0] = 0.55
-    modules['lgns'][8][8][5][0] = 0.55
-    modules['lgns'][8][8][6][0] = 0.55
-    modules['lgns'][8][8][7][0] = 0.55
-    modules['lgns'][8][8][8][0] = 0.55
-    modules['lgns'][8][5][3][0] = 0.55
-    modules['lgns'][8][6][3][0] = 0.55
-    modules['lgns'][8][7][3][0] = 0.55
-    modules['lgns'][8][5][8][0] = 0.55
-    modules['lgns'][8][6][8][0] = 0.55
-    modules['lgns'][8][7][8][0] = 0.55    
+    modules['lgns'][8][4][3][0] = 0.54
+    modules['lgns'][8][4][4][0] = 0.54
+    modules['lgns'][8][4][5][0] = 0.54
+    modules['lgns'][8][4][6][0] = 0.54
+    modules['lgns'][8][4][7][0] = 0.54
+    modules['lgns'][8][4][8][0] = 0.54
+    modules['lgns'][8][8][3][0] = 0.54
+    modules['lgns'][8][8][4][0] = 0.54
+    modules['lgns'][8][8][5][0] = 0.54
+    modules['lgns'][8][8][6][0] = 0.54
+    modules['lgns'][8][8][7][0] = 0.54
+    modules['lgns'][8][8][8][0] = 0.54
+    modules['lgns'][8][5][3][0] = 0.54
+    modules['lgns'][8][6][3][0] = 0.54
+    modules['lgns'][8][7][3][0] = 0.54
+    modules['lgns'][8][5][8][0] = 0.54
+    modules['lgns'][8][6][8][0] = 0.54
+    modules['lgns'][8][7][8][0] = 0.54    
 
 # What follows now is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 3700:
@@ -323,24 +330,24 @@ if t == 4000:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'O' shape
-    modules['lgns'][8][4][3][0] = 0.55
-    modules['lgns'][8][4][4][0] = 0.55
-    modules['lgns'][8][4][5][0] = 0.55
-    modules['lgns'][8][4][6][0] = 0.55
-    modules['lgns'][8][4][7][0] = 0.55
-    modules['lgns'][8][4][8][0] = 0.55
-    modules['lgns'][8][8][3][0] = 0.55
-    modules['lgns'][8][8][4][0] = 0.55
-    modules['lgns'][8][8][5][0] = 0.55
-    modules['lgns'][8][8][6][0] = 0.55
-    modules['lgns'][8][8][7][0] = 0.55
-    modules['lgns'][8][8][8][0] = 0.55
-    modules['lgns'][8][5][3][0] = 0.55
-    modules['lgns'][8][6][3][0] = 0.55
-    modules['lgns'][8][7][3][0] = 0.55
-    modules['lgns'][8][5][8][0] = 0.55
-    modules['lgns'][8][6][8][0] = 0.55
-    modules['lgns'][8][7][8][0] = 0.55
+    modules['lgns'][8][4][3][0] = 0.54
+    modules['lgns'][8][4][4][0] = 0.54
+    modules['lgns'][8][4][5][0] = 0.54
+    modules['lgns'][8][4][6][0] = 0.54
+    modules['lgns'][8][4][7][0] = 0.54
+    modules['lgns'][8][4][8][0] = 0.54
+    modules['lgns'][8][8][3][0] = 0.54
+    modules['lgns'][8][8][4][0] = 0.54
+    modules['lgns'][8][8][5][0] = 0.54
+    modules['lgns'][8][8][6][0] = 0.54
+    modules['lgns'][8][8][7][0] = 0.54
+    modules['lgns'][8][8][8][0] = 0.54
+    modules['lgns'][8][5][3][0] = 0.54
+    modules['lgns'][8][6][3][0] = 0.54
+    modules['lgns'][8][7][3][0] = 0.54
+    modules['lgns'][8][5][8][0] = 0.54
+    modules['lgns'][8][6][8][0] = 0.54
+    modules['lgns'][8][7][8][0] = 0.54
 
 # what follows now is an intertrial interval of 400 timesteps (2 second), which includes
 # the response period.
@@ -378,24 +385,24 @@ if t == 4600:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following stimulus is an 'O' shape
-    modules['lgns'][8][4][3][0] = 0.55
-    modules['lgns'][8][4][4][0] = 0.55
-    modules['lgns'][8][4][5][0] = 0.55
-    modules['lgns'][8][4][6][0] = 0.55
-    modules['lgns'][8][4][7][0] = 0.55
-    modules['lgns'][8][4][8][0] = 0.55
-    modules['lgns'][8][8][3][0] = 0.55
-    modules['lgns'][8][8][4][0] = 0.55
-    modules['lgns'][8][8][5][0] = 0.55
-    modules['lgns'][8][8][6][0] = 0.55
-    modules['lgns'][8][8][7][0] = 0.55
-    modules['lgns'][8][8][8][0] = 0.55
-    modules['lgns'][8][5][3][0] = 0.55
-    modules['lgns'][8][6][3][0] = 0.55
-    modules['lgns'][8][7][3][0] = 0.55
-    modules['lgns'][8][5][8][0] = 0.55
-    modules['lgns'][8][6][8][0] = 0.55
-    modules['lgns'][8][7][8][0] = 0.55
+    modules['lgns'][8][4][3][0] = 0.54
+    modules['lgns'][8][4][4][0] = 0.54
+    modules['lgns'][8][4][5][0] = 0.54
+    modules['lgns'][8][4][6][0] = 0.54
+    modules['lgns'][8][4][7][0] = 0.54
+    modules['lgns'][8][4][8][0] = 0.54
+    modules['lgns'][8][8][3][0] = 0.54
+    modules['lgns'][8][8][4][0] = 0.54
+    modules['lgns'][8][8][5][0] = 0.54
+    modules['lgns'][8][8][6][0] = 0.54
+    modules['lgns'][8][8][7][0] = 0.54
+    modules['lgns'][8][8][8][0] = 0.54
+    modules['lgns'][8][5][3][0] = 0.54
+    modules['lgns'][8][6][3][0] = 0.54
+    modules['lgns'][8][7][3][0] = 0.54
+    modules['lgns'][8][5][8][0] = 0.54
+    modules['lgns'][8][6][8][0] = 0.54
+    modules['lgns'][8][7][8][0] = 0.54
                 
 # What follows is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 4800:
@@ -415,21 +422,21 @@ if t == 5100:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = 0.55
-    modules['lgns'][8][3][1][0] = 0.55
-    modules['lgns'][8][3][2][0] = 0.55
-    modules['lgns'][8][3][3][0] = 0.55
-    modules['lgns'][8][3][4][0] = 0.55
-    modules['lgns'][8][3][5][0] = 0.55
-    modules['lgns'][8][3][6][0] = 0.55
-    modules['lgns'][8][3][7][0] = 0.55
-    modules['lgns'][8][3][8][0] = 0.55
-    modules['lgns'][8][2][6][0] = 0.55
-    modules['lgns'][8][2][7][0] = 0.55
-    modules['lgns'][8][1][6][0] = 0.55
-    modules['lgns'][8][1][7][0] = 0.55
-    modules['lgns'][8][0][6][0] = 0.55
-    modules['lgns'][8][0][7][0] = 0.55
+    modules['lgns'][8][3][0][0] = 0.54
+    modules['lgns'][8][3][1][0] = 0.54
+    modules['lgns'][8][3][2][0] = 0.54
+    modules['lgns'][8][3][3][0] = 0.54
+    modules['lgns'][8][3][4][0] = 0.54
+    modules['lgns'][8][3][5][0] = 0.54
+    modules['lgns'][8][3][6][0] = 0.54
+    modules['lgns'][8][3][7][0] = 0.54
+    modules['lgns'][8][3][8][0] = 0.54
+    modules['lgns'][8][2][6][0] = 0.54
+    modules['lgns'][8][2][7][0] = 0.54
+    modules['lgns'][8][1][6][0] = 0.54
+    modules['lgns'][8][1][7][0] = 0.54
+    modules['lgns'][8][0][6][0] = 0.54
+    modules['lgns'][8][0][7][0] = 0.54
     
 # what follows now is an intertrial interval of 400 timesteps (1 second), which includes
 # the response period.
@@ -463,21 +470,21 @@ if t == 5700:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = 0.55
-    modules['lgns'][8][3][1][0] = 0.55
-    modules['lgns'][8][3][2][0] = 0.55
-    modules['lgns'][8][3][3][0] = 0.55
-    modules['lgns'][8][3][4][0] = 0.55
-    modules['lgns'][8][3][5][0] = 0.55
-    modules['lgns'][8][3][6][0] = 0.55
-    modules['lgns'][8][3][7][0] = 0.55
-    modules['lgns'][8][3][8][0] = 0.55
-    modules['lgns'][8][2][6][0] = 0.55
-    modules['lgns'][8][2][7][0] = 0.55
-    modules['lgns'][8][1][6][0] = 0.55
-    modules['lgns'][8][1][7][0] = 0.55
-    modules['lgns'][8][0][6][0] = 0.55
-    modules['lgns'][8][0][7][0] = 0.55
+    modules['lgns'][8][3][0][0] = 0.54
+    modules['lgns'][8][3][1][0] = 0.54
+    modules['lgns'][8][3][2][0] = 0.54
+    modules['lgns'][8][3][3][0] = 0.54
+    modules['lgns'][8][3][4][0] = 0.54
+    modules['lgns'][8][3][5][0] = 0.54
+    modules['lgns'][8][3][6][0] = 0.54
+    modules['lgns'][8][3][7][0] = 0.54
+    modules['lgns'][8][3][8][0] = 0.54
+    modules['lgns'][8][2][6][0] = 0.54
+    modules['lgns'][8][2][7][0] = 0.54
+    modules['lgns'][8][1][6][0] = 0.54
+    modules['lgns'][8][1][7][0] = 0.54
+    modules['lgns'][8][0][6][0] = 0.54
+    modules['lgns'][8][0][7][0] = 0.54
                     
 # What follows not is a DELAY period of 300 timesteps = 1.5 seconds 
 if t == 5900:
@@ -497,21 +504,21 @@ if t == 6200:
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = 0.55
-    modules['lgns'][8][3][1][0] = 0.55
-    modules['lgns'][8][3][2][0] = 0.55
-    modules['lgns'][8][3][3][0] = 0.55
-    modules['lgns'][8][3][4][0] = 0.55
-    modules['lgns'][8][3][5][0] = 0.55
-    modules['lgns'][8][3][6][0] = 0.55
-    modules['lgns'][8][3][7][0] = 0.55
-    modules['lgns'][8][3][8][0] = 0.55
-    modules['lgns'][8][2][6][0] = 0.55
-    modules['lgns'][8][2][7][0] = 0.55
-    modules['lgns'][8][1][6][0] = 0.55
-    modules['lgns'][8][1][7][0] = 0.55
-    modules['lgns'][8][0][6][0] = 0.55
-    modules['lgns'][8][0][7][0] = 0.55
+    modules['lgns'][8][3][0][0] = 0.54
+    modules['lgns'][8][3][1][0] = 0.54
+    modules['lgns'][8][3][2][0] = 0.54
+    modules['lgns'][8][3][3][0] = 0.54
+    modules['lgns'][8][3][4][0] = 0.54
+    modules['lgns'][8][3][5][0] = 0.54
+    modules['lgns'][8][3][6][0] = 0.54
+    modules['lgns'][8][3][7][0] = 0.54
+    modules['lgns'][8][3][8][0] = 0.54
+    modules['lgns'][8][2][6][0] = 0.54
+    modules['lgns'][8][2][7][0] = 0.54
+    modules['lgns'][8][1][6][0] = 0.54
+    modules['lgns'][8][1][7][0] = 0.54
+    modules['lgns'][8][0][6][0] = 0.54
+    modules['lgns'][8][0][7][0] = 0.54
                      
 # what follows now is an intertrial interval of 400 timesteps (2 second), which includes
 # the response period.
