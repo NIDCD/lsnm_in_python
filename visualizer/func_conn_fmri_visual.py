@@ -33,31 +33,58 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (functionalConnectivityVisual.py) was created on May 4, 2015.
+#   This file (func_conn_fmri_visual.py) was created on July 10, 2015.
 #
 #   Based in part by Matlab scripts by Horwitz et al.
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on July 9 2015  
+#   Last updated by Antonio Ulloa on July 10 2015  
 # **************************************************************************/
 
-# functionalConnectivityVisual.py
+# func_conn_fmri_visual.py
 #
 # Calculate and plot functional connectivity (within-task time series correlation)
-# of IT with all other simulated brain areas, using the output 
-# from visual DMS task (synaptic activity and BOLD activity time series)
+# of the BOLD timeseries in IT with the BOLD timeseries of all other simulated brain
+# regions.
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 import pandas as pd
 
+import math as m
+
+from scipy.stats import poisson
+
+from scipy import signal
+
+# define constants needed for hemodynamic function
+lambda_ = 6.0
+
+# given the number of total timesteps, calculate total time of scanning
+# experiment in seconds
+T = 198
+
+# Time for one complete trial in seconds
+Ttrial = 5.5
+
+# define neural synaptic time interval and total time of scanning
+# experiment (units are seconds)
+Ti = .005 * 10
+
+# the scanning happened every Tr interval below (in seconds). This
+# is the time needed to sample hemodynamic activity to produce
+# each fMRI image.
+Tr = 2
+
 # define the length of both each trial and the whole experiment
 # in synaptic timesteps, as well as total number of trials
 experiment_length = 3960
 trial_length = 110
 number_of_trials = 36
+
+synaptic_timesteps = experiment_length
 
 # define an array with location of control trials, and another array
 # with location of task-related trials, relative to
@@ -127,6 +154,21 @@ infr = np.loadtxt('../visual_model/output/infr_synaptic.out')
 tvb_efr=np.loadtxt('../visual_model/output/exfr_tvb_syn.out')
 tvb_ifr=np.loadtxt('../visual_model/output/infr_tvb_syn.out')
 
+# Given neural synaptic time interval and total time of scanning experiment,
+# construct a numpy array of time points (data points provided in data files)
+time_in_seconds = np.arange(0, T, Tr)
+
+# the following calculates a Poisson distribution (that will represent a hemodynamic
+# function, given lambda (the Poisson time constant characterizing width and height
+# of hemodynamic function), and tau (the time step)
+# if you would do it manually you would do the following:
+#h = [lambda_ ** tau * m.exp(-lambda_) / m.factorial(tau) for tau in time_in_seconds]
+h = poisson.pmf(time_in_seconds, lambda_)
+
+# resample the array containing the poisson to increase its size and match the size of
+# the synaptic activity array
+h = signal.resample(h, synaptic_timesteps)
+
 # add all units WITHIN each region together across space to calculate
 # synaptic activity in EACH brain region
 v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + tvb_ev1 + tvb_iv1
@@ -147,19 +189,32 @@ d2 = d2[0:experiment_length]
 fs = fs[0:experiment_length]
 fr = fr[0:experiment_length]
 
+# now, we need to convolve the synaptic activity with a hemodynamic delay
+# function and sample the array at Tr regular intervals
+
+BOLD_interval = np.arange(0, synaptic_timesteps)
+
+v1_BOLD = np.convolve(v1, h, mode='full')[BOLD_interval]
+v4_BOLD = np.convolve(v4, h, mode='full')[BOLD_interval]
+it_BOLD = np.convolve(it, h, mode='full')[BOLD_interval]
+d1_BOLD = np.convolve(d1, h, mode='full')[BOLD_interval]
+d2_BOLD = np.convolve(d2, h, mode='full')[BOLD_interval]
+fs_BOLD = np.convolve(fs, h, mode='full')[BOLD_interval]
+fr_BOLD = np.convolve(fr, h, mode='full')[BOLD_interval]
+
 # Gets rid of the control trials in the synaptic activity arrays,
 # by separating the task-related trials and concatenating them
 # together. Remember that each trial is 110 synaptic timesteps
 # long.
 
 # first, split the arrays into subarrays, each one containing a single trial
-it_subarrays = np.split(it, number_of_trials)
-v1_subarrays = np.split(v1, number_of_trials)
-v4_subarrays = np.split(v4, number_of_trials)
-d1_subarrays = np.split(d1, number_of_trials)
-d2_subarrays = np.split(d2, number_of_trials)
-fs_subarrays = np.split(fs, number_of_trials)
-fr_subarrays = np.split(fr, number_of_trials)
+it_subarrays = np.split(it_BOLD, number_of_trials)
+v1_subarrays = np.split(v1_BOLD, number_of_trials)
+v4_subarrays = np.split(v4_BOLD, number_of_trials)
+d1_subarrays = np.split(d1_BOLD, number_of_trials)
+d2_subarrays = np.split(d2_BOLD, number_of_trials)
+fs_subarrays = np.split(fs_BOLD, number_of_trials)
+fr_subarrays = np.split(fr_BOLD, number_of_trials)
 # now, get rid of the control trials...
 it_DMS_trials = np.delete(it_subarrays, control_trials, axis=0)
 v1_DMS_trials = np.delete(v1_subarrays, control_trials, axis=0)
@@ -194,6 +249,32 @@ d2_control_trials_ts = np.concatenate(d2_control_trials)
 fs_control_trials_ts = np.concatenate(fs_control_trials)
 fr_control_trials_ts = np.concatenate(fr_control_trials)
 
+# Downsample the resulting fMRI timeseries for both DMS and control trials
+# Convert seconds to Ti units (how many times the scanning interval fits into each
+# synaptic interval)
+
+Tr_new = round(Tr / Ti)
+
+# We need to rescale the BOLD signal arrays to match the timescale of the synaptic
+# signals. We also truncate the resulting float down to the nearest integer. in other
+# words, we are downsampling the BOLD array to match the scan interval time Tr
+
+BOLD_timing = m.trunc(v1_DMS_trials_ts.size / Tr_new)
+
+v1_DMS_trials_ts = [v1_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+v4_DMS_trials_ts = [v4_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+it_DMS_trials_ts = [it_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+d1_DMS_trials_ts = [d1_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+d2_DMS_trials_ts = [d2_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+fs_DMS_trials_ts = [fs_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+fr_DMS_trials_ts = [fr_DMS_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+v1_control_trials_ts = [v1_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+v4_control_trials_ts = [v4_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+it_control_trials_ts = [it_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+d1_control_trials_ts = [d1_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+d2_control_trials_ts = [d2_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+fs_control_trials_ts = [fs_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+fr_control_trials_ts = [fr_control_trials_ts[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 
 # now, convert DMS and control timeseries into pandas timeseries, so we can analyze it
 IT_dms_ts = pd.Series(it_DMS_trials_ts)
@@ -259,7 +340,7 @@ rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='yellow', label='D2'
 
 rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='red', label='FR')
 
-ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH ALL OTHER BRAIN REGIONS')
+ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH OTHER BRAIN REGIONS (fMRI)')
 
 # get rid of x axis ticks and labels
 ax.set_xticks([])

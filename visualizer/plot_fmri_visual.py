@@ -33,20 +33,21 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (fmriVisual.py) was created on April 17, 2015.
+#   This file (plot_fmri_visual.py) was created on April 17, 2015.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 17 2015
+#   Last updated by Antonio Ulloa on July 10 2015
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
-# fmriVisual.py
+# plot_fmri_visual.py
 #
 # Calculate and plot fMRI BOLD signal based on data from visual
-# delay-match-to-sample simulation
+# delay-match-to-sample simulation.
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -62,9 +63,9 @@ lambda_ = 6.0
 
 # given the number of total timesteps, calculate total time of scanning
 # experiment in seconds
-T = 265
+T = 199
 
-# Time for one complete trial
+# Time for one complete trial in seconds
 Ttrial = 5.5
 
 # define neural synaptic time interval and total time of scanning
@@ -77,19 +78,30 @@ Ti = .005 * 10
 Tr = 2
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('../../output/ev1h_synaptic.out')
-ev1v = np.loadtxt('../../output/ev1v_synaptic.out')
-iv1h = np.loadtxt('../../output/iv1h_synaptic.out')
-iv1v = np.loadtxt('../../output/iv1v_synaptic.out')
+ev1h = np.loadtxt('../visual_model/output/ev1h_synaptic.out')
+ev1v = np.loadtxt('../visual_model/output/ev1v_synaptic.out')
+iv1h = np.loadtxt('../visual_model/output/iv1h_synaptic.out')
+iv1v = np.loadtxt('../visual_model/output/iv1v_synaptic.out')
+
+# Load TVB V1 host node synaptic activity into numpy array
+tvb_ev1=np.loadtxt('../visual_model/output/ev1v_tvb_syn.out')
+tvb_iv1=np.loadtxt('../visual_model/output/iv1v_tvb_syn.out')
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('../../output/exss_synaptic.out')
-inss = np.loadtxt('../../output/inss_synaptic.out')
+exss = np.loadtxt('../visual_model/output/exss_synaptic.out')
+inss = np.loadtxt('../visual_model/output/inss_synaptic.out')
+
+# Load TVB IT host node synaptic activity into numpy array
+tvb_eit=np.loadtxt('../visual_model/output/exss_tvb_syn.out')
+tvb_iit=np.loadtxt('../visual_model/output/inss_tvb_syn.out')
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('../../output/efd1_synaptic.out')
-ifd1 = np.loadtxt('../../output/ifd1_synaptic.out')
+efd1 = np.loadtxt('../visual_model/output/efd1_synaptic.out')
+ifd1 = np.loadtxt('../visual_model/output/ifd1_synaptic.out')
 
+# Load TVB D1 host node synaptic activity into numpy array
+tvb_ed1=np.loadtxt('../visual_model/output/efd1_tvb_syn.out')
+tvb_id1=np.loadtxt('../visual_model/output/ifd1_tvb_syn.out')
 
 # Extract number of timesteps from one of the synaptic activity arrays
 synaptic_timesteps = ev1h.shape[0]
@@ -128,15 +140,14 @@ h = poisson.pmf(time_in_seconds, lambda_)
 # the synaptic activity array
 h = signal.resample(h, synaptic_timesteps)
 
-
 plt.figure(1)
 plt.plot(h)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1)
-it = np.sum(exss + inss, axis = 1)
-d1 = np.sum(efd1 + ifd1, axis = 1)
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + tvb_ev1 + tvb_iv1
+it = np.sum(exss + inss, axis = 1) + tvb_eit + tvb_iit
+d1 = np.sum(efd1 + ifd1, axis = 1) + tvb_ed1 + tvb_id1
 
 # now, we need to convolve the synaptic activity with a hemodynamic delay
 # function and sample the array at Tr regular intervals
@@ -163,22 +174,24 @@ it_BOLD_downsampled = [it_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 d1_BOLD_downsampled = [d1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 
 
+
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
 synaptic_ticks = Ttrial/Ti
 # estimate how many 'MR ticks' there are in each trial
 mr_ticks = round(Ttrial/Tr)
 
-# remove first trial from synapctic activity array
+# remove first trial from synaptic activity array
 v1_truncated = np.delete(v1, np.arange(synaptic_ticks))
 it_truncated = np.delete(it, np.arange(synaptic_ticks))
 d1_truncated = np.delete(d1, np.arange(synaptic_ticks))
+
+
 
 # remove first trial from BOLD signal array
 v1_BOLD_truncated = np.delete(v1_BOLD_downsampled, np.arange(mr_ticks))
 it_BOLD_truncated = np.delete(it_BOLD_downsampled, np.arange(mr_ticks))
 d1_BOLD_truncated = np.delete(d1_BOLD_downsampled, np.arange(mr_ticks))
-
 
 # Set up figure to plot synaptic activity
 plt.figure(2)
