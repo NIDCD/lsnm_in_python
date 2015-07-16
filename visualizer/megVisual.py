@@ -35,6 +35,7 @@
 #
 #   This file (megVisual.py) was created on June 7, 2015.
 #
+#   Based on Sanz-Leon et al (2015) and Sarvas (1987) and on TVB's monitors.py
 #
 #   Author: Antonio Ulloa
 #
@@ -43,11 +44,32 @@
 
 # megVisual.py
 #
-# Calculate and plot MEG signal at source points based on data from visual
+# Calculate and plot MEG signal at source locations based on data from visual
 # delay-match-to-sample simulation
 
 import numpy as np
 import matplotlib.pyplot as plt
+
+#the magnetic constant = 1.25663706 × 10-6 m kg s-2 A-2  (H/m)
+mu_0 = 1.25663706e-6 #mH/mm
+
+# hypothesized Talairach coordinates of LSNM brain regions
+v1_loc = [18, -88, 8]
+
+v4_loc = [30, -72, -12]
+
+it_loc = [28, -36, -8]
+
+pf_loc = [42, 26, 20]
+
+# initialize source positions
+r_0 = [v1_loc, v4_loc, it_loc, pf_loc] 
+
+#initialize vector from sources to sensor
+Q = simulator.connectivity.orientations
+
+centre = numpy.mean(r_0, axis=0)[numpy.newaxis, :]
+radius = 1.01 * max(numpy.sqrt(numpy.sum((r_0 - centre)**2, axis=1)))
 
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('../simulator/output/ev1h_synaptic.out')

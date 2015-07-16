@@ -667,7 +667,7 @@ class TaskThread(QtCore.QThread):
                             modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
 
                             
-            # the following loop adds TVB neural activity of a number of timesteps given by the
+            # the following loop adds TVB neural activity over a number of timesteps given by the
             # variable 'synaptic_interval'
             for host_node in lsnm_tvb_link.keys():
                 
@@ -720,7 +720,7 @@ class TaskThread(QtCore.QThread):
 
                                 # extract value of TVB node
                                 value = RawData[0, tvb_conn[i]]
-                                value =  value[0]
+                                value = value[0]
                                 # clips TVB node value to edges of interval [0, 1]
                                 value = max(value, 0)
                                 value = min(value, 1)
