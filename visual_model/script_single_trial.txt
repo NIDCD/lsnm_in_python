@@ -41,7 +41,7 @@ if t == 200:
     modules['lgns'][8][7][8][0] = 0.7
                 
 # What follows is a DELAY period of 300 timesteps = 1.5 seconds 
-if t == 400:
+elif t == 400:
 
     # turn off input stimulus but leave small level of activity there
     for x in range(modules['lgns'][0]):
@@ -49,7 +49,7 @@ if t == 400:
             modules['lgns'][8][x][y][0] = 0.05
 
 # ... and now, present S2 for 200 timesteps (1 second) 
-if t == 700:
+elif t == 700:
 
     # reset LGN activity prior to stimulus presentation
     for x in range(modules['lgns'][0]):
@@ -79,7 +79,7 @@ if t == 700:
     
 # what follows now is an intertrial interval of 400 timesteps (1 second), which includes
 # the response period.
-if t == 900:
+elif t == 900:
              
     # reset D1 prior to each trial
     for x in range(modules['efd1'][0]):

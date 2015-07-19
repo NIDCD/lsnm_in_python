@@ -2,6 +2,10 @@
 #
 # There are 3 DMS trials and 3 control trials for each of six levels of attention
 #
+# The total number of timesteps is 39600 = 198 seconds
+#
+# The number of timesteps in each trial is 1100 = 5.5 seconds
+#
 # Both DMS trials and control trials are: MATCH, MISMATCH, MATCH.
 # The attention parameter in DMS trials is varied from 0.24 to 0.34 in steps of 0.02
 # The control trials constitute 'passive viewing': degraded shapes are presented and
@@ -3159,7 +3163,7 @@ if t == 39200:
     modules['lgns'][8][0][6][0] = 0.54
     modules['lgns'][8][0][7][0] = 0.54
                      
-# what follows now is an intertrial interval of 400 timesteps (2 second), which includes
+# what follows now is a response period of 200 timesteps (2 second), which includes
 # the response period.
 if t == 39400:
              

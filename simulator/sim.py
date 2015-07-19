@@ -284,7 +284,7 @@ class TaskThread(QtCore.QThread):
         TVB_speed = 4.0
 
         # define length of TVB simulation in ms
-        TVB_simulation_length = 199000
+        TVB_simulation_length = 2000
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
@@ -319,8 +319,7 @@ class TaskThread(QtCore.QThread):
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
-        # (each trial is 4400 timesteps long x 12 trials = 52800)
-        LSNM_simulation_time = 39800
+        LSNM_simulation_time = 39600
         
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
@@ -389,7 +388,9 @@ class TaskThread(QtCore.QThread):
         # each host node
         # tvb_syn = dict.fromkeys(lsnm_tvb_link, 0.0)
         # create an array to store synaptic activity for each and all TVB nodes
-        tvb_syn = []
+        tvb_syna = []
+        # also, create an array to store electrical activity for all TVB nodes
+        tvb_elec = []
 
         # create and initialize array to store synaptic activity for all TVB nodes.
         # The synaptic activity for each node is zero at first, then it accumulates values
@@ -417,29 +418,29 @@ class TaskThread(QtCore.QThread):
         print ': ',
         print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
         print 'with the following weights: ',
-        print white_matter.weights[72][np.nonzero(white_matter.weights[345])]
+        print white_matter.weights[345][np.nonzero(white_matter.weights[345])]
         
         print '\rInto ' + white_matter.region_labels[393],
         print ': ',
         print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
         print 'with the following weights: ',
-        print white_matter.weights[68][np.nonzero(white_matter.weights[393])]
+        print white_matter.weights[393][np.nonzero(white_matter.weights[393])]
         
         print '\rInto ' + white_matter.region_labels[413],
         print ': ',        
         print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
         print 'with the following weights: ',
-        print white_matter.weights[60][np.nonzero(white_matter.weights[413])]
+        print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
         
         print '\rInto ' + white_matter.region_labels[74],
         print ': ',
         print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
         print 'with the following weights: ',
-        print white_matter.weights[70][np.nonzero(white_matter.weights[74])]
+        print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
         
 
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
-        # initialize an empty list to store ALL of the modules of the neural network
+        # initialize an empty list to store ALL of the modules of the LSNM neural network
         modules = []
 
         # open the input file containing module declarations (i.e., the 'model'), then
@@ -579,7 +580,7 @@ class TaskThread(QtCore.QThread):
         # TVB activity, and TVB synaptic acivity) to output data files in text format
         fs_neuronal = []
         fs_synaptic = []
-        fs_tvb      = []
+        #fs_tvb      = []
         #fs_tvb_syn  = []
 
         # open one output file per module to record electrical and synaptic activities
@@ -590,8 +591,8 @@ class TaskThread(QtCore.QThread):
 
         # ...for TVB node activities, open one output file per 'host' node to record timeseries
         # TVB 'host' nodes and another file for TVB host synaptic activities
-        for host_tvb_node in lsnm_tvb_link.keys():
-            fs_tvb.append(open('./output/' + host_tvb_node + '_tvb.out', 'w'))
+        #for host_tvb_node in lsnm_tvb_link.keys():
+            #fs_tvb.append(open('./output/' + host_tvb_node + '_tvb.out', 'w'))
             #fs_tvb_syn.append(open('./output/' + host_tvb_node + '_tvb_syn.out', 'w'))
     
         # create a dictionary so that each module name is associated with one output file
@@ -599,7 +600,7 @@ class TaskThread(QtCore.QThread):
         fs_dict_synaptic = dict(zip(modules.keys(), fs_synaptic))
 
         # also create a dictionary for host TVB node activity output files
-        fs_dict_tvb = dict(zip(lsnm_tvb_link.keys(), fs_tvb))
+        #fs_dict_tvb = dict(zip(lsnm_tvb_link.keys(), fs_tvb))
         #fs_dict_tvb_syn = dict(zip(lsnm_tvb_link.keys(), fs_tvb_syn))
         
         # open the file with the experimental script and store the script in a string
@@ -624,6 +625,7 @@ class TaskThread(QtCore.QThread):
         # simulation and both run concurrently, timestep by timestep.
         for raw in sim(simulation_length=TVB_simulation_length):
 
+            
             # convert current TVB connectome electrical activity to a numpy array 
             RawData = numpy.array(raw[0][1])
             
@@ -683,27 +685,26 @@ class TaskThread(QtCore.QThread):
             #for host_node in lsnm_tvb_link.keys():
             for tvb_node in range(TVB_number_of_nodes):
 
-                # find the value of the node indexed by tvb_node
-                tvb_node_value = raw[0][1][0][tvb_node][0]                
-
-                # clips node value to edges of interval [0, 1]
-                tvb_node_value = max(tvb_node_value, 0)
-                tvb_node_value = min(tvb_node_value, 1)
-
                 # extract TVB node numbers that are conected to TVB node above
                 tvb_conn = np.nonzero(white_matter.weights[tvb_node])
                 # extract the numpy array from it
                 tvb_conn = tvb_conn[0]
-                
+
                 # build a numpy array of weights from TVB connections to the current TVB node
                 wm = white_matter.weights[tvb_node][tvb_conn]
 
+                # build a numpy array of origin TVB nodes connected to current TVB node
+                tvb_origin_node = raw[0][1][0][tvb_conn]
+
+                # clips node value to edges of interval [0, 1]
+                tvb_origin_node = np.clip(tvb_origin_node, 0, 1)
+                
                 # do the following for each white matter connection to current TVB node:
-                # multiply all incoming connection weights times the value of the correponding
+                # multiply all incoming connection weights times the value of the corresponding
                 # node that is sending that connection to the current TVB node
-                for i in range(tvb_conn.size):
-                    
-                    current_tvb_syn[tvb_node] += wm[i] * tvb_node_value
+                for cxn in range(tvb_conn.size):
+
+                    current_tvb_syn[tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
 
                 
             # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
@@ -778,7 +779,7 @@ class TaskThread(QtCore.QThread):
                 for x in range(modules[m][0]):
                     for y in range(modules[m][1]):
                         
-                        # Write out neural and integrated synaptic activity, and reset
+                        # Write out neural and integrate synaptic activity, and reset
                         # integrated synaptic activity, but ONLY IF a given number of timesteps
                         # has elapsed (integration interval)
                         if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
@@ -801,24 +802,27 @@ class TaskThread(QtCore.QThread):
             # time step, but ONLY IF a given number of timesteps has elapsed (integration
             # interval)
             if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
-                for host_node in lsnm_tvb_link.keys():
+                #for host_node in lsnm_tvb_link.keys():
                     #host_node_value = RawData[0, lsnm_tvb_link[host_node]]
                     #host_node_value = host_node_value[0]
-                    host_node_value = raw[0][1][0][lsnm_tvb_link[host_node]][0]
+                    #host_node_value = raw[0][1][0][lsnm_tvb_link[host_node]][0]
                     # clip node value to edges of interval [0,1]
-                    host_node_value = max(host_node_value, 0)
-                    host_node_value = min(host_node_value, 1)
+                    #host_node_value = max(host_node_value, 0)
+                    #host_node_value = min(host_node_value, 1)
                     # write out TVB node value to output file
-                    fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
+                    #fs_dict_tvb[host_node].write(repr(host_node_value) + ' ')
                     #write out synaptic activity of TVB node to output file
                     #fs_dict_tvb_syn[host_node].write(repr(tvb_syn[host_node]) + ' ')
                     # reset TVB synaptic activity
                     #tvb_syn[host_node] = 0.0
+                # rectifies or 'clamps' current tvb values to edges [0,1]
+                tvb_clamped=np.clip(raw[0][1], 0, 1)
+                # append the current TVB node electrical activity to array
+                tvb_elec.append(tvb_clamped)
                 # append current synaptic activity array to synaptic activity timeseries
-                tvb_syn.append(current_tvb_syn)
-                # rest TVB synapctic activity
-                for tvb_node in range(TVB_number_of_nodes):
-                    current_tvb_syn[tvb_node] = 0.0
+                tvb_syna.append(current_tvb_syn)
+                # reset TVB synaptic activity, but not TVB neuroelectrical activity
+                current_tvb_syn = [0.0] * TVB_number_of_nodes
                 
             
             # the following 'for loop' computes the neural activity at each unit in the network,
@@ -871,16 +875,18 @@ class TaskThread(QtCore.QThread):
             f.close()
         for f in fs_synaptic:
             f.close()
-        for f in fs_tvb:
-            f.close()
+        #for f in fs_tvb:
+        #    f.close()
         #for f in fs_tvb_syn:
         #    f.close()
 
-        # convert synaptic activity of TVB nodes into a numpy array
-        TVB_syn = numpy(tvb_syn)
+        # convert electrical and synaptic activity of TVB nodes into numpy arrays
+        TVB_elec = numpy.array(tvb_elec)
+        TVB_syna = numpy.array(tvb_syna)
 
-        # now, save the TVB synaptic activity to a file
-        numpy.save('tvb_synaptic', TVB_syn)
+        # now, save the TVB electrical and synaptic activities to separate files
+        numpy.save("tvb_neuronal.npy", TVB_elec)
+        numpy.save("tvb_synaptic.npy", TVB_syna)
             
         print '\r Simulation Finished.'
         print '\r Output data files saved.'
