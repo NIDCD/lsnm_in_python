@@ -33,53 +33,51 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plotSynapticVisual.py) was created on April 17, 2015.
+#   This file (plot_synaptic_visual.py) was created on April 17, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 17 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 19 2015  
 # **************************************************************************/
 
-# plotSynapticVisual.py
+# plot_synaptic_visual.py
 #
 # Plot synaptic activity data from visual
 # delay-match-to-sample simulation
+
+# what are the locations of relevant TVB nodes within TVB array?
+v1_loc = 345
+v4_loc = 393
+it_loc = 413
+pf_loc =  74
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("../visual_model/output/tvb_synaptic.npy")
-
-print tvb_synaptic.shape
+tvb_synaptic = np.load("tvb_synaptic.npy")
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('../visual_model/output/ev1h_synaptic.out')
-ev1v = np.loadtxt('../visual_model/output/ev1v_synaptic.out')
-iv1h = np.loadtxt('../visual_model/output/iv1h_synaptic.out')
-iv1v = np.loadtxt('../visual_model/output/iv1v_synaptic.out')
+ev1h = np.loadtxt('ev1h_synaptic.out')
+ev1v = np.loadtxt('ev1v_synaptic.out')
+iv1h = np.loadtxt('iv1h_synaptic.out')
+iv1v = np.loadtxt('iv1v_synaptic.out')
 
 # Load TVB V1 host node synaptic activity into numpy array
-tvb_v1 = tvb_synaptic[:,345]
-#tvb_ev1=np.loadtxt('../visual_model/output/ev1v_tvb_syn.out')
-#tvb_iv1=np.loadtxt('../visual_model/output/iv1v_tvb_syn.out')
+tvb_v1 = tvb_synaptic[:, v1_loc]
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('../visual_model/output/exss_synaptic.out')
-inss = np.loadtxt('../visual_model/output/inss_synaptic.out')
+exss = np.loadtxt('exss_synaptic.out')
+inss = np.loadtxt('inss_synaptic.out')
 
 # Load TVB IT host node synaptic activity into numpy array
-tvb_it = tvb_synaptic[:,413]
-#tvb_eit=np.loadtxt('../visual_model/output/exss_tvb_syn.out')
-#tvb_iit=np.loadtxt('../visual_model/output/inss_tvb_syn.out')
+tvb_it = tvb_synaptic[:, it_loc]
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('../visual_model/output/efd1_synaptic.out')
-ifd1 = np.loadtxt('../visual_model/output/ifd1_synaptic.out')
+efd1 = np.loadtxt('efd1_synaptic.out')
+ifd1 = np.loadtxt('ifd1_synaptic.out')
 
 # Load TVB D1 host node synaptic activity into numpy array
-tvb_d1 = tvb_synaptic[:,74]
-#tvb_ed1=np.loadtxt('../visual_model/output/efd1_tvb_syn.out')
-#tvb_id1=np.loadtxt('../visual_model/output/ifd1_tvb_syn.out')
+tvb_d1 = tvb_synaptic[:, pf_loc]
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
@@ -88,9 +86,9 @@ timesteps = ev1h.shape[0]
 t = np.arange(0, timesteps, 1)
 
 # add all units within each region (V1, IT, and D1) together across space
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1)
-it = np.sum(exss + inss, axis = 1)
-d1 = np.sum(efd1 + ifd1, axis = 1)
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + tvb_v1
+it = np.sum(exss + inss, axis = 1) + tvb_it
+d1 = np.sum(efd1 + ifd1, axis = 1) + tvb_d1
 
 # Set up plot
 plt.figure(1)
@@ -101,12 +99,6 @@ plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 plt.plot(t, v1)
 plt.plot(t, it)
 plt.plot(t, d1)
-
-plt.figure(2)
-
-plt.plot(tvb_v1)
-plt.plot(tvb_it)
-plt.plot(tvb_d1)
 
 # Show the plot on the screen
 plt.show()

@@ -69,6 +69,9 @@ import matplotlib.pyplot as plt
 # import 'numpy' module, which contains useful matrix functions
 import numpy as np
 
+# module to import external or user created modules into current script
+import importlib as il
+
 # import 'sys' module, which gives you access to file read/write functions
 import sys
 
@@ -284,7 +287,7 @@ class TaskThread(QtCore.QThread):
         TVB_speed = 4.0
 
         # define length of TVB simulation in ms
-        TVB_simulation_length = 2000
+        TVB_simulation_length = 16500
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
@@ -319,7 +322,7 @@ class TaskThread(QtCore.QThread):
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
-        LSNM_simulation_time = 39600
+        LSNM_simulation_time = 3300
         
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
@@ -620,6 +623,9 @@ class TaskThread(QtCore.QThread):
         # initialize timestep counter for LSNM timesteps
         t = 0
 
+        # import the experimental script given by user's script file
+        exec(experiment_script)
+        
         # the following 'for loop' is the main loop of the TVB simulation with the parameters
         # defined above. Note that the LSNM simulator is literally embedded into the TVB
         # simulation and both run concurrently, timestep by timestep.
@@ -631,10 +637,15 @@ class TaskThread(QtCore.QThread):
             
             # let the user know the percentage of simulation that has elapsed
             self.notifyProgress.emit(int(round(t*sim_percentage,0)))
+
+            # check script to see if there are any event to be presented to the LSNM
+            # network at current timestep t
+            current_event=simulation_events.get(str(t))
+
+            # then, introduce the event!
+            if current_event is not None:
+                current_event(modules, lo_att_level, hi_att_level, lo_inp_level, hi_inp_level)
             
-            # run the experimental script given by user's script file
-            exec(experiment_script)
-                    
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
             # at destination nodes using destination units and connecting weights provided
             for m in modules.keys():

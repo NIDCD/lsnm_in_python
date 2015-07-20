@@ -24,16 +24,6 @@ if t == 200:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.3
 
-    # reset D1 prior to each trial
-    for x in range(modules['efd1'][0]):
-    	for y in range(modules['efd1'][1]):
-	    modules['efd1'][8][x][y][0] = 0.2
-	    
-    # reset LGNS activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following stimulus is an 'O' shape
     modules['lgns'][8][4][3][0] = 0.7
@@ -65,11 +55,6 @@ elif t == 400:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 700:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following stimuuls is an 'O' shape
@@ -117,11 +102,6 @@ elif t == 1300:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.3
 
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'O' shape
     modules['lgns'][8][4][3][0] = 0.7
@@ -153,11 +133,6 @@ elif t == 1500:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 1800:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
@@ -201,11 +176,6 @@ elif t == 2400:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.3
 
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
     modules['lgns'][8][3][0][0] = 0.7
@@ -234,11 +204,6 @@ elif t == 2600:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 2900:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
@@ -285,16 +250,6 @@ elif t == 3500:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.05
 
-    # reset D1 prior to each trial
-    for x in range(modules['exss'][0]):
-    	for y in range(modules['exss'][1]):
-	    modules['efd1'][8][x][y][0] = 0.2
-	    
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'O' shape
     modules['lgns'][8][4][3][0] = 0.54
@@ -326,11 +281,6 @@ elif t == 3700:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 4000:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'O' shape
@@ -377,16 +327,6 @@ elif t == 4600:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.05
 
-    # reset D1 prior to each trial
-    for x in range(modules['efd1'][0]):
-    	for y in range(modules['efd1'][1]):
-	    modules['efd1'][8][x][y][0] = 0.2
-	    
-    # reset LGNS activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following stimulus is an 'O' shape
     modules['lgns'][8][4][3][0] = 0.54
@@ -418,11 +358,6 @@ elif t == 4800:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 5100:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
@@ -467,11 +402,6 @@ elif t == 5700:
     # turn attention to 'HI', as the input stimulus has just been presented
     modules['atts'][8][0][0][0] = 0.05
 
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
-
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape
     modules['lgns'][8][3][0][0] = 0.54
@@ -500,11 +430,6 @@ elif t == 5900:
 
 # ... and now, present S2 for 200 timesteps (1 second) 
 elif t == 6200:
-
-    # reset LGN activity prior to stimulus presentation
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = 0.05
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is an 'T' shape

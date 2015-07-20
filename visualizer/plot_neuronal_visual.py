@@ -33,15 +33,21 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plotVisual.py) was created on December 1, 2014.
+#   This file (plot_neuronal_visual.py) was created on December 1, 2014.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 13 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 19 2015  
 # **************************************************************************/
 
-# plotVisual.py
+# plot_neuronal_visual.py
 #
 # Plot output data files of visual delay-match-to-sample simulation
+
+# what are the locations of relevant TVB nodes within TVB array?
+v1_loc = 345
+v4_loc = 393
+it_loc = 413
+pf_loc =  74
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -49,25 +55,28 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Load data files
-lgns = np.loadtxt('../visual_model/output/lgns.out')
-efd1 = np.loadtxt('../visual_model/output/efd1.out')
-efd2 = np.loadtxt('../visual_model/output/efd2.out')
-ev1h = np.loadtxt('../visual_model/output/ev1h.out')
-ev1v = np.loadtxt('../visual_model/output/ev1v.out')
-ev4c = np.loadtxt('../visual_model/output/ev4c.out')
-ev4h = np.loadtxt('../visual_model/output/ev4h.out')
-ev4v = np.loadtxt('../visual_model/output/ev4v.out')
-exfr = np.loadtxt('../visual_model/output/exfr.out')
-exfs = np.loadtxt('../visual_model/output/exfs.out')
-exss = np.loadtxt('../visual_model/output/exss.out')
+lgns = np.loadtxt('lgns.out')
+efd1 = np.loadtxt('efd1.out')
+efd2 = np.loadtxt('efd2.out')
+ev1h = np.loadtxt('ev1h.out')
+ev1v = np.loadtxt('ev1v.out')
+ev4c = np.loadtxt('ev4c.out')
+ev4h = np.loadtxt('ev4h.out')
+ev4v = np.loadtxt('ev4v.out')
+exfr = np.loadtxt('exfr.out')
+exfs = np.loadtxt('exfs.out')
+exss = np.loadtxt('exss.out')
 
-tvb_v1 = np.loadtxt('../visual_model/output/ev1h_tvb.out')
-tvb_v4 = np.loadtxt('../visual_model/output/ev4h_tvb.out')
-tvb_it = np.loadtxt('../visual_model/output/exss_tvb.out')
-tvb_fs = np.loadtxt('../visual_model/output/exfs_tvb.out')
-tvb_d1 = np.loadtxt('../visual_model/output/efd1_tvb.out')
-tvb_d2 = np.loadtxt('../visual_model/output/efd2_tvb.out')
-tvb_fr = np.loadtxt('../visual_model/output/exfr_tvb.out')
+# load file containing TVB nodes electrical activity
+tvb = np.load('tvb_neuronal.npy')
+
+tvb_v1 = tvb[:, 0, v1_loc, 0]
+tvb_v4 = tvb[:, 0, v4_loc, 0]
+tvb_it = tvb[:, 0, it_loc, 0]
+tvb_fs = tvb[:, 0, pf_loc, 0]
+tvb_d1 = tvb[:, 0, pf_loc, 0]
+tvb_d2 = tvb[:, 0, pf_loc, 0]
+tvb_fr = tvb[:, 0, pf_loc, 0]
 
 # Extract number of timesteps from one of the matrices
 timesteps = lgns.shape[0]
