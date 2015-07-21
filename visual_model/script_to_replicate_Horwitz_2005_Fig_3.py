@@ -25,26 +25,26 @@
 lo_att_level = 0.05
 hi_att_level = 0.3
 lo_inp_level = 0.05
+md_inp_level = 0.54
 hi_inp_level = 0.7
 
-def delay_period(modules,
-                 low_att_level, hi_att_level,
-                 low_inp_level, hi_inp_level):
-    
-    "modifies neural network with delay period parameters given"
-    
-    modules['atts'][8][0][0][0] = hi_att_level
-    
-    # turn off input stimulus but leave small level of activity there
-    for x in range(modules['lgns'][0]):
-        for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = low_inp_level
+# the following is random shape1, this shape has the same luminance as an 'O'
+rand_shape1 = rdm.sample(range(81),18)
+rand_indeces1 = np.unravel_index(rand_shape1,(9,9))
+ri1 = zip(*rand_indeces1)
 
+# A second random shape in inserted for a mismatch
+rand_shape2 = rdm.sample(range(81),18)
+rand_indeces2 = np.unravel_index(rand_shape2,(9,9))
+ri2 = zip(*rand_indeces2)
+        
 def o_shape(modules,
             low_att_level, hi_att_level,
-            low_inp_level, hi_inp_level):
-
-    "gives an o-shaped visual input to neural network with parameters given"
+            low_inp_level, md_inp_level, hi_inp_level):
+    """
+    generates an o-shaped visual input to neural network with parameters given"
+    
+    """
     
     modules['atts'][8][0][0][0] = hi_att_level
     
@@ -71,31 +71,81 @@ def o_shape(modules,
     
 def t_shape(modules,
             low_att_level, hi_att_level,
-            low_inp_level, hi_inp_level):
+            low_inp_level, md_inp_level, hi_inp_level):
     
+    """
+    generates a t-shaped visual input to neural network with parameters given"
+    
+    """
     modules['atts'][8][0][0][0] = hi_att_level
 
     # insert the inputs stimulus into LGN and see what happens
-    # the following is an 'T' shape
-    modules['lgns'][8][3][0][0] = hi_inp_level
-    modules['lgns'][8][3][1][0] = hi_inp_level
-    modules['lgns'][8][3][2][0] = hi_inp_level
-    modules['lgns'][8][3][3][0] = hi_inp_level
-    modules['lgns'][8][3][4][0] = hi_inp_level
-    modules['lgns'][8][3][5][0] = hi_inp_level
-    modules['lgns'][8][3][6][0] = hi_inp_level
-    modules['lgns'][8][3][7][0] = hi_inp_level
-    modules['lgns'][8][3][8][0] = hi_inp_level
-    modules['lgns'][8][2][6][0] = hi_inp_level
-    modules['lgns'][8][2][7][0] = hi_inp_level
-    modules['lgns'][8][1][6][0] = hi_inp_level
-    modules['lgns'][8][1][7][0] = hi_inp_level
-    modules['lgns'][8][0][6][0] = hi_inp_level
-    modules['lgns'][8][0][7][0] = hi_inp_level
+    # the following is a 'T' shape
+    modules['lgns'][8][3][0][0] = 0.7
+    modules['lgns'][8][3][1][0] = 0.7
+    modules['lgns'][8][3][2][0] = 0.7
+    modules['lgns'][8][3][3][0] = 0.7
+    modules['lgns'][8][3][4][0] = 0.7
+    modules['lgns'][8][3][5][0] = 0.7
+    modules['lgns'][8][3][6][0] = 0.7
+    modules['lgns'][8][3][7][0] = 0.7
+    modules['lgns'][8][0][6][0] = 0.7
+    modules['lgns'][8][1][6][0] = 0.7
+    modules['lgns'][8][1][7][0] = 0.7
+    modules['lgns'][8][2][6][0] = 0.7
+    modules['lgns'][8][2][7][0] = 0.7
+    modules['lgns'][8][4][6][0] = 0.7
+    modules['lgns'][8][4][7][0] = 0.7
+    modules['lgns'][8][5][6][0] = 0.7
+    modules['lgns'][8][5][7][0] = 0.7
+    modules['lgns'][8][6][6][0] = 0.7
+
+def random_shape_1(modules,
+                    low_att_level, hi_att_level,
+                    low_inp_level, md_inp_level, hi_inp_level):
+    """
+    generates a random visual input to neural network with parameters given
     
+    """
+    for k1 in range(len(ri1)):
+        modules['lgns'][8][ri1[k1][0]][ri1[k1][1]][0] = md_inp_level
+    
+def random_shape_2(modules,
+                    low_att_level, hi_att_level,
+                    low_inp_level, md_inp_level, hi_inp_level):
+    """
+    generates a random visual input to neural network with parameters given
+    
+    """
+    
+    for k1 in range(len(ri2)):
+        modules['lgns'][8][ri2[k1][0]][ri2[k1][1]][0] = md_inp_level
+
+    
+def delay_period(modules,
+                 low_att_level, hi_att_level,
+                 low_inp_level, md_inp_level, hi_inp_level):
+    
+    """
+    modifies neural network with delay period parameters given
+
+    """
+    
+    modules['atts'][8][0][0][0] = hi_att_level
+    
+    # turn off input stimulus but leave small level of activity there
+    for x in range(modules['lgns'][0]):
+        for y in range(modules['lgns'][1]):
+            modules['lgns'][8][x][y][0] = low_inp_level
+
 def intertrial_interval(modules,
                         low_att_level, hi_att_level,
-                        low_inp_level, hi_inp_level):
+                        low_inp_level, md_inp_level, hi_inp_level):
+    """
+    resets the visual inputs and short-term memory using given parameters
+
+    """
+
     # reset D1
     for x in range(modules['efd1'][0]):
         for y in range(modules['efd1'][1]):
@@ -108,17 +158,20 @@ def intertrial_interval(modules,
 
     # turn attention to 'LO', as the current trial has ended
     modules['atts'][8][0][0][0] = low_att_level
+
     
+# define a dictionary of simulation events functions, each associated with
+# a specific simulation timestep
 simulation_events = {        
             
-    '200': o_shape,
-                
+    '200': o_shape,                
+
     '400': delay_period,
 
     '700': o_shape,
 
-    '900': intertrial_interval,
-             
+    '900': intertrial_interval,             
+
     '1300': o_shape,
 
     '1500': delay_period,
@@ -135,4 +188,31 @@ simulation_events = {
 
     '3100': intertrial_interval,
 
+    '3500': random_shape_1,
+
+    '3700': delay_period,
+
+    '4000': random_shape_1,
+
+    '4200': intertrial_interval,
+
+    '4600': random_shape_1,
+
+    '4800': delay_period,
+
+    '5100': random_shape_2,
+
+    '5300': intertrial_interval,
+
+    '5700': random_shape_2,
+
+    '5900': delay_period,
+
+    '6200': random_shape_2,
+
+    '6400': intertrial_interval,
+
 }
+
+
+##- EoF -##

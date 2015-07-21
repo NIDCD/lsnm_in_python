@@ -444,6 +444,9 @@ class TaskThread(QtCore.QThread):
 
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network
+        # NOTE: This is the main data structure holding all of the LSNM network values
+        # at each timestep, including neural activity, connections weights, neural
+        # population model parameters, synaptic activity, module dimensions, among others.
         modules = []
 
         # open the input file containing module declarations (i.e., the 'model'), then
@@ -490,8 +493,29 @@ class TaskThread(QtCore.QThread):
             # now append that matrix to the current module
             module.append(unit_matrix)
 
-        # now turn the list modules into a dictionary so we can access each module using the
+        # now turn the list modules into a Python dictionary so we can access each module using the
         # module name as key (this makes index 0 dissapear and shifts all other list indexes by 1)
+        # Therefore, the key to the dictionary 'modules' is now the name of the LSNM module
+        # The indexes of each module list are as follows:
+        # 0: module's X dimension (number of columns)
+        # 1: module's Y dimension (number of rows)
+        # 2: activation rule (neural population equation) or 'clamp' (constant value)
+        # 3: Wilson-Cowan parameter 'threshold'
+        # 4: Wilson-Cowan parameter 'Delta'
+        # 5: Wilson-Cowan parameter 'delta'
+        # 6: Wilson-Cowan parameter 'K'
+        # 7: Wilson-Cowan parameter 'N'
+        # 8: A python list of lists of X x Y elements containing the follwing elements:
+        #     0: neural activity of current unit
+        #     1: Sum of all inputs to current unit
+        #     2: Sum of excitatory inputs to current unit
+        #     3: Sum of inhibitory inputs to current unit
+        #     4: a Python list of lists containing all outgoing weight of current unit, There as
+        #        many elements as outgoing connection weights and each element contains the following:
+        #         0: destination module (where is the connection going to)
+        #         1: X coordinate of location of destination unit
+        #         2: Y coordinate of location of destination unit
+        #         3: Connection weight
         modules = {m[0]: m[1:] for m in modules}
 
         # read file that contains list of weight files, store the list of files in a python list,
@@ -642,9 +666,10 @@ class TaskThread(QtCore.QThread):
             # network at current timestep t
             current_event=simulation_events.get(str(t))
 
-            # then, introduce the event!
+            # then, introduce the event (if any was found)!
             if current_event is not None:
-                current_event(modules, lo_att_level, hi_att_level, lo_inp_level, hi_inp_level)
+                current_event(modules, lo_att_level, hi_att_level,
+                              lo_inp_level, md_inp_level, hi_inp_level)
             
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
             # at destination nodes using destination units and connecting weights provided
