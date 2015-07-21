@@ -1,16 +1,19 @@
 #!/usr/bin/python
 #
-# The following script replicates the results of Horwitz, Warner et al (2005), Figure 3.
+# The following script replicates the results of Horwitz, Warner et al (2005), Figures 4 and 5.
 #
-# There are 6 trials total: 3 DMS trials and 3 control trials
+# There are 36 trials total, divided in groups of 6 trials: each group has a level of attention
+# that increases from 0.2 to 0.3 in steps of 0.02.
 #
-# Total number of timesteps is 6600 = 33 seconds
-#
-# The number of timesteps in each trial is 1100 = 5.5 seconds
+# Within each attention level, we have 3 DMS trials and 3 control trials
 #
 # The DMS trials are MATCH, MISMATCH, MATCH. The attention parameter in DMS trials is 0.3
 # The control trials are 'passive viewing': random shapes are presented and low attention (0.05)
 # is used. Passive viewing trials are also organized as MATCH, MISMATCH, MATCH.
+#
+# Total number of timesteps is 39600 = 198 seconds
+#
+# The number of timesteps in each trial is 1100 = 5.5 seconds
 #
 # The first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in Horwitz
 # et al (2005)
@@ -19,9 +22,6 @@
 # we are assuming that each simulation timestep is equivalent to 5 milliseconds
 # of real time. 
                 
-# now we present S1 by manually inserting it into the MGN module and leaving S1 there
-# for 200 timesteps (1 second).
-
 lo_att_level = 0.05
 hi_att_level = 0.3
 lo_inp_level = 0.05
@@ -40,7 +40,7 @@ ri2 = zip(*rand_indeces2)
         
 def o_shape(modules,
             low_att_level, hi_att_level,
-            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+            low_inp_level, md_inp_level, hi_inp_level):
     """
     generates an o-shaped visual input to neural network with parameters given"
     
@@ -71,7 +71,7 @@ def o_shape(modules,
     
 def t_shape(modules,
             low_att_level, hi_att_level,
-            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+            low_inp_level, md_inp_level, hi_inp_level):
     
     """
     generates a t-shaped visual input to neural network with parameters given"
@@ -102,7 +102,7 @@ def t_shape(modules,
 
 def random_shape_1(modules,
                     low_att_level, hi_att_level,
-                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+                    low_inp_level, md_inp_level, hi_inp_level):
     """
     generates a random visual input to neural network with parameters given
     
@@ -112,7 +112,7 @@ def random_shape_1(modules,
     
 def random_shape_2(modules,
                     low_att_level, hi_att_level,
-                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+                    low_inp_level, md_inp_level, hi_inp_level):
     """
     generates a random visual input to neural network with parameters given
     
@@ -124,7 +124,7 @@ def random_shape_2(modules,
     
 def delay_period(modules,
                  low_att_level, hi_att_level,
-                 low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+                 low_inp_level, md_inp_level, hi_inp_level):
     
     """
     modifies neural network with delay period parameters given
@@ -140,7 +140,7 @@ def delay_period(modules,
 
 def intertrial_interval(modules,
                         low_att_level, hi_att_level,
-                        low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+                        low_inp_level, md_inp_level, hi_inp_level):
     """
     resets the visual inputs and short-term memory using given parameters
 
