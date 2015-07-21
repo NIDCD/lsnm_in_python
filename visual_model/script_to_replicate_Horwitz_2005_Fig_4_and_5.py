@@ -23,10 +23,11 @@
 # of real time. 
                 
 lo_att_level = 0.05
-hi_att_level = 0.3
+hi_att_level = 0.2
 lo_inp_level = 0.05
-md_inp_level = 0.54
+md_inp_level = 0.7
 hi_inp_level = 0.7
+att_step = 0.02 
 
 # the following is random shape1, this shape has the same luminance as an 'O'
 rand_shape1 = rdm.sample(range(81),18)
@@ -39,7 +40,7 @@ rand_indeces2 = np.unravel_index(rand_shape2,(9,9))
 ri2 = zip(*rand_indeces2)
         
 def o_shape(modules,
-            low_att_level, hi_att_level,
+            low_att_level, hi_att_level, att_step,
             low_inp_level, md_inp_level, hi_inp_level):
     """
     generates an o-shaped visual input to neural network with parameters given"
@@ -70,7 +71,7 @@ def o_shape(modules,
     modules['lgns'][8][7][8][0] = hi_inp_level
     
 def t_shape(modules,
-            low_att_level, hi_att_level,
+            low_att_level, hi_att_level, att_step,
             low_inp_level, md_inp_level, hi_inp_level):
     
     """
@@ -101,7 +102,7 @@ def t_shape(modules,
     modules['lgns'][8][6][6][0] = 0.7
 
 def random_shape_1(modules,
-                    low_att_level, hi_att_level,
+                    low_att_level, hi_att_level, att_step,
                     low_inp_level, md_inp_level, hi_inp_level):
     """
     generates a random visual input to neural network with parameters given
@@ -111,7 +112,7 @@ def random_shape_1(modules,
         modules['lgns'][8][ri1[k1][0]][ri1[k1][1]][0] = md_inp_level
     
 def random_shape_2(modules,
-                    low_att_level, hi_att_level,
+                    low_att_level, hi_att_level, att_step,
                     low_inp_level, md_inp_level, hi_inp_level):
     """
     generates a random visual input to neural network with parameters given
@@ -123,7 +124,7 @@ def random_shape_2(modules,
 
     
 def delay_period(modules,
-                 low_att_level, hi_att_level,
+                 low_att_level, hi_att_level, att_step,
                  low_inp_level, md_inp_level, hi_inp_level):
     
     """
@@ -139,7 +140,7 @@ def delay_period(modules,
             modules['lgns'][8][x][y][0] = low_inp_level
 
 def intertrial_interval(modules,
-                        low_att_level, hi_att_level,
+                        low_att_level, hi_att_level, att_step
                         low_inp_level, md_inp_level, hi_inp_level):
     """
     resets the visual inputs and short-term memory using given parameters

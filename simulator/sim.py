@@ -668,7 +668,7 @@ class TaskThread(QtCore.QThread):
 
             # then, introduce the event (if any was found)!
             if current_event is not None:
-                current_event(modules, lo_att_level, hi_att_level,
+                current_event(modules, lo_att_level, hi_att_level, att_step,
                               lo_inp_level, md_inp_level, hi_inp_level, ri1, ri2)
             
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
