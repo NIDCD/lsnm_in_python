@@ -286,9 +286,6 @@ class TaskThread(QtCore.QThread):
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
 
-        # define length of TVB simulation in ms
-        TVB_simulation_length = 16500
-
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
         TVB_global_coupling_strength = 0.0042
@@ -322,8 +319,11 @@ class TaskThread(QtCore.QThread):
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
-        LSNM_simulation_time = 3300
+        LSNM_simulation_time = 6600
         
+        # define length of TVB simulation in ms
+        TVB_simulation_length = LSNM_simulation_time * 5
+
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
         #TVB_sampling_rate = int(round(88000 / simulation_time))
