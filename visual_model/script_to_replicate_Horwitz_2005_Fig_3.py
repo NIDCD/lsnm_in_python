@@ -21,126 +21,116 @@
                 
 # now we present S1 by manually inserting it into the MGN module and leaving S1 there
 # for 200 timesteps (1 second).
-
-lo_att_level = 0.05
-hi_att_level = 0.3
-lo_inp_level = 0.05
-md_inp_level = 0.54
-hi_inp_level = 0.7
+        
+# Define list of parameters the the script is going to need to modify the LSNM neural network
+# They are organized in the following order:
+# [lo_att_level, hi_att_level, lo_inp_level, hi_inp_level, att_step, ri1, ri2]
+script_params = [0.05, 0.3, 0.05, 0.7, 0.0, [], []]
 
 # the following is random shape1, this shape has the same luminance as an 'O'
 rand_shape1 = rdm.sample(range(81),18)
 rand_indeces1 = np.unravel_index(rand_shape1,(9,9))
-ri1 = zip(*rand_indeces1)
+script_params[5] = zip(*rand_indeces1)
 
 # A second random shape in inserted for a mismatch
 rand_shape2 = rdm.sample(range(81),18)
 rand_indeces2 = np.unravel_index(rand_shape2,(9,9))
-ri2 = zip(*rand_indeces2)
+script_params[6] = zip(*rand_indeces2)
         
-def o_shape(modules,
-            low_att_level, hi_att_level,
-            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def o_shape(modules, script_params):
+    
     """
-    generates an o-shaped visual input to neural network with parameters given"
+    generates an o-shaped visual input to neural network with parameters given
     
     """
     
-    modules['atts'][8][0][0][0] = hi_att_level
+    modules['atts'][8][0][0][0] = script_params[1]
     
     # insert the inputs stimulus into LGN and see what happens
     # the following stimulus is an 'O' shape
-    modules['lgns'][8][4][3][0] = hi_inp_level
-    modules['lgns'][8][4][4][0] = hi_inp_level
-    modules['lgns'][8][4][5][0] = hi_inp_level
-    modules['lgns'][8][4][6][0] = hi_inp_level
-    modules['lgns'][8][4][7][0] = hi_inp_level
-    modules['lgns'][8][4][8][0] = hi_inp_level
-    modules['lgns'][8][8][3][0] = hi_inp_level
-    modules['lgns'][8][8][4][0] = hi_inp_level
-    modules['lgns'][8][8][5][0] = hi_inp_level
-    modules['lgns'][8][8][6][0] = hi_inp_level
-    modules['lgns'][8][8][7][0] = hi_inp_level
-    modules['lgns'][8][8][8][0] = hi_inp_level
-    modules['lgns'][8][5][3][0] = hi_inp_level
-    modules['lgns'][8][6][3][0] = hi_inp_level
-    modules['lgns'][8][7][3][0] = hi_inp_level
-    modules['lgns'][8][5][8][0] = hi_inp_level
-    modules['lgns'][8][6][8][0] = hi_inp_level
-    modules['lgns'][8][7][8][0] = hi_inp_level
+    modules['lgns'][8][4][3][0] = script_params[3]
+    modules['lgns'][8][4][4][0] = script_params[3]
+    modules['lgns'][8][4][5][0] = script_params[3]
+    modules['lgns'][8][4][6][0] = script_params[3]
+    modules['lgns'][8][4][7][0] = script_params[3]
+    modules['lgns'][8][4][8][0] = script_params[3]
+    modules['lgns'][8][8][3][0] = script_params[3]
+    modules['lgns'][8][8][4][0] = script_params[3]
+    modules['lgns'][8][8][5][0] = script_params[3]
+    modules['lgns'][8][8][6][0] = script_params[3]
+    modules['lgns'][8][8][7][0] = script_params[3]
+    modules['lgns'][8][8][8][0] = script_params[3]
+    modules['lgns'][8][5][3][0] = script_params[3]
+    modules['lgns'][8][6][3][0] = script_params[3]
+    modules['lgns'][8][7][3][0] = script_params[3]
+    modules['lgns'][8][5][8][0] = script_params[3]
+    modules['lgns'][8][6][8][0] = script_params[3]
+    modules['lgns'][8][7][8][0] = script_params[3]
     
-def t_shape(modules,
-            low_att_level, hi_att_level,
-            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def t_shape(modules, script_params):
     
     """
     generates a t-shaped visual input to neural network with parameters given"
     
     """
-    modules['atts'][8][0][0][0] = hi_att_level
+    modules['atts'][8][0][0][0] = script_params[1]
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is a 'T' shape
-    modules['lgns'][8][3][0][0] = 0.7
-    modules['lgns'][8][3][1][0] = 0.7
-    modules['lgns'][8][3][2][0] = 0.7
-    modules['lgns'][8][3][3][0] = 0.7
-    modules['lgns'][8][3][4][0] = 0.7
-    modules['lgns'][8][3][5][0] = 0.7
-    modules['lgns'][8][3][6][0] = 0.7
-    modules['lgns'][8][3][7][0] = 0.7
-    modules['lgns'][8][0][6][0] = 0.7
-    modules['lgns'][8][1][6][0] = 0.7
-    modules['lgns'][8][1][7][0] = 0.7
-    modules['lgns'][8][2][6][0] = 0.7
-    modules['lgns'][8][2][7][0] = 0.7
-    modules['lgns'][8][4][6][0] = 0.7
-    modules['lgns'][8][4][7][0] = 0.7
-    modules['lgns'][8][5][6][0] = 0.7
-    modules['lgns'][8][5][7][0] = 0.7
-    modules['lgns'][8][6][6][0] = 0.7
+    modules['lgns'][8][3][0][0] = script_params[3]
+    modules['lgns'][8][3][1][0] = script_params[3]
+    modules['lgns'][8][3][2][0] = script_params[3]
+    modules['lgns'][8][3][3][0] = script_params[3]
+    modules['lgns'][8][3][4][0] = script_params[3]
+    modules['lgns'][8][3][5][0] = script_params[3]
+    modules['lgns'][8][3][6][0] = script_params[3]
+    modules['lgns'][8][3][7][0] = script_params[3]
+    modules['lgns'][8][0][6][0] = script_params[3]
+    modules['lgns'][8][1][6][0] = script_params[3]
+    modules['lgns'][8][1][7][0] = script_params[3]
+    modules['lgns'][8][2][6][0] = script_params[3]
+    modules['lgns'][8][2][7][0] = script_params[3]
+    modules['lgns'][8][4][6][0] = script_params[3]
+    modules['lgns'][8][4][7][0] = script_params[3]
+    modules['lgns'][8][5][6][0] = script_params[3]
+    modules['lgns'][8][5][7][0] = script_params[3]
+    modules['lgns'][8][6][6][0] = script_params[3]
 
-def random_shape_1(modules,
-                    low_att_level, hi_att_level,
-                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def random_shape_1(modules, script_params):
     """
     generates a random visual input to neural network with parameters given
     
     """
-    for k1 in range(len(ri1)):
-        modules['lgns'][8][ri1[k1][0]][ri1[k1][1]][0] = md_inp_level
+    modules['atts'][8][0][0][0] = script_params[0]
+
+    for k1 in range(len(script_params[5])):
+        modules['lgns'][8][script_params[5][k1][0]][script_params[5][k1][1]][0] = script_params[3]
     
-def random_shape_2(modules,
-                    low_att_level, hi_att_level,
-                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def random_shape_2(modules, script_params):
     """
     generates a random visual input to neural network with parameters given
     
     """
     
-    for k1 in range(len(ri2)):
-        modules['lgns'][8][ri2[k1][0]][ri2[k1][1]][0] = md_inp_level
+    modules['atts'][8][0][0][0] = script_params[0]
+
+    for k1 in range(len(script_params[6])):
+        modules['lgns'][8][script_params[6][k1][0]][script_params[6][k1][1]][0] = script_params[3]
 
     
-def delay_period(modules,
-                 low_att_level, hi_att_level,
-                 low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def delay_period(modules, script_params):
     
     """
     modifies neural network with delay period parameters given
 
     """
     
-    modules['atts'][8][0][0][0] = hi_att_level
-    
     # turn off input stimulus but leave small level of activity there
     for x in range(modules['lgns'][0]):
         for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = low_inp_level
+            modules['lgns'][8][x][y][0] = script_params[2]
 
-def intertrial_interval(modules,
-                        low_att_level, hi_att_level,
-                        low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+def intertrial_interval(modules, script_params):
     """
     resets the visual inputs and short-term memory using given parameters
 
@@ -149,15 +139,23 @@ def intertrial_interval(modules,
     # reset D1
     for x in range(modules['efd1'][0]):
         for y in range(modules['efd1'][1]):
-            modules['efd1'][8][x][y][0] = 0.25
+            modules['efd1'][8][x][y][0] = script_params[2]
 	    
     # turn off input stimulus but leave small level of activity there
     for x in range(modules['lgns'][0]):
         for y in range(modules['lgns'][1]):
-            modules['lgns'][8][x][y][0] = low_inp_level
+            modules['lgns'][8][x][y][0] = script_params[2]
 
     # turn attention to 'LO', as the current trial has ended
-    modules['atts'][8][0][0][0] = low_att_level
+    modules['atts'][8][0][0][0] = script_params[0]
+
+def increase_attention(modules, script_params):
+    """
+    Increases 'hi_att_level' by a step given by 'att_step'
+
+    """
+
+    script_params[1] = script_params[1] + script_params[4]
 
     
 # define a dictionary of simulation events functions, each associated with
@@ -166,12 +164,15 @@ simulation_events = {
             
     '200': o_shape,                
 
+    '399': increase_attention,
     '400': delay_period,
 
+    '699': increase_attention,
     '700': o_shape,
 
     '900': intertrial_interval,             
 
+    '1299': increase_attention,
     '1300': o_shape,
 
     '1500': delay_period,

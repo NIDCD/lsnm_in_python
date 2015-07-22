@@ -1,19 +1,16 @@
 #!/usr/bin/python
 #
-# The following script replicates the results of Horwitz, Warner et al (2005), Figures 4 and 5.
+# The following script replicates the results of Horwitz, Warner et al (2005), Figure 3.
 #
-# There are 36 trials total, divided in groups of 6 trials: each group has a level of attention
-# that increases from 0.2 to 0.3 in steps of 0.02.
+# There are 6 trials total: 3 DMS trials and 3 control trials
 #
-# Within each attention level, we have 3 DMS trials and 3 control trials
+# Total number of timesteps is 6600 = 33 seconds
+#
+# The number of timesteps in each trial is 1100 = 5.5 seconds
 #
 # The DMS trials are MATCH, MISMATCH, MATCH. The attention parameter in DMS trials is 0.3
 # The control trials are 'passive viewing': random shapes are presented and low attention (0.05)
 # is used. Passive viewing trials are also organized as MATCH, MISMATCH, MATCH.
-#
-# Total number of timesteps is 39600 = 198 seconds
-#
-# The number of timesteps in each trial is 1100 = 5.5 seconds
 #
 # The first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in Horwitz
 # et al (2005)
@@ -22,10 +19,13 @@
 # we are assuming that each simulation timestep is equivalent to 5 milliseconds
 # of real time. 
                 
+# now we present S1 by manually inserting it into the MGN module and leaving S1 there
+# for 200 timesteps (1 second).
+        
 lo_att_level = 0.05
-hi_att_level = 0.2
+hi_att_level = 0.3
 lo_inp_level = 0.05
-md_inp_level = 0.7
+md_inp_level = 0.54
 hi_inp_level = 0.7
 att_step = 0.02 
 
@@ -41,7 +41,7 @@ ri2 = zip(*rand_indeces2)
         
 def o_shape(modules,
             low_att_level, hi_att_level, att_step,
-            low_inp_level, md_inp_level, hi_inp_level):
+            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     """
     generates an o-shaped visual input to neural network with parameters given"
     
@@ -72,7 +72,7 @@ def o_shape(modules,
     
 def t_shape(modules,
             low_att_level, hi_att_level, att_step,
-            low_inp_level, md_inp_level, hi_inp_level):
+            low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     
     """
     generates a t-shaped visual input to neural network with parameters given"
@@ -82,28 +82,28 @@ def t_shape(modules,
 
     # insert the inputs stimulus into LGN and see what happens
     # the following is a 'T' shape
-    modules['lgns'][8][3][0][0] = 0.7
-    modules['lgns'][8][3][1][0] = 0.7
-    modules['lgns'][8][3][2][0] = 0.7
-    modules['lgns'][8][3][3][0] = 0.7
-    modules['lgns'][8][3][4][0] = 0.7
-    modules['lgns'][8][3][5][0] = 0.7
-    modules['lgns'][8][3][6][0] = 0.7
-    modules['lgns'][8][3][7][0] = 0.7
-    modules['lgns'][8][0][6][0] = 0.7
-    modules['lgns'][8][1][6][0] = 0.7
-    modules['lgns'][8][1][7][0] = 0.7
-    modules['lgns'][8][2][6][0] = 0.7
-    modules['lgns'][8][2][7][0] = 0.7
-    modules['lgns'][8][4][6][0] = 0.7
-    modules['lgns'][8][4][7][0] = 0.7
-    modules['lgns'][8][5][6][0] = 0.7
-    modules['lgns'][8][5][7][0] = 0.7
-    modules['lgns'][8][6][6][0] = 0.7
+    modules['lgns'][8][3][0][0] = hi_inp_level
+    modules['lgns'][8][3][1][0] = hi_inp_level
+    modules['lgns'][8][3][2][0] = hi_inp_level
+    modules['lgns'][8][3][3][0] = hi_inp_level
+    modules['lgns'][8][3][4][0] = hi_inp_level
+    modules['lgns'][8][3][5][0] = hi_inp_level
+    modules['lgns'][8][3][6][0] = hi_inp_level
+    modules['lgns'][8][3][7][0] = hi_inp_level
+    modules['lgns'][8][0][6][0] = hi_inp_level
+    modules['lgns'][8][1][6][0] = hi_inp_level
+    modules['lgns'][8][1][7][0] = hi_inp_level
+    modules['lgns'][8][2][6][0] = hi_inp_level
+    modules['lgns'][8][2][7][0] = hi_inp_level
+    modules['lgns'][8][4][6][0] = hi_inp_level
+    modules['lgns'][8][4][7][0] = hi_inp_level
+    modules['lgns'][8][5][6][0] = hi_inp_level
+    modules['lgns'][8][5][7][0] = hi_inp_level
+    modules['lgns'][8][6][6][0] = hi_inp_level
 
 def random_shape_1(modules,
                     low_att_level, hi_att_level, att_step,
-                    low_inp_level, md_inp_level, hi_inp_level):
+                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     """
     generates a random visual input to neural network with parameters given
     
@@ -113,7 +113,7 @@ def random_shape_1(modules,
     
 def random_shape_2(modules,
                     low_att_level, hi_att_level, att_step,
-                    low_inp_level, md_inp_level, hi_inp_level):
+                    low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     """
     generates a random visual input to neural network with parameters given
     
@@ -125,14 +125,12 @@ def random_shape_2(modules,
     
 def delay_period(modules,
                  low_att_level, hi_att_level, att_step,
-                 low_inp_level, md_inp_level, hi_inp_level):
+                 low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     
     """
     modifies neural network with delay period parameters given
 
     """
-    
-    modules['atts'][8][0][0][0] = hi_att_level
     
     # turn off input stimulus but leave small level of activity there
     for x in range(modules['lgns'][0]):
@@ -140,8 +138,8 @@ def delay_period(modules,
             modules['lgns'][8][x][y][0] = low_inp_level
 
 def intertrial_interval(modules,
-                        low_att_level, hi_att_level, att_step
-                        low_inp_level, md_inp_level, hi_inp_level):
+                        low_att_level, hi_att_level, att_step,
+                        low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
     """
     resets the visual inputs and short-term memory using given parameters
 
@@ -159,6 +157,18 @@ def intertrial_interval(modules,
 
     # turn attention to 'LO', as the current trial has ended
     modules['atts'][8][0][0][0] = low_att_level
+
+def increase_attention(modules,
+                        low_att_level, hi_att_level, att_step,
+                        low_inp_level, md_inp_level, hi_inp_level, ri1, ri2):
+    """
+    Increases 'hi_att_level' by a step given by 'att_step'
+
+    """
+
+    hi_att_level = hi_att_level + att_step
+
+    return hi_att_level
 
     
 # define a dictionary of simulation events functions, each associated with

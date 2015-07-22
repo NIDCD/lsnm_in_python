@@ -320,7 +320,7 @@ class TaskThread(QtCore.QThread):
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
         LSNM_simulation_time = 6600
-        
+
         # define length of TVB simulation in ms
         TVB_simulation_length = LSNM_simulation_time * 5
 
@@ -667,10 +667,13 @@ class TaskThread(QtCore.QThread):
             current_event=simulation_events.get(str(t))
 
             # then, introduce the event (if any was found)!
+            # Note that 'modules' is defined within 'sim.py', whereas 'script_params' is
+            # defined within the simulation script uploaded at runtime
             if current_event is not None:
-                current_event(modules, lo_att_level, hi_att_level, att_step,
-                              lo_inp_level, md_inp_level, hi_inp_level, ri1, ri2)
-            
+                current_event(modules, script_params)
+
+            print script_params[1]
+
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
             # at destination nodes using destination units and connecting weights provided
             for m in modules.keys():
