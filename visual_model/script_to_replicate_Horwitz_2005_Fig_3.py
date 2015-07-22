@@ -164,15 +164,12 @@ simulation_events = {
             
     '200': o_shape,                
 
-    '399': increase_attention,
     '400': delay_period,
 
-    '699': increase_attention,
     '700': o_shape,
 
     '900': intertrial_interval,             
 
-    '1299': increase_attention,
     '1300': o_shape,
 
     '1500': delay_period,
