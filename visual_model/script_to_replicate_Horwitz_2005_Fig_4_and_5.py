@@ -429,7 +429,7 @@ simulation_events = {
 
     '34300': o_shape,
 
-    '43500': delay_period,
+    '34500': delay_period,
 
     '34800': t_shape,
 
