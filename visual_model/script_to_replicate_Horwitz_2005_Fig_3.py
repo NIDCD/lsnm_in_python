@@ -25,7 +25,7 @@
 # Define list of parameters the the script is going to need to modify the LSNM neural network
 # They are organized in the following order:
 # [lo_att_level, hi_att_level, lo_inp_level, hi_inp_level, att_step, ri1, ri2]
-script_params = [0.05, 0.3, 0.05, 0.7, 0.0, [], []]
+script_params = [0.05, 0.3, 0.05, 0.7, 0.02, [], []]
 
 # the following is random shape1, this shape has the same luminance as an 'O'
 rand_shape1 = rdm.sample(range(81),18)
