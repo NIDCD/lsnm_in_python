@@ -672,7 +672,7 @@ class TaskThread(QtCore.QThread):
             if current_event is not None:
                 current_event(modules, script_params)
 
-            print script_params[1]
+            print t, script_params[1]
 
             # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
             # at destination nodes using destination units and connecting weights provided
