@@ -59,6 +59,24 @@ from scipy.stats import poisson
 
 from scipy import signal
 
+# what are the locations of relevant TVB nodes within TVB array?
+#v1_loc = 345
+#v4_loc = 393
+#it_loc = 413
+#pf_loc =  74
+# Use all 10 nodes within rPCAL
+v1_loc = range(344, 354)
+
+# Use all 22 nodes within rFUS
+v4_loc = range(390, 412)
+
+# Use all 6 nodes within rPARH
+it_loc = range(412, 417)
+
+# Use all 22 nodes within rRMF
+pf_loc =  range(57, 79)
+
+
 # define constants needed for hemodynamic function
 lambda_ = 6.0
 
@@ -89,70 +107,68 @@ synaptic_timesteps = experiment_length
 # define an array with location of control trials, and another array
 # with location of task-related trials, relative to
 # an array that contains all trials (task-related trials included)
-control_trials = [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35]
-dms_trials =     [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34]
+control_trials = [3,4,5,9,10,11,15,16,17,21,22,23,27,28,29,33,34,35]
+dms_trials =     [0,1,2,6,7,8,12,13,14,18,19,20,24,25,26,30,31,32]
+
+
+# Load TVB nodes synaptic activity
+tvb_synaptic = np.load("tvb_synaptic.npy")
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('../visual_model/output/ev1h_synaptic.out')
-ev1v = np.loadtxt('../visual_model/output/ev1v_synaptic.out')
-iv1h = np.loadtxt('../visual_model/output/iv1h_synaptic.out')
-iv1v = np.loadtxt('../visual_model/output/iv1v_synaptic.out')
+ev1h = np.loadtxt('ev1h_synaptic.out')
+ev1v = np.loadtxt('ev1v_synaptic.out')
+iv1h = np.loadtxt('iv1h_synaptic.out')
+iv1v = np.loadtxt('iv1v_synaptic.out')
 
 # Load TVB V1 host node synaptic activity into numpy array
-tvb_ev1=np.loadtxt('../visual_model/output/ev1v_tvb_syn.out')
-tvb_iv1=np.loadtxt('../visual_model/output/iv1v_tvb_syn.out')
+tvb_v1 = tvb_synaptic[:, v1_loc[0]:v1_loc[-1]]
 
 # Load V4 synaptic activity data files into a numpy array
-ev4h = np.loadtxt('../visual_model/output/ev4h_synaptic.out')
-ev4v = np.loadtxt('../visual_model/output/ev4v_synaptic.out')
-ev4c = np.loadtxt('../visual_model/output/ev4c_synaptic.out')
-iv4h = np.loadtxt('../visual_model/output/iv4h_synaptic.out')
-iv4v = np.loadtxt('../visual_model/output/iv4v_synaptic.out')
-iv4c = np.loadtxt('../visual_model/output/iv4c_synaptic.out')
+ev4h = np.loadtxt('ev4h_synaptic.out')
+ev4v = np.loadtxt('ev4v_synaptic.out')
+ev4c = np.loadtxt('ev4c_synaptic.out')
+iv4h = np.loadtxt('iv4h_synaptic.out')
+iv4v = np.loadtxt('iv4v_synaptic.out')
+iv4c = np.loadtxt('iv4c_synaptic.out')
 
-# Load TVB V4 host node synaptic activity into numpy array
-tvb_ev4=np.loadtxt('../visual_model/output/ev4v_tvb_syn.out')
-tvb_iv4=np.loadtxt('../visual_model/output/iv4v_tvb_syn.out')
+# Load TVB V1 host node synaptic activity into numpy array
+tvb_v4 = tvb_synaptic[:, v4_loc[0]:v4_loc[-1]]
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('../visual_model/output/exss_synaptic.out')
-inss = np.loadtxt('../visual_model/output/inss_synaptic.out')
+exss = np.loadtxt('exss_synaptic.out')
+inss = np.loadtxt('inss_synaptic.out')
 
 # Load TVB IT host node synaptic activity into numpy array
-tvb_eit=np.loadtxt('../visual_model/output/exss_tvb_syn.out')
-tvb_iit=np.loadtxt('../visual_model/output/inss_tvb_syn.out')
+tvb_it = tvb_synaptic[:, it_loc[0]:v4_loc[-1]]
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('../visual_model/output/efd1_synaptic.out')
-ifd1 = np.loadtxt('../visual_model/output/ifd1_synaptic.out')
+efd1 = np.loadtxt('efd1_synaptic.out')
+ifd1 = np.loadtxt('ifd1_synaptic.out')
 
 # Load TVB D1 host node synaptic activity into numpy array
-tvb_ed1=np.loadtxt('../visual_model/output/efd1_tvb_syn.out')
-tvb_id1=np.loadtxt('../visual_model/output/ifd1_tvb_syn.out')
+tvb_pf = tvb_synaptic[:, pf_loc[0]:pf_loc[-1]]
 
 # Load D2 synaptic activity data files into a numpy array
-efd2 = np.loadtxt('../visual_model/output/efd2_synaptic.out')
-ifd2 = np.loadtxt('../visual_model/output/ifd2_synaptic.out')
-
-# Load TVB D2 host node synaptic activity into numpy array
-tvb_ed2=np.loadtxt('../visual_model/output/efd2_tvb_syn.out')
-tvb_id2=np.loadtxt('../visual_model/output/ifd2_tvb_syn.out')
+efd2 = np.loadtxt('efd2_synaptic.out')
+ifd2 = np.loadtxt('ifd2_synaptic.out')
 
 # Load FS synaptic activity data files into a numpy array
-exfs = np.loadtxt('../visual_model/output/exfs_synaptic.out')
-infs = np.loadtxt('../visual_model/output/infs_synaptic.out')
-
-# Load TVB FS host node synaptic activity into numpy array
-tvb_efs=np.loadtxt('../visual_model/output/exfs_tvb_syn.out')
-tvb_ifs=np.loadtxt('../visual_model/output/infs_tvb_syn.out')
+exfs = np.loadtxt('exfs_synaptic.out')
+infs = np.loadtxt('infs_synaptic.out')
 
 # Load FR synaptic activity data files into a numpy array
-exfr = np.loadtxt('../visual_model/output/exfr_synaptic.out')
-infr = np.loadtxt('../visual_model/output/infr_synaptic.out')
+exfr = np.loadtxt('exfr_synaptic.out')
+infr = np.loadtxt('infr_synaptic.out')
 
-# Load TVB FR host node synaptic activity into numpy array
-tvb_efr=np.loadtxt('../visual_model/output/exfr_tvb_syn.out')
-tvb_ifr=np.loadtxt('../visual_model/output/infr_tvb_syn.out')
+# add all units WITHIN each region together across space to calculate
+# synaptic activity in EACH brain region
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_v1, axis=1)
+v4 = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_v4, axis=1)
+it = np.sum(exss + inss, axis = 1) + np.sum(tvb_it, axis=1)
+d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_pf, axis=1)
+d2 = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_pf, axis=1)
+fs = np.sum(exfs + infs, axis = 1) + np.sum(tvb_pf, axis=1)
+fr = np.sum(exfr + infr, axis = 1) + np.sum(tvb_pf, axis=1)
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)
@@ -168,26 +184,6 @@ h = poisson.pmf(time_in_seconds, lambda_)
 # resample the array containing the poisson to increase its size and match the size of
 # the synaptic activity array
 h = signal.resample(h, synaptic_timesteps)
-
-# add all units WITHIN each region together across space to calculate
-# synaptic activity in EACH brain region
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + tvb_ev1 + tvb_iv1
-v4 = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + tvb_ev4 + tvb_iv4
-it = np.sum(exss + inss, axis = 1) + tvb_eit + tvb_iit
-d1 = np.sum(efd1 + ifd1, axis = 1) + tvb_ed1 + tvb_ed1
-d2 = np.sum(efd2 + ifd2, axis = 1) + tvb_ed2 + tvb_id2
-fs = np.sum(exfs + infs, axis = 1) + tvb_efs + tvb_ifs
-fr = np.sum(exfr + infr, axis = 1) + tvb_efr + tvb_ifr
-
-# Truncate the final part of time series to match the length of the experiment
-# (they are supposed to match anyway, so typically there will be nothing to truncate)
-v1 = v1[0:experiment_length]
-v4 = v4[0:experiment_length]
-it = it[0:experiment_length]
-d1 = d1[0:experiment_length]
-d2 = d2[0:experiment_length]
-fs = fs[0:experiment_length]
-fr = fr[0:experiment_length]
 
 # now, we need to convolve the synaptic activity with a hemodynamic delay
 # function and sample the array at Tr regular intervals

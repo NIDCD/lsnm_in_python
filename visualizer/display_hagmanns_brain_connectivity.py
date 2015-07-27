@@ -48,8 +48,14 @@ from tvb.simulator.lab import *
 from tvb.simulator.plot.tools import mlab
 
 # build an array of TVB nodes that you want to look at closely to visualize what is
-# conected to what
+# connected to what
 nodes_to_be_examined = [345, 393, 413, 74] 
+
+# Define the hypothetical Talairach locations of each LSNM visual modules
+v1 = [18,-88,8]
+v4 = [30,-72,-12]
+it = [28,-36,-8]
+vpf = [42,26,20]
 
 # Load connectivity from Hagmann's brain
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -59,8 +65,14 @@ centres = white_matter.centres
 region_centres = mlab.points3d(centres[:, 0], 
                                centres[:, 1], 
                                centres[:, 2],
-                               color=(0.4, 0.4, 0.4),
+                               color=(1, 1, 1),
                                scale_factor = 2.)
+
+# Now plot the hypothetical locations of LSNM visual modules
+v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 5.)
+v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 5.)
+it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 5.)
+vpf_module = mlab.points3d(vpf[0],vpf[1],vpf[2],color=(1, 0, 0),scale_factor = 5.)
 
 # ... now Plot the connections among the nodes
 for tvb_node in nodes_to_be_examined:
@@ -75,7 +87,8 @@ for tvb_node in nodes_to_be_examined:
         cxn = numpy.array([centres[connected_node],
                            centres[tvb_node]])
         
-        connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2])
+        connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2],
+                                  color = (1, 0, 1), tube_radius=1.0)
 
 # Finally, show everything on screen
 mlab.show(stop=True)
