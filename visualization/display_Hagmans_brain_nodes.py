@@ -64,7 +64,8 @@ vpf = [42,26,20]
 # Define the hypothetical Talairach locations of each LSNM auditory modules
 a1 = [48,-26,10]
 a2 = [62,-32,10]
-st = [60,-39,12]
+#stp = [60,-39,12]
+sta = [59,-17,4]
 apf = [56,21,5]
 
 plot_surface(CORTEX, op=0.3)
@@ -77,16 +78,18 @@ region_centres = mlab.points3d(centres[:, 0],
                                scale_factor = 2.)
 
 # Now plot the hypothetical locations of LSNM visual modules
-v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 10.)
-v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 10.)
-it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 10.)
-vpf_module = mlab.points3d(vpf[0],vpf[1],vpf[2],color=(1, 0, 0),scale_factor = 10.)
+# v1 is yellow, v4 is green, it is blue, pf is red
+#v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 10.)
+#v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 10.)
+#it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 10.)
+#vpf_module = mlab.points3d(vpf[0],vpf[1],vpf[2],color=(1, 0, 0),scale_factor = 10.)
 
 # Now plot the hypothetical locations of LSNM auditory modules
-#a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 10.)
-#a2_module = mlab.points3d(a2[0],a2[1],a2[2],color=(0, 1, 0),scale_factor = 10.)
-#st_module = mlab.points3d(st[0],st[1],st[2],color=(0, 0, 1),scale_factor = 10.)
-#apf_module = mlab.points3d(apf[0],apf[1],apf[2],color=(1, 0, 0),scale_factor = 10.)
+a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 10.)
+a2_module = mlab.points3d(a2[0],a2[1],a2[2],color=(0, 1, 0),scale_factor = 10.)
+#stp_module = mlab.points3d(stp[0],stp[1],stp[2],color=(0, 1, 1),scale_factor = 10.)
+sta_module = mlab.points3d(sta[0],sta[1],sta[2],color=(0, 0, 1),scale_factor = 10.)
+apf_module = mlab.points3d(apf[0],apf[1],apf[2],color=(1, 0, 0),scale_factor = 10.)
 
 # Finally, show everything on screen
 mlab.show(stop=True)

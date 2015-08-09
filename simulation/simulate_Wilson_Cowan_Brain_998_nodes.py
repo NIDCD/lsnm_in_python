@@ -52,7 +52,7 @@
 # of the simulation and are written out to a data file that can be accessed
 # later.
 #
-# Additionnally, it find closest TVB nodes given a set of LSNM module locations
+# Additionnally, it finds closest TVB nodes given a set of LSNM module locations
 # in Talairach coordinates
 
 from tvb.simulator.lab import *
@@ -75,7 +75,7 @@ class WilsonCowanPositive(models.WilsonCowan):
 speed = 4.0
 
 # define length of simulation in ms
-simulation_length = 6500
+simulation_length = 1000
 
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
@@ -117,6 +117,7 @@ RawData = numpy.array(raw_data)
 
 pl.figure('RawData')
 pl.plot(RawData[:,0,345])
+pl.plot(RawData[:,1,345])
 pl.show()
 
 # write output dimension to the console
@@ -150,7 +151,7 @@ d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
 closest = d_a2[0].argmin()
 print closest, white_matter.centres[closest]
 
-d_st = ds.cdist([(60, -39, 12)], white_matter.centres, 'euclidean')
+d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
 closest = d_st[0].argmin()
 print closest, white_matter.centres[closest]
 

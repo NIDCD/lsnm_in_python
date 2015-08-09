@@ -103,8 +103,19 @@ ev1v = np.loadtxt('ev1v_synaptic.out')
 iv1h = np.loadtxt('iv1h_synaptic.out')
 iv1v = np.loadtxt('iv1v_synaptic.out')
 
+# Load V4 synaptic activity data files into numpy arrays
+ev4h = np.loadtxt('ev4h_synaptic.out')
+ev4c = np.loadtxt('ev4c_synaptic.out')
+ev4v = np.loadtxt('ev4v_synaptic.out')
+iv4h = np.loadtxt('iv4h_synaptic.out')
+iv4c = np.loadtxt('iv4c_synaptic.out')
+iv4v = np.loadtxt('iv4v_synaptic.out')
+
 # Load TVB V1 host node synaptic activity into numpy array
 tvb_v1 = tvb_synaptic[:, v1_loc[0]:v1_loc[-1]]
+
+# Load TVB V4 host node synaptic activity into numpy array
+tvb_v4 = tvb_synaptic[:, v4_loc[0]:v4_loc[-1]]
 
 # Load IT synaptic activity data files into a numpy array
 exss = np.loadtxt('exss_synaptic.out')
@@ -163,6 +174,7 @@ plt.plot(h)
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
 v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_v1, axis=1)
+v4 = np.sum(ev4h + ev4c + ev4v + iv4h + iv4c + iv4v, axis=1) + np.sum(tvb_v4, axis=1)
 it = np.sum(exss + inss, axis = 1) + np.sum(tvb_it, axis=1)
 d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_d1, axis=1)
 
@@ -172,6 +184,7 @@ d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_d1, axis=1)
 BOLD_interval = np.arange(0, synaptic_timesteps)
 
 v1_BOLD = np.convolve(v1, h, mode='full')[BOLD_interval]
+v4_BOLD = np.convolve(v4, h, mode='full')[BOLD_interval]
 it_BOLD = np.convolve(it, h, mode='full')[BOLD_interval]
 d1_BOLD = np.convolve(d1, h, mode='full')[BOLD_interval]
 
@@ -187,6 +200,7 @@ Tr_new = round(Tr / Ti)
 BOLD_timing = m.trunc(v1_BOLD.size / Tr_new)
 
 v1_BOLD_downsampled = [v1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+v4_BOLD_downsampled = [v4_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 it_BOLD_downsampled = [it_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 d1_BOLD_downsampled = [d1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 
@@ -198,13 +212,13 @@ mr_ticks = round(Ttrial/Tr)
 
 # remove first trial from synaptic activity array
 v1_truncated = np.delete(v1, np.arange(synaptic_ticks))
+v4_truncated = np.delete(v4, np.arange(synaptic_ticks))
 it_truncated = np.delete(it, np.arange(synaptic_ticks))
 d1_truncated = np.delete(d1, np.arange(synaptic_ticks))
 
-
-
 # remove first trial from BOLD signal array
 v1_BOLD_truncated = np.delete(v1_BOLD_downsampled, np.arange(mr_ticks))
+v4_BOLD_truncated = np.delete(v4_BOLD_downsampled, np.arange(mr_ticks))
 it_BOLD_truncated = np.delete(it_BOLD_downsampled, np.arange(mr_ticks))
 d1_BOLD_truncated = np.delete(d1_BOLD_downsampled, np.arange(mr_ticks))
 
@@ -218,14 +232,36 @@ plt.plot(v1_truncated)
 plt.plot(it_truncated)
 plt.plot(d1_truncated)
 
-# Set up second figure to plot fMRI BOLD signal
+# Set up separate figures to plot fMRI BOLD signal
 plt.figure(3)
 
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL')
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V1/V2')
 
-plt.plot(v1_BOLD_truncated)
-plt.plot(it_BOLD_truncated)
-plt.plot(d1_BOLD_truncated)
+plt.plot(v1_BOLD_downsampled, linewidth=3.0, color='yellow')
+plt.gca().set_axis_bgcolor('black')
+plt.ylim((17200,18100))
 
-# Show the plot on the screen
+plt.figure(4)
+
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
+
+plt.plot(v4_BOLD_downsampled, linewidth=3.0, color='green')
+plt.gca().set_axis_bgcolor('black')
+plt.ylim((19000,21300))
+
+plt.figure(5)
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
+
+plt.plot(it_BOLD_downsampled, linewidth=3.0, color='blue')
+plt.gca().set_axis_bgcolor('black')
+plt.ylim((3300,3900))
+
+plt.figure(6)
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
+
+plt.plot(d1_BOLD_downsampled, linewidth=3.0, color='red')
+plt.gca().set_axis_bgcolor('black')
+plt.ylim((17600,18700))
+
+# Show the plots on the screen
 plt.show()
