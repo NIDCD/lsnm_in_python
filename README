@@ -31,21 +31,39 @@ Voice, Speech and Language Branch
 National Institute on Deafness and Other Communication Disorders
 National Institutes of Health
 
-This README file was last modified on May 8, 2015.
+This README file was last modified on August 9, 2015.
 
 ================================================================
 
-Python version of LSNM. To execute this software you will need to
+Python version of LSNM (Large-Scale Neural Modeling software).
+This repository contains the following directories:
+
+   * stimuli_creation: Scripts to create stimuli for simulation
+   
+   * simulation: Scripts to simulate neural models
+   
+   * analysis: Scripts to analyze simulated
+   
+   * visualization: Scripts to visualize simulated data
+
+   * auditory_model: Husain et al (2004)'s auditory model
+
+   * visual_model: Tagamets and Horwitz (1998)'s visual model
+
+
+To execute this software you will need to
 have the following installed on your local machine or server:
 
    * Python 2.7 for any platform (so far tested on Mac OS and
      RedHat Linux). Please note that python LSNM is NOT compatible
      with either Python 2.6 or Python 3.0.
+
    * Python modules matplotlib, re, random, math, numpy, sys, and
      PyQt4, pandas, among other scientific computation modules. My
      advice is to download Anaconda Python, freely available
      from continuum.io, which contains Python 2.7 and a full set
      of modules commonly used in scientific computation.
+     
    * The Virtual Brain Python modules, located at the TVB github
      repository at https://github.com/the-virtual-brain. You will
      need to clone the directories 'tvb-library' and 'tvb-data'
