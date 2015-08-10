@@ -333,7 +333,7 @@ class TaskThread(QtCore.QThread):
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
-        LSNM_simulation_time = 39600
+        LSNM_simulation_time = 6600
 
         # define length of TVB simulation in ms
         TVB_simulation_length = LSNM_simulation_time * 5
