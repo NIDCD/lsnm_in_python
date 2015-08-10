@@ -294,6 +294,19 @@ class TaskThread(QtCore.QThread):
         # declare a variable that describes number of nodes in TVB connectome
         TVB_number_of_nodes = 998
         
+        # the following are the weights used among excitatory and inhibitory populations
+        # in the TVB's implementation of the Wilson-Cowan equations. These values were
+        # taken from the default values in the TVB source code in script "models.npy"
+        # The values are also in Table 11 Column a of Sanz-Leon et al (2015)
+        #
+        # The reason we re-defined the weights below is to be able to calculate local
+        # synaptic activity at each timestep, as the TVB original source code does not
+        # calculate synaptic activities
+        w_ee = 12.0
+        w_ii = 11.0
+        w_ei =  4.0
+        w_ie = 13.0
+        
         # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
         white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
         
@@ -398,8 +411,7 @@ class TaskThread(QtCore.QThread):
         # The synaptic activity for each node is zero at first, then it accumulates values
         # (integration) during a given number of timesteps. Every number of timesteps
         # (given by 'synaptic_interval'), the array below is re-initialized to zero.
-        #current_tvb_syn = [ [0.0]*2 for _ in range(TVB_number_of_nodes) ]
-        current_tvb_syn = [0.0] * TVB_number_of_nodes
+        current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
         
         # declare a gain for the link from TVB to LSNM (around which normally distributed
         # random numbers will be generated)
@@ -708,6 +720,9 @@ class TaskThread(QtCore.QThread):
             # at the current timestep
             for tvb_node in range(TVB_number_of_nodes):
 
+                # rectifies or 'clamps' current tvb values to edges [0,1]
+                current_tvb_neu=np.clip(raw[0][1], 0, 1)
+                
                 # extract TVB node numbers that are conected to TVB node above
                 tvb_conn = np.nonzero(white_matter.weights[tvb_node])
                 # extract the numpy array from it
@@ -727,15 +742,23 @@ class TaskThread(QtCore.QThread):
                 # node that is sending that connection to the current TVB node
                 for cxn in range(tvb_conn.size):
 
-                    # first, update synaptic activity in excitatory population
-                    current_tvb_syn[tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
+                    # update synaptic activity in excitatory population, by multiplying each
+                    # incoming connection weight times the value of the node sending such
+                    # connection
+                    current_tvb_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
 
-                    # then, update synaptic activity in inhibitory population
-                    # Please note that we are assuming that the inhibitory population
-                    # in each node assumes that there is no incoming connections to inhibitory
-                    # nodes from other nodes (in the Virtual Brain nodes). Therefore, 
-                    # current_tvb_syn[1][tvb_node] += 
+                # now, add the influence of the local (within the same node) connectivity
+                # onto the synaptic activity of the current node, excitatory population
+                current_tvb_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
+ 
 
+                # now, update synaptic activity in inhibitory population
+                # Please note that we are assuming that there are no incoming connections
+                # to inhibitory nodes from other nodes (in the Virtual Brain nodes).
+                # Therefore, only the local (within the same node) connections are
+                # considered
+                current_tvb_syn[1][tvb_node] += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+    
                 
             # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
             # Brain, and adds the product of each TVB -> LSNM unit value times their respective
@@ -833,15 +856,13 @@ class TaskThread(QtCore.QThread):
             # time step, but ONLY IF a given number of timesteps has elapsed (integration
             # interval)
             if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
-                # rectifies or 'clamps' current tvb values to edges [0,1]
-                tvb_clamped=np.clip(raw[0][1], 0, 1)
                 # append the current TVB node electrical activity to array
-                tvb_elec.append(tvb_clamped)
+                tvb_elec.append(current_tvb_neu)
                 # append current synaptic activity array to synaptic activity timeseries
                 tvb_syna.append(current_tvb_syn)
                 # reset TVB synaptic activity, but not TVB neuroelectrical activity
-                current_tvb_syn = [0.0] * TVB_number_of_nodes
-                
+                current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+
             
             # the following 'for loop' computes the neural activity at each unit in the network,
             # depending on their 'activation rule'

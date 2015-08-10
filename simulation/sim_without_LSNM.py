@@ -91,7 +91,7 @@ tvb_syna = []
 # also, create an array to store electrical activity for all TVB nodes
 tvb_elec = []
 
-# number of nodes in model t be simulated (Hagmann's brain)
+# number of nodes in model to be simulated (Hagmann's brain)
 TVB_number_of_nodes = 998
 
 # create and initialize array to store synaptic activity for all TVB nodes, excitatory
