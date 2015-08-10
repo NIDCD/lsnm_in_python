@@ -251,10 +251,11 @@ class LSNM(QtGui.QWidget):
 
 class WilsonCowanPositive(models.WilsonCowan):
     "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
-    "only allows positive values at integration time. In other words, it clamps state"
-    "variables to > 0 when a stochastic integration is used"
+    "only allows values between 0 and 1 at integration time. In other words, it clips state"
+    "variables to the range [0,1] when a stochastic integration is used"
     def dfun(self, state_variables, coupling, local_coupling=0.0):
         state_variables[state_variables < 0.0] = 0.0
+        state_variables[state_variables > 1.0] = 1.0
         return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
             
 class TaskThread(QtCore.QThread):
@@ -387,9 +388,6 @@ class TaskThread(QtCore.QThread):
         #                 'infr': 44
         #}
 
-        # generate copy of dictionary of TVB host nodes to store synaptic activities of
-        # each host node
-        # tvb_syn = dict.fromkeys(lsnm_tvb_link, 0.0)
         # create an array to store synaptic activity for each and all TVB nodes
         tvb_syna = []
         # also, create an array to store electrical activity for all TVB nodes
@@ -830,7 +828,7 @@ class TaskThread(QtCore.QThread):
                 fs_dict_neuronal[m].write('\n')
                 fs_dict_synaptic[m].write('\n')
 
-            # also write neural and synaptic activity of TVB host nodes to output files at
+            # also write neural and synaptic activity of all TVB nodes to output files at
             # the current
             # time step, but ONLY IF a given number of timesteps has elapsed (integration
             # interval)
