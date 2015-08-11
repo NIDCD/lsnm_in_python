@@ -64,6 +64,12 @@ from scipy import signal
 #v4_loc = 393
 #it_loc = 413
 #pf_loc =  74
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the document:
+#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
+# Provided by Barry Horwitz
+# Please note that arrays in Python start from zero so one does to account for that and shift
+# indices given by the above document by one location.
 # Use all 10 nodes within rPCAL
 v1_loc = range(344, 354)
 
@@ -71,11 +77,23 @@ v1_loc = range(344, 354)
 v4_loc = range(390, 412)
 
 # Use all 6 nodes within rPARH
-it_loc = range(412, 417)
+it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
 pf_loc =  range(57, 79)
 
+# Load TVB nodes synaptic activity
+tvb_synaptic = np.load("tvb_synaptic.npy")
+
+# Load TVB host node synaptic activities into separate numpy arrays
+tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
+tvb_epf = tvb_synaptic[:, 0, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
+tvb_ipf = tvb_synaptic[:, 1, pf_loc[0]:pf_loc[-1]+1, 0]
 
 # define constants needed for hemodynamic function
 lambda_ = 6.0
@@ -110,18 +128,11 @@ synaptic_timesteps = experiment_length
 control_trials = [3,4,5,9,10,11,15,16,17,21,22,23,27,28,29,33,34,35]
 dms_trials =     [0,1,2,6,7,8,12,13,14,18,19,20,24,25,26,30,31,32]
 
-
-# Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
-
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('ev1h_synaptic.out')
 ev1v = np.loadtxt('ev1v_synaptic.out')
 iv1h = np.loadtxt('iv1h_synaptic.out')
 iv1v = np.loadtxt('iv1v_synaptic.out')
-
-# Load TVB V1 host node synaptic activity into numpy array
-tvb_v1 = tvb_synaptic[:, v1_loc[0]:v1_loc[-1]]
 
 # Load V4 synaptic activity data files into a numpy array
 ev4h = np.loadtxt('ev4h_synaptic.out')
@@ -131,22 +142,13 @@ iv4h = np.loadtxt('iv4h_synaptic.out')
 iv4v = np.loadtxt('iv4v_synaptic.out')
 iv4c = np.loadtxt('iv4c_synaptic.out')
 
-# Load TVB V1 host node synaptic activity into numpy array
-tvb_v4 = tvb_synaptic[:, v4_loc[0]:v4_loc[-1]]
-
 # Load IT synaptic activity data files into a numpy array
 exss = np.loadtxt('exss_synaptic.out')
 inss = np.loadtxt('inss_synaptic.out')
 
-# Load TVB IT host node synaptic activity into numpy array
-tvb_it = tvb_synaptic[:, it_loc[0]:v4_loc[-1]]
-
 # Load D1 synaptic activity data files into a numpy array
 efd1 = np.loadtxt('efd1_synaptic.out')
 ifd1 = np.loadtxt('ifd1_synaptic.out')
-
-# Load TVB D1 host node synaptic activity into numpy array
-tvb_pf = tvb_synaptic[:, pf_loc[0]:pf_loc[-1]]
 
 # Load D2 synaptic activity data files into a numpy array
 efd2 = np.loadtxt('efd2_synaptic.out')
@@ -162,13 +164,13 @@ infr = np.loadtxt('infr_synaptic.out')
 
 # add all units WITHIN each region together across space to calculate
 # synaptic activity in EACH brain region
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_v1, axis=1)
-v4 = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_v4, axis=1)
-it = np.sum(exss + inss, axis = 1) + np.sum(tvb_it, axis=1)
-d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_pf, axis=1)
-d2 = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_pf, axis=1)
-fs = np.sum(exfs + infs, axis = 1) + np.sum(tvb_pf, axis=1)
-fr = np.sum(exfr + infr, axis = 1) + np.sum(tvb_pf, axis=1)
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
+v4 = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
+it = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
+d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_epf+tvb_ipf, axis=1)
+d2 = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_epf+tvb_ipf, axis=1)
+fs = np.sum(exfs + infs, axis = 1) + np.sum(tvb_epf+tvb_ipf, axis=1)
+fr = np.sum(exfr + infr, axis = 1) + np.sum(tvb_epf+tvb_ipf, axis=1)
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)

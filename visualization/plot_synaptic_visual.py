@@ -44,17 +44,45 @@
 # Plot synaptic activity data from visual
 # delay-match-to-sample simulation
 
-# what are the locations of relevant TVB nodes within TVB array?
-v1_loc = 345
-v4_loc = 393
-it_loc = 413
-pf_loc =  74
-
 import numpy as np
 import matplotlib.pyplot as plt
 
+# what are the locations of relevant TVB nodes within TVB array?
+#v1_loc = 345
+#v4_loc = 393
+#it_loc = 413
+#pf_loc =  74
+
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the document:
+#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
+# Provided by Barry Horwitz
+# Please note that arrays in Python start from zero so one does to account for that and shift
+# indices given by the above document by one location.
+# Use all 10 nodes within rPCAL
+v1_loc = range(344, 354)
+
+# Use all 22 nodes within rFUS
+v4_loc = range(390, 412)
+
+# Use all 6 nodes within rPARH
+it_loc = range(412, 418)
+
+# Use all 22 nodes within rRMF
+pf_loc =  range(57, 79)
+
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
+
+# Load TVB host node synaptic activities into separate numpy arrays
+tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
+tvb_epf = tvb_synaptic[:, 0, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
+tvb_ipf = tvb_synaptic[:, 1, pf_loc[0]:pf_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('ev1h_synaptic.out')
@@ -62,22 +90,13 @@ ev1v = np.loadtxt('ev1v_synaptic.out')
 iv1h = np.loadtxt('iv1h_synaptic.out')
 iv1v = np.loadtxt('iv1v_synaptic.out')
 
-# Load TVB V1 host node synaptic activity into numpy array
-tvb_v1 = tvb_synaptic[:, v1_loc]
-
 # Load IT synaptic activity data files into a numpy array
 exss = np.loadtxt('exss_synaptic.out')
 inss = np.loadtxt('inss_synaptic.out')
 
-# Load TVB IT host node synaptic activity into numpy array
-tvb_it = tvb_synaptic[:, it_loc]
-
 # Load D1 synaptic activity data files into a numpy array
 efd1 = np.loadtxt('efd1_synaptic.out')
 ifd1 = np.loadtxt('ifd1_synaptic.out')
-
-# Load TVB D1 host node synaptic activity into numpy array
-tvb_d1 = tvb_synaptic[:, pf_loc]
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
@@ -85,10 +104,11 @@ timesteps = ev1h.shape[0]
 # Construct a numpy array of timesteps (data points provided in data files)
 t = np.arange(0, timesteps, 1)
 
-# add all units within each region (V1, IT, and D1) together across space
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + tvb_v1
-it = np.sum(exss + inss, axis = 1) + tvb_it
-d1 = np.sum(efd1 + ifd1, axis = 1) + tvb_d1
+# add all units within each region (V1, IT, and D1) together across space to calculate
+# synaptic activity in each brain region
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1 + tvb_iv1, axis=1)
+it = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit + tvb_iit, axis=1)
+d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_epf + tvb_ipf, axis=1)
 
 # Set up plot
 plt.figure(1)

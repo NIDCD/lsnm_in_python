@@ -333,7 +333,7 @@ class TaskThread(QtCore.QThread):
 
         # define the simulation time in total number of timesteps
         # Each timestep is roughly equivalent to 5ms
-        LSNM_simulation_time = 6600
+        LSNM_simulation_time = 39600
 
         # define length of TVB simulation in ms
         TVB_simulation_length = LSNM_simulation_time * 5
@@ -415,8 +415,8 @@ class TaskThread(QtCore.QThread):
         
         # declare a gain for the link from TVB to LSNM (around which normally distributed
         # random numbers will be generated)
-        lsnm_tvb_gain = 0.0005
-
+        lsnm_tvb_gain = 0.001
+        
         # declare an integration interval for the 'integrated' synaptic activity,
         # for fMRI computation, in number of timesteps.
         # The same variable is used to know how often we are going to write to

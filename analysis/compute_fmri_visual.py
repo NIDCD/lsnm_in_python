@@ -33,17 +33,17 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plot_fmri_visual.py) was created on April 17, 2015.
+#   This file (compute_fmri_visual.py) was created on April 17, 2015.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on July 10 2015
+#   Last updated by Antonio Ulloa on August 11 2015
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
-# plot_fmri_visual.py
+# compute_fmri_visual.py
 #
 # Calculate and plot fMRI BOLD signal based on data from visual
 # delay-match-to-sample simulation.
@@ -82,6 +82,12 @@ Tr = 2
 #v4_loc = 393
 #it_loc = 413
 #pf_loc =  74
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the document:
+#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
+# Provided by Barry Horwitz
+# Please note that arrays in Python start from zero so one does to account for that and shift
+# indices given by the above document by one location.
 # Use all 10 nodes within rPCAL
 v1_loc = range(344, 354)
 
@@ -89,13 +95,23 @@ v1_loc = range(344, 354)
 v4_loc = range(390, 412)
 
 # Use all 6 nodes within rPARH
-it_loc = range(412, 417)
+it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
 pf_loc =  range(57, 79)
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
+
+# Load TVB host node synaptic activities into separate numpy arrays
+tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
+tvb_epf = tvb_synaptic[:, 0, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
+tvb_ipf = tvb_synaptic[:, 1, pf_loc[0]:pf_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('ev1h_synaptic.out')
@@ -111,25 +127,13 @@ iv4h = np.loadtxt('iv4h_synaptic.out')
 iv4c = np.loadtxt('iv4c_synaptic.out')
 iv4v = np.loadtxt('iv4v_synaptic.out')
 
-# Load TVB V1 host node synaptic activity into numpy array
-tvb_v1 = tvb_synaptic[:, v1_loc[0]:v1_loc[-1]]
-
-# Load TVB V4 host node synaptic activity into numpy array
-tvb_v4 = tvb_synaptic[:, v4_loc[0]:v4_loc[-1]]
-
 # Load IT synaptic activity data files into a numpy array
 exss = np.loadtxt('exss_synaptic.out')
 inss = np.loadtxt('inss_synaptic.out')
 
-# Load TVB IT host node synaptic activity into numpy array
-tvb_it = tvb_synaptic[:, it_loc[0]:it_loc[-1]]
-
 # Load D1 synaptic activity data files into a numpy array
 efd1 = np.loadtxt('efd1_synaptic.out')
 ifd1 = np.loadtxt('ifd1_synaptic.out')
-
-# Load TVB D1 host node synaptic activity into numpy array
-tvb_d1 = tvb_synaptic[:, pf_loc[0]:pf_loc[-1]]
 
 # Extract number of timesteps from one of the synaptic activity arrays
 synaptic_timesteps = ev1h.shape[0]
@@ -173,10 +177,12 @@ plt.plot(h)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_v1, axis=1)
-v4 = np.sum(ev4h + ev4c + ev4v + iv4h + iv4c + iv4v, axis=1) + np.sum(tvb_v4, axis=1)
-it = np.sum(exss + inss, axis = 1) + np.sum(tvb_it, axis=1)
-d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_d1, axis=1)
+v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1 + tvb_iv1, axis=1)
+v4 = np.sum(ev4h + ev4c + ev4v + iv4h + iv4c + iv4v, axis=1) + np.sum(tvb_ev4 + tvb_iv4, axis=1)
+it = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit + tvb_iit, axis=1)
+d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_epf + tvb_ipf, axis=1)
+
+print v1
 
 # now, we need to convolve the synaptic activity with a hemodynamic delay
 # function and sample the array at Tr regular intervals
@@ -239,7 +245,6 @@ plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V1/V2')
 
 plt.plot(v1_BOLD_downsampled, linewidth=3.0, color='yellow')
 plt.gca().set_axis_bgcolor('black')
-plt.ylim((17200,18100))
 
 plt.figure(4)
 
@@ -247,21 +252,18 @@ plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
 
 plt.plot(v4_BOLD_downsampled, linewidth=3.0, color='green')
 plt.gca().set_axis_bgcolor('black')
-plt.ylim((19000,21300))
 
 plt.figure(5)
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
 
 plt.plot(it_BOLD_downsampled, linewidth=3.0, color='blue')
 plt.gca().set_axis_bgcolor('black')
-plt.ylim((3300,3900))
 
 plt.figure(6)
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
 
 plt.plot(d1_BOLD_downsampled, linewidth=3.0, color='red')
 plt.gca().set_axis_bgcolor('black')
-plt.ylim((17600,18700))
 
 # Show the plots on the screen
 plt.show()
