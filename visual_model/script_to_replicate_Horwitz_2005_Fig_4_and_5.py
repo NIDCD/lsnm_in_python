@@ -22,7 +22,11 @@
 #                
 # We present stimuli to the visual LSNM network by manually inserting it into the MGN module
 # and leaving the stimuli there for 200 timesteps (1 second).
-#        
+
+# define the simulation time in total number of timesteps
+# Each timestep is roughly equivalent to 5ms
+LSNM_simulation_time = 39600
+
 # Define list of parameters the the script is going to need to modify the LSNM neural network
 # They are organized in the following order:
 # [lo_att_level, hi_att_level, lo_inp_level, hi_inp_level, att_step, ri1, ri2]

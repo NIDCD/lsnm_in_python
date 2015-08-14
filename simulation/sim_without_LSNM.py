@@ -111,7 +111,7 @@ synaptic_interval = 10
 speed = 4.0
 
 # define length of simulation in ms
-simulation_length = 1000
+simulation_length = 100
 
 # define the simulation time in total number of timesteps
 # Each timestep is roughly equivalent to 5ms
@@ -224,8 +224,20 @@ d_it = ds.cdist([(28, -36, -8)], white_matter.centres, 'euclidean')
 closest = d_it[0].argmin()
 print closest, white_matter.centres[closest]
 
-d_pf= ds.cdist([(42, 26, 20)], white_matter.centres, 'euclidean')
-closest = d_pf[0].argmin()
+d_fs= ds.cdist([(47, 19, 9)], white_matter.centres, 'euclidean')
+closest = d_fs[0].argmin()
+print closest, white_matter.centres[closest]
+
+d_d1= ds.cdist([(42, 26, 20)], white_matter.centres, 'euclidean')
+closest = d_d1[0].argmin()
+print closest, white_matter.centres[closest]
+
+d_d2= ds.cdist([(42, 39, 2)], white_matter.centres, 'euclidean')
+closest = d_d2[0].argmin()
+print closest, white_matter.centres[closest]
+
+d_r= ds.cdist([(29, 25, 40)], white_matter.centres, 'euclidean')
+closest = d_r[0].argmin()
 print closest, white_matter.centres[closest]
 
 # AUDITORY MODEL TALAIRACH COORDINATES

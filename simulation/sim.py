@@ -331,13 +331,6 @@ class TaskThread(QtCore.QThread):
 
         sim.configure()
 
-        # define the simulation time in total number of timesteps
-        # Each timestep is roughly equivalent to 5ms
-        LSNM_simulation_time = 39600
-
-        # define length of TVB simulation in ms
-        TVB_simulation_length = LSNM_simulation_time * 5
-
         # sample TVB raw data array file to extract 1100 data points
         # (only use if you are loading a preprocessed TVB simulation)
         #TVB_sampling_rate = int(round(88000 / simulation_time))
@@ -369,12 +362,12 @@ class TaskThread(QtCore.QThread):
                          'inss': 413,
                          'efd1': 74,
                          'ifd1': 74,
-                         'efd2': 74,
-                         'ifd2': 74,
-                         'exfs': 74,
-                         'infs': 74,
-                         'exfr': 74,
-                         'infr': 74
+                         'efd2': 41,
+                         'ifd2': 41,
+                         'exfs': 47,
+                         'infs': 47,
+                         'exfr': 125,
+                         'infr': 125
                          }
         
         # the following are the TVB -> LSNM auditory connections
@@ -447,13 +440,30 @@ class TaskThread(QtCore.QThread):
         print 'with the following weights: ',
         print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
         
+        print '\rInto ' + white_matter.region_labels[47],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[47])]
+        print 'with the following weights: ',
+        print white_matter.weights[47][np.nonzero(white_matter.weights[47])]
+
         print '\rInto ' + white_matter.region_labels[74],
         print ': ',
         print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
         print 'with the following weights: ',
         print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
-        
 
+        print '\rInto ' + white_matter.region_labels[41],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[41])]
+        print 'with the following weights: ',
+        print white_matter.weights[41][np.nonzero(white_matter.weights[41])]
+        
+        print '\rInto ' + white_matter.region_labels[125],
+        print ': ',
+        print white_matter.region_labels[np.nonzero(white_matter.weights[125])]
+        print 'with the following weights: ',
+        print white_matter.weights[125][np.nonzero(white_matter.weights[125])]        
+        
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network
         # NOTE: This is the main data structure holding all of the LSNM network values
@@ -634,12 +644,6 @@ class TaskThread(QtCore.QThread):
         with open(script) as s:
             experiment_script = s.read()
             
-        # initialize number of timesteps for simulation
-        sim_percentage = 100.0/LSNM_simulation_time
-
-        # run the simulation for the number of timesteps given
-        print '\r Running simulation...'
-
         # uncomment the following line and subsititute in the for loop below if you want
         # LSNM to drive the whole simulation
         #for t in range(LSNM_simulation_time):
@@ -650,6 +654,15 @@ class TaskThread(QtCore.QThread):
         # import the experimental script given by user's script file
         exec(experiment_script)
         
+        # define length of TVB simulation in ms
+        TVB_simulation_length = LSNM_simulation_time * 5
+
+        # initialize number of timesteps for simulation
+        sim_percentage = 100.0/LSNM_simulation_time
+
+        # run the simulation for the number of timesteps given
+        print '\r Running simulation...'        
+
         # the following 'for loop' is the main loop of the TVB simulation with the parameters
         # defined above. Note that the LSNM simulator is literally embedded into the TVB
         # simulation and both run concurrently, timestep by timestep.

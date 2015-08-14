@@ -56,23 +56,21 @@ import math as m
 
 from scipy.stats import poisson
 
-from scipy import signal
+# define neural synaptic time interval in seconds. The simulation data is collected
+# one data point at synaptic intervals (10 simulation timesteps). Every simulation
+# timestep is equivalent to 5 ms.
+Ti = 0.005 * 10
 
-# define constants needed for hemodynamic function
-lambda_ = 6.0
+# define constant needed for hemodynamic function (in milliseconds)
+lambda_ = 6
 
-# given the number of total timesteps, calculate total time of scanning
-# experiment in seconds
+# Total time of scanning experiment in seconds (timesteps X 5)
 T = 198
 
-# Time for one complete trial in seconds
+# Time for one complete trial in milliseconds
 Ttrial = 5.5
 
-# define neural synaptic time interval and total time of scanning
-# experiment (units are seconds)
-Ti = .005 * 10
-
-# the scanning happened every Tr interval below (in seconds). This
+# the scanning happened every Tr interval below (in milliseconds). This
 # is the time needed to sample hemodynamic activity to produce
 # each fMRI image.
 Tr = 2
@@ -98,7 +96,7 @@ v4_loc = range(390, 412)
 it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
-pf_loc =  range(57, 79)
+d1_loc =  range(57, 79)
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
@@ -107,11 +105,11 @@ tvb_synaptic = np.load("tvb_synaptic.npy")
 tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
 tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
 tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
-tvb_epf = tvb_synaptic[:, 0, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
 tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
 tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
 tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
-tvb_ipf = tvb_synaptic[:, 1, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('ev1h_synaptic.out')
@@ -168,47 +166,47 @@ h = poisson.pmf(time_in_seconds, lambda_)
 # now, convert to a numpy array
 #h = np.asarray(h)
 
-# resample the array containing the poisson to increase its size and match the size of
-# the synaptic activity array
-h = signal.resample(h, synaptic_timesteps)
-
-plt.figure(1)
-plt.plot(h)
+# rescale the array containing the poisson to increase its size and match the size of
+# the synaptic activity array (using linear interpolation)
+scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
+synaptic_timescale = np.arange(0, synaptic_timesteps)
+h = np.interp(synaptic_timescale, scanning_timescale, h)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
-v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1 + tvb_iv1, axis=1)
-v4 = np.sum(ev4h + ev4c + ev4v + iv4h + iv4c + iv4v, axis=1) + np.sum(tvb_ev4 + tvb_iv4, axis=1)
-it = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit + tvb_iit, axis=1)
-d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_epf + tvb_ipf, axis=1)
-
-print v1
+v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1 + tvb_iv1, axis=1)
+v4_syn = np.sum(ev4h + ev4c + ev4v + iv4h + iv4c + iv4v, axis=1) + np.sum(tvb_ev4 + tvb_iv4, axis=1)
+it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit + tvb_iit, axis=1)
+d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1 + tvb_id1, axis=1)
 
 # now, we need to convolve the synaptic activity with a hemodynamic delay
-# function and sample the array at Tr regular intervals
-
-BOLD_interval = np.arange(0, synaptic_timesteps)
-
-v1_BOLD = np.convolve(v1, h, mode='full')[BOLD_interval]
-v4_BOLD = np.convolve(v4, h, mode='full')[BOLD_interval]
-it_BOLD = np.convolve(it, h, mode='full')[BOLD_interval]
-d1_BOLD = np.convolve(d1, h, mode='full')[BOLD_interval]
+# function and sample the array at Tr regular intervals (back to the scanning
+# timescale)
+v1_BOLD = np.convolve(v1_syn, h)[scanning_timescale]
+v4_BOLD = np.convolve(v4_syn, h)[scanning_timescale]
+it_BOLD = np.convolve(it_syn, h)[scanning_timescale]
+d1_BOLD = np.convolve(d1_syn, h)[scanning_timescale]
 
 # Convert seconds to Ti units (how many times the scanning interval fits into each
 # synaptic interval)
 
-Tr_new = round(Tr / Ti)
+#Tr_new = round(Tr / Ti)
 
 # We need to rescale the BOLD signal arrays to match the timescale of the synaptic
 # signals. We also truncate the resulting float down to the nearest integer. in other
 # words, we are downsampling the BOLD array to match the scan interval time Tr
 
-BOLD_timing = m.trunc(v1_BOLD.size / Tr_new)
+#BOLD_timing = m.trunc(v1_BOLD.size / Tr_new)
 
-v1_BOLD_downsampled = [v1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
-v4_BOLD_downsampled = [v4_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
-it_BOLD_downsampled = [it_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
-d1_BOLD_downsampled = [d1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+#v1_BOLD = np.interp(synaptic_timescale, scanning_timescale, v1_BOLD)
+#v4_BOLD = np.interp(synaptic_timescale, scanning_timescale, v4_BOLD)
+#it_BOLD = np.interp(synaptic_timescale, scanning_timescale, it_BOLD)
+#d1_BOLD = np.interp(synaptic_timescale, scanning_timescale, d1_BOLD)
+
+#v1_BOLD_downsampled = [v1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+#v4_BOLD_downsampled = [v4_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+#it_BOLD_downsampled = [it_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
+#d1_BOLD_downsampled = [d1_BOLD[i * Tr_new + 1] for i in np.arange(BOLD_timing)]
 
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
@@ -217,52 +215,56 @@ synaptic_ticks = Ttrial/Ti
 mr_ticks = round(Ttrial/Tr)
 
 # remove first trial from synaptic activity array
-v1_truncated = np.delete(v1, np.arange(synaptic_ticks))
-v4_truncated = np.delete(v4, np.arange(synaptic_ticks))
-it_truncated = np.delete(it, np.arange(synaptic_ticks))
-d1_truncated = np.delete(d1, np.arange(synaptic_ticks))
+#v1_truncated = np.delete(v1, np.arange(synaptic_ticks))
+#v4_truncated = np.delete(v4, np.arange(synaptic_ticks))
+#it_truncated = np.delete(it, np.arange(synaptic_ticks))
+#d1_truncated = np.delete(d1, np.arange(synaptic_ticks))
 
-# remove first trial from BOLD signal array
-v1_BOLD_truncated = np.delete(v1_BOLD_downsampled, np.arange(mr_ticks))
-v4_BOLD_truncated = np.delete(v4_BOLD_downsampled, np.arange(mr_ticks))
-it_BOLD_truncated = np.delete(it_BOLD_downsampled, np.arange(mr_ticks))
-d1_BOLD_truncated = np.delete(d1_BOLD_downsampled, np.arange(mr_ticks))
+# remove first 2 trials from BOLD signal array (to eliminate edge effects from
+# convolution)
+v1_BOLD = np.delete(v1_BOLD, np.arange(2 * mr_ticks))
+v4_BOLD = np.delete(v4_BOLD, np.arange(2 * mr_ticks))
+it_BOLD = np.delete(it_BOLD, np.arange(2 * mr_ticks))
+d1_BOLD = np.delete(d1_BOLD, np.arange(2 * mr_ticks))
 
 # Set up figure to plot synaptic activity
-plt.figure(2)
+plt.figure(1)
 
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 
-# Plot V1 module
-plt.plot(v1_truncated)
-plt.plot(it_truncated)
-plt.plot(d1_truncated)
+# Plot synaptic activities
+plt.plot(v1_syn)
+plt.plot(it_syn)
+plt.plot(d1_syn)
 
 # Set up separate figures to plot fMRI BOLD signal
-plt.figure(3)
+plt.figure(2)
 
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V1/V2')
 
-plt.plot(v1_BOLD_downsampled, linewidth=3.0, color='yellow')
+plt.plot(v1_BOLD, linewidth=3.0, color='yellow')
 plt.gca().set_axis_bgcolor('black')
+
+print v1_BOLD.shape
+print mr_ticks
 
 plt.figure(4)
 
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
 
-plt.plot(v4_BOLD_downsampled, linewidth=3.0, color='green')
+plt.plot(v4_BOLD, linewidth=3.0, color='green')
 plt.gca().set_axis_bgcolor('black')
 
 plt.figure(5)
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
 
-plt.plot(it_BOLD_downsampled, linewidth=3.0, color='blue')
+plt.plot(it_BOLD, linewidth=3.0, color='blue')
 plt.gca().set_axis_bgcolor('black')
 
 plt.figure(6)
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
 
-plt.plot(d1_BOLD_downsampled, linewidth=3.0, color='red')
+plt.plot(d1_BOLD, linewidth=3.0, color='red')
 plt.gca().set_axis_bgcolor('black')
 
 # Show the plots on the screen
