@@ -69,20 +69,37 @@ v4_loc = range(390, 412)
 it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
-pf_loc =  range(57, 79)
+d1_loc = range(57, 79)
+
+# Use all nodes within rPTRI
+d2_loc = range(39, 47)
+
+# Use all nodes within rPOPE
+fs_loc = range(47, 57)
+
+# Use all nodes within rCMF
+fr_loc = range(125, 138)
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
 
 # Load TVB host node synaptic activities into separate numpy arrays
+# the index '0' stores excitary (E) synaptic activity, and index '1'
+# stores inhibitory synaptic activity
 tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
 tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
 tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
-tvb_epf = tvb_synaptic[:, 0, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
+tvb_ed2 = tvb_synaptic[:, 0, d2_loc[0]:d2_loc[-1]+1, 0]
+tvb_efs = tvb_synaptic[:, 0, fs_loc[0]:fs_loc[-1]+1, 0]
+tvb_efr = tvb_synaptic[:, 0, fr_loc[0]:fr_loc[-1]+1, 0]
 tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
 tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
 tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
-tvb_ipf = tvb_synaptic[:, 1, pf_loc[0]:pf_loc[-1]+1, 0]
+tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
+tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
+tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
+tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
 ev1h = np.loadtxt('ev1h_synaptic.out')
@@ -108,7 +125,7 @@ t = np.arange(0, timesteps, 1)
 # synaptic activity in each brain region
 v1 = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1 + tvb_iv1, axis=1)
 it = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit + tvb_iit, axis=1)
-d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_epf + tvb_ipf, axis=1)
+d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1 + tvb_id1, axis=1)
 
 # Set up plot
 plt.figure(1)

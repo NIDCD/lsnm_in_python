@@ -140,45 +140,42 @@ tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
 tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
 tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
 
-# Load V1 synaptic activity data files into a numpy array
+# Load LSNM synaptic activity data files into numpy arrays
 ev1h = np.loadtxt('ev1h_synaptic.out')
 ev1v = np.loadtxt('ev1v_synaptic.out')
 iv1h = np.loadtxt('iv1h_synaptic.out')
 iv1v = np.loadtxt('iv1v_synaptic.out')
-
-# Load V4 synaptic activity data files into numpy arrays
 ev4h = np.loadtxt('ev4h_synaptic.out')
 ev4c = np.loadtxt('ev4c_synaptic.out')
 ev4v = np.loadtxt('ev4v_synaptic.out')
 iv4h = np.loadtxt('iv4h_synaptic.out')
 iv4c = np.loadtxt('iv4c_synaptic.out')
 iv4v = np.loadtxt('iv4v_synaptic.out')
-
-# Load IT synaptic activity data files into a numpy array
 exss = np.loadtxt('exss_synaptic.out')
 inss = np.loadtxt('inss_synaptic.out')
-
-# Load D1 synaptic activity data files into a numpy array
 efd1 = np.loadtxt('efd1_synaptic.out')
 ifd1 = np.loadtxt('ifd1_synaptic.out')
-
-# Load D2 synaptic activity data files into a numpy array
 efd2 = np.loadtxt('efd2_synaptic.out')
 ifd2 = np.loadtxt('ifd2_synaptic.out')
-
-# Load FS synaptic activity data files into a numpy array
 exfs = np.loadtxt('exfs_synaptic.out')
 infs = np.loadtxt('infs_synaptic.out')
-
-# Load FR synaptic activity data files into a numpy array
 exfr = np.loadtxt('exfr_synaptic.out')
 infr = np.loadtxt('infr_synaptic.out')
 
-# Extract number of timesteps from one of the synaptic activity arrays
-synaptic_timesteps = ev1h.shape[0]
+# add all units WITHIN each region together across space to calculate
+# synaptic activity in EACH brain region
+v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
+v4_syn = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
+it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
+d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1+tvb_id1, axis=1)
+d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
+fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
+fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
 
-# Given neural synaptic time interval and total time of scanning experiment,
-# construct a numpy array of time points (data points provided in data files)
+# Extract number of timesteps from one of the synaptic activity arrays
+synaptic_timesteps = v1_syn.size
+
+# Construct a numpy array of time points
 time_in_seconds = np.arange(0, T, Tr)
 
 # the following calculates a Poisson distribution (that will represent a hemodynamic
@@ -194,18 +191,9 @@ scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr
 synaptic_timescale = np.arange(0, synaptic_timesteps)
 h = np.interp(synaptic_timescale, scanning_timescale, h)
 
-# add all units WITHIN each region together across space to calculate
-# synaptic activity in EACH brain region
-v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
-v4_syn = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
-it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
-d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1+tvb_id1, axis=1)
-d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
-fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
-fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
-
 # now, we need to convolve the synaptic activity with the hemodynamic delay
-# function and then bring it back to a synaptic timescale
+# function to generate a BOLD signal and then bring it back to a synaptic
+# timescale
 v1_BOLD = np.convolve(v1_syn, h)[synaptic_timescale]
 v4_BOLD = np.convolve(v4_syn, h)[synaptic_timescale]
 it_BOLD = np.convolve(it_syn, h)[synaptic_timescale]
@@ -214,9 +202,48 @@ d2_BOLD = np.convolve(d2_syn, h)[synaptic_timescale]
 fs_BOLD = np.convolve(fs_syn, h)[synaptic_timescale]
 fr_BOLD = np.convolve(fr_syn, h)[synaptic_timescale]
 
-# Gets rid of the control trials in the BOLD signal arrays,
+###############################################################################
+###############################################################################
+# We need to downsample the BOLD signal at this point, before we do any
+# more processing to it.
+v1_BOLD = v1_BOLD[scanning_timescale]
+v4_BOLD = v4_BOLD[scanning_timescale]
+it_BOLD = it_BOLD[scanning_timescale]
+d1_BOLD = d1_BOLD[scanning_timescale]
+d2_BOLD = d2_BOLD[scanning_timescale]
+fs_BOLD = fs_BOLD[scanning_timescale]
+fr_BOLD = fr_BOLD[scanning_timescale]
+
+# And now we scale it up 10 times its size, so that we can subdivide the arrays
+# in equally sized subarrays
+scanning_timescale_x_100 = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T*100.0/Tr))
+v1_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, v1_BOLD)
+v4_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, v4_BOLD)
+it_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, it_BOLD)
+d1_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, d1_BOLD)
+d2_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, d2_BOLD)
+fs_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, fs_BOLD)
+fr_BOLD = np.interp(scanning_timescale_x_100, scanning_timescale, fr_BOLD)
+
+###############################################################################
+###############################################################################
+
+# remove first few scans from BOLD signal arrays (to eliminate edge effects from
+# convolution during the first block of scans)
+# Please note that arrays have to be divisible by the number of trials, i.e., the
+# BOLD arrays have to be split after deleting the first few scans, which has to
+# result in an equal division. 
+v1_BOLD = np.delete(v1_BOLD, np.arange(432))
+v4_BOLD = np.delete(v4_BOLD, np.arange(432))
+it_BOLD = np.delete(it_BOLD, np.arange(432))
+d1_BOLD = np.delete(d1_BOLD, np.arange(432))
+d2_BOLD = np.delete(d2_BOLD, np.arange(432))
+fs_BOLD = np.delete(fs_BOLD, np.arange(432))
+fr_BOLD = np.delete(fr_BOLD, np.arange(432))
+
+# Get rid of the control trials in the BOLD signal arrays,
 # by separating the task-related trials and concatenating them
-# together. Remember that each trial is 110 synaptic timesteps
+# together. Remember that each trial is a number of synaptic timesteps
 # long.
 
 # first, split the arrays into subarrays, each one containing a single trial
@@ -227,6 +254,18 @@ d1_subarrays = np.split(d1_BOLD, number_of_trials)
 d2_subarrays = np.split(d2_BOLD, number_of_trials)
 fs_subarrays = np.split(fs_BOLD, number_of_trials)
 fr_subarrays = np.split(fr_BOLD, number_of_trials)
+
+print len(it_subarrays[0])
+
+# we get rid of the inter-trial interval for each and all trials (1 second at the
+# end of each trial. 1 second = 50 array positions.
+#it_subarrays = np.delete(it_subarrays, np.arange(212,262), axis=1)
+#v1_subarrays = np.delete(v1_subarrays, np.arange(212,262), axis=1)
+#v4_subarrays = np.delete(v4_subarrays, np.arange(212,262), axis=1)
+#d1_subarrays = np.delete(d1_subarrays, np.arange(212,262), axis=1)
+#d2_subarrays = np.delete(d2_subarrays, np.arange(212,262), axis=1)
+#fs_subarrays = np.delete(fs_subarrays, np.arange(212,262), axis=1)
+#fr_subarrays = np.delete(fr_subarrays, np.arange(212,262), axis=1)
 
 # now, get rid of the control trials...
 it_DMS_trials = np.delete(it_subarrays, control_trials, axis=0)
@@ -266,52 +305,58 @@ fr_control_trials_ts = np.concatenate(fr_control_trials)
 
 # Calculate new synaptic timesteps and scanning timescale, as all BOLD arrays
 # have been halved
-new_synaptic_timesteps = v1_DMS_trials_ts.size
-scanning_timescale = np.arange(0, new_synaptic_timesteps, new_synaptic_timesteps / (T/Tr))
+#new_synaptic_timesteps = v1_DMS_trials_ts.size
+#scanning_timescale = np.arange(0, new_synaptic_timesteps, new_synaptic_timesteps / (T/Tr))
 
-# now, sample all BOLD arrays, DMS and control, to the match the
+# now, sample all BOLD arrays, DMS and control, to match the
 # MRI scanning interval:
-v1_DMS_trials_ts = v1_DMS_trials_ts[scanning_timescale]
-v4_DMS_trials_ts = v4_DMS_trials_ts[scanning_timescale]
-it_DMS_trials_ts = it_DMS_trials_ts[scanning_timescale]
-d1_DMS_trials_ts = d1_DMS_trials_ts[scanning_timescale]
-d2_DMS_trials_ts = d2_DMS_trials_ts[scanning_timescale]
-fs_DMS_trials_ts = fs_DMS_trials_ts[scanning_timescale]
-fr_DMS_trials_ts = fr_DMS_trials_ts[scanning_timescale]
-v1_control_trials_ts = v1_control_trials_ts[scanning_timescale]
-v4_control_trials_ts = v4_control_trials_ts[scanning_timescale]
-it_control_trials_ts = it_control_trials_ts[scanning_timescale]
-d1_control_trials_ts = d1_control_trials_ts[scanning_timescale]
-d2_control_trials_ts = d2_control_trials_ts[scanning_timescale]
-fs_control_trials_ts = fs_control_trials_ts[scanning_timescale]
-fr_control_trials_ts = fr_control_trials_ts[scanning_timescale]
+#v1_DMS_trials_ts = v1_DMS_trials_ts[scanning_timescale]
+#v4_DMS_trials_ts = v4_DMS_trials_ts[scanning_timescale]
+#it_DMS_trials_ts = it_DMS_trials_ts[scanning_timescale]
+#d1_DMS_trials_ts = d1_DMS_trials_ts[scanning_timescale]
+#d2_DMS_trials_ts = d2_DMS_trials_ts[scanning_timescale]
+#fs_DMS_trials_ts = fs_DMS_trials_ts[scanning_timescale]
+#fr_DMS_trials_ts = fr_DMS_trials_ts[scanning_timescale]
+#v1_control_trials_ts = v1_control_trials_ts[scanning_timescale]
+#v4_control_trials_ts = v4_control_trials_ts[scanning_timescale]
+#it_control_trials_ts = it_control_trials_ts[scanning_timescale]
+#d1_control_trials_ts = d1_control_trials_ts[scanning_timescale]
+#d2_control_trials_ts = d2_control_trials_ts[scanning_timescale]
+#fs_control_trials_ts = fs_control_trials_ts[scanning_timescale]
+#fr_control_trials_ts = fr_control_trials_ts[scanning_timescale]
 
-# remove first few scans from BOLD signal arrays (to eliminate edge effects from
-# convolution)
-v1_DMS_trials_ts = np.delete(v1_DMS_trials_ts, np.arange(10))
-v4_DMS_trials_ts = np.delete(v4_DMS_trials_ts, np.arange(10))
-it_DMS_trials_ts = np.delete(it_DMS_trials_ts, np.arange(10))
-d1_DMS_trials_ts = np.delete(d1_DMS_trials_ts, np.arange(10))
-d2_DMS_trials_ts = np.delete(d2_DMS_trials_ts, np.arange(10))
-fs_DMS_trials_ts = np.delete(fs_DMS_trials_ts, np.arange(10))
-fr_DMS_trials_ts = np.delete(fr_DMS_trials_ts, np.arange(10))
+v1_BOLD_dms = v1_DMS_trials_ts
+v4_BOLD_dms = v4_DMS_trials_ts
+it_BOLD_dms = it_DMS_trials_ts
+d1_BOLD_dms = d1_DMS_trials_ts
+d2_BOLD_dms = d2_DMS_trials_ts
+fs_BOLD_dms = fs_DMS_trials_ts
+fr_BOLD_dms = fr_DMS_trials_ts
+
+v1_BOLD_ctl = v1_control_trials_ts
+v4_BOLD_ctl = v4_control_trials_ts
+it_BOLD_ctl = it_control_trials_ts
+d1_BOLD_ctl = d1_control_trials_ts
+d2_BOLD_ctl = d2_control_trials_ts
+fs_BOLD_ctl = fs_control_trials_ts
+fr_BOLD_ctl = fr_control_trials_ts
 
 # now, convert DMS and control timeseries into pandas timeseries, so we can analyze it
-IT_dms_ts = pd.Series(it_DMS_trials_ts)
-V1_dms_ts = pd.Series(v1_DMS_trials_ts)
-V4_dms_ts = pd.Series(v4_DMS_trials_ts)
-D1_dms_ts = pd.Series(d1_DMS_trials_ts)
-D2_dms_ts = pd.Series(d2_DMS_trials_ts)
-FS_dms_ts = pd.Series(fs_DMS_trials_ts)
-FR_dms_ts = pd.Series(fr_DMS_trials_ts)
+IT_dms_ts = pd.Series(it_BOLD_dms)
+V1_dms_ts = pd.Series(v1_BOLD_dms)
+V4_dms_ts = pd.Series(v4_BOLD_dms)
+D1_dms_ts = pd.Series(d1_BOLD_dms)
+D2_dms_ts = pd.Series(d2_BOLD_dms)
+FS_dms_ts = pd.Series(fs_BOLD_dms)
+FR_dms_ts = pd.Series(fr_BOLD_dms)
 
-IT_ctl_ts = pd.Series(it_control_trials_ts)
-V1_ctl_ts = pd.Series(v1_control_trials_ts)
-V4_ctl_ts = pd.Series(v4_control_trials_ts)
-D1_ctl_ts = pd.Series(d1_control_trials_ts)
-D2_ctl_ts = pd.Series(d2_control_trials_ts)
-FS_ctl_ts = pd.Series(fs_control_trials_ts)
-FR_ctl_ts = pd.Series(fr_control_trials_ts)
+IT_ctl_ts = pd.Series(it_BOLD_ctl)
+V1_ctl_ts = pd.Series(v1_BOLD_ctl)
+V4_ctl_ts = pd.Series(v4_BOLD_ctl)
+D1_ctl_ts = pd.Series(d1_BOLD_ctl)
+D2_ctl_ts = pd.Series(d2_BOLD_ctl)
+FS_ctl_ts = pd.Series(fs_BOLD_ctl)
+FR_ctl_ts = pd.Series(fr_BOLD_ctl)
 
 
 # ... and calculate the functional connectivity of IT with the other modules
@@ -339,6 +384,7 @@ width = 0.1                     # width of the bars
 
 fig, ax = plt.subplots()
 
+ax.set_ylim([0,1])
 
 # now, group the values to be plotted by brain module
 it_v1_corr = (funct_conn_it_v1_dms, funct_conn_it_v1_ctl)

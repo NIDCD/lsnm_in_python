@@ -47,7 +47,10 @@
 v1_loc = 345
 v4_loc = 393
 it_loc = 413
-pf_loc =  74
+d1_loc =  74
+d2_loc =  41
+fs_loc =  47
+fr_loc = 125
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -73,10 +76,10 @@ tvb = np.load('tvb_neuronal.npy')
 tvb_v1 = tvb[:, 0, v1_loc, 0]
 tvb_v4 = tvb[:, 0, v4_loc, 0]
 tvb_it = tvb[:, 0, it_loc, 0]
-tvb_fs = tvb[:, 0, pf_loc, 0]
-tvb_d1 = tvb[:, 0, pf_loc, 0]
-tvb_d2 = tvb[:, 0, pf_loc, 0]
-tvb_fr = tvb[:, 0, pf_loc, 0]
+tvb_fs = tvb[:, 0, fs_loc, 0]
+tvb_d1 = tvb[:, 0, d1_loc, 0]
+tvb_d2 = tvb[:, 0, d2_loc, 0]
+tvb_fr = tvb[:, 0, fr_loc, 0]
 
 # Extract number of timesteps from one of the matrices
 timesteps = lgns.shape[0]

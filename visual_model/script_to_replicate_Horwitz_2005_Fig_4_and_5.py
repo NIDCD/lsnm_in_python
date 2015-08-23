@@ -33,11 +33,13 @@ LSNM_simulation_time = 39600
 script_params = [0.05, 0.2, 0.05, 0.7, 0.02, [], []]
 
 # the following is random shape1, this shape has the same luminance as an 'O'
+# Contributed by John Gilbert
 rand_shape1 = rdm.sample(range(81),18)
 rand_indeces1 = np.unravel_index(rand_shape1,(9,9))
 script_params[5] = zip(*rand_indeces1)
 
 # A second random shape in inserted for a mismatch
+# Contributed by John Gilbert
 rand_shape2 = rdm.sample(range(81),18)
 rand_indeces2 = np.unravel_index(rand_shape2,(9,9))
 script_params[6] = zip(*rand_indeces2)
