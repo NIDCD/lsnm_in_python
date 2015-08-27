@@ -43,47 +43,96 @@
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
-# compute_fmri_visual.py
+# compute_BOLD_balloon_model.py
 #
-# Calculate and plot fMRI BOLD signal based using the non-linear balloon model and
-# the generalized BOLD signal model (with revised BOLD model coefficients, as
-# described in Stephan et al (2007).
+# Calculate and plot fMRI BOLD signal, using the
+# Balloon/Windkessel model, as described by Stephan et al (2007)
+# and Friston et al (2000), and
+# the BOLD signal model, as described by Stephan et al (2007) and
+# Friston et al (2000).
+# Parameters for both were taken from Friston et al (2000) and they were
+# estimated using a 2T scanner, with a TR of 1.7 seconds, 
+# 
+#
 # ... using data from visual delay-match-to-sample simulation.
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
 
 import numpy as np
+
 import matplotlib.pyplot as plt
+
+from scipy.integrate import odeint
 
 # define the name of the output file where the BOLD timeseries will be stored
 BOLD_file = 'lsnm_bold_balloon.npy'
 
 # define balloon model parameters...
-tau_s = 0.65           # Signal decay in seconds
-tau_f = 0.41           # Time of flow-dependent elimination or feedback regulation
-                       # in seconds
-alpha = 0.32           # Grubb's vessel stiffness exponent
-E_0 = 0.4              # Resting oxygen extraction fraction
+tau_s = 1.54           # rate constant of vasodilatory signal decay in seconds
+                      # from Friston et al, 2000
+
+tau_f = 0.4           # Time of flow-dependent elimination or feedback regulation
+                      # in seconds, from Friston et al, 2000
+
+alpha = 0.38           # Grubb's vessel stiffness exponent, from Friston et al, 2000
+
 tau_0 = 0.98           # Hemodynamic transit time in seconds
+                      # from Friston et al, 2000
 
-# define initial conditions for balloon model
-s = 1.0                # blood flow
-f = 1.0                # blood inflow
-v = 1.0                # venous blood volume
-q = 1.0                # deoxyhemoglobin content
-
+epsilon = 0.5         # efficacy of synaptic activity to induce the signal,
+                      # from Friston et al, 2000
+                      
 # define BOLD model parameters...
-r_0 = 25.0             # Slope of intravascular relaxation rate (Hz)
-nu_0 = 40.3            # Frequency offset at the outer surface of magnetized
-                       # vessels (Hz)
-epsilon = 0.5          # Ratio of intra- and extravascular signals
-V_0 = 4.0              # Resting blood volume fraction
-TE = 0.04              # Echo time for a 1.5T scanner
+r_0 = 25.0            # Slope of intravascular relaxation rate (Hz)
+                      # (Obata et al, 2004)
 
-# calculate BOLD model coefficients...
+nu_0 = 40.3           # Frequency offset at the outer surface of magnetized
+                      # vessels (Hz) (Obata et al, 2004)
+
+epsilon = 1.43        # Ratio of intra- and extravascular BOLD signal at rest
+                      # (Obata et al, 2004)
+
+V_0 = 0.02            # Resting blood volume fraction, from Friston et al, 2000
+
+E_0 = 0.34             # Resting oxygen extraction fraction (Friston et al, 2000)
+
+TE = 0.040            # Echo time for a 1.5T scanner (Friston et al, 2000)
+
+# calculate ratio of intra- and extravascular BOLD signal at rest
+#mu_epsilon = 1.0
+#nu_epsilon = 
+#epsilon = mu_epsilon * exp(nu_epsilon)
+
+# calculate BOLD model coefficients, from Friston et al (2000)
+#k1 = 7.0 * E_0
+#k2 = 2.0
+#k3 = 2.0 * E_0 - 0.2 
 k1 = 4.3 * nu_0 * E_0 * TE
 k2 = epsilon * r_0 * E_0 * TE
-k3 = 1 - epsilon
+k3 = 1.0 - epsilon
+
+def balloon_function(y, t, syn):
+    ''' 
+    Balloon model of hemodynamic change
+    
+    '''
+    
+    # unpack initial values
+    s = y[0]
+    f = y[1]
+    v = y[2]
+    q = y[3]
+
+    x = syn[np.floor(t * synaptic_timesteps / T)]
+
+    # the balloon model equations
+    ds = epsilon * x - (1. / tau_s) * s - (1. / tau_f) * (f - 1)
+    df = s
+    dv = (1. / tau_0) * (f - v ** (1. / alpha))
+    dq = (1. / tau_0) * ((f * (1. - (1. - E_0) ** (1. / f)) / E_0) -
+                          (v ** (1. / alpha)) * (q / v))
+
+    return [ds, df, dv, dq]
 
 # define neural synaptic time interval in seconds. The simulation data is collected
 # one data point at synaptic intervals (10 simulation timesteps). Every simulation
@@ -102,7 +151,7 @@ Ttrial = 5.5
 Tr = 2
 
 # how many scans do you want to remove from beginning of BOLD timeseries?
-scans_to_remove = 7
+scans_to_remove = 4
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the document:
@@ -177,7 +226,7 @@ synaptic_timesteps = ev1h.shape[0]
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)
-time_in_seconds = np.arange(0, T, Tr)
+time_in_seconds = np.arange(0, T, Ti)
 
 # add all units WITHIN each region together across space to calculate
 # synaptic activity in EACH brain region
@@ -189,34 +238,91 @@ d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
 fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
 fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
 
-# normalize synaptic activities
-max_value = np.amax(v1_syn)
-v1_syn = v1_syn / max_value
+# Hard coded initial conditions
+s = 0.  # s, blood flow
+f = 1.  # f, blood inflow
+v = 1.  # v, venous blood volume
+q = 1.  # q, deoxyhemoglobin content
 
-v1_BOLD = np.zeros(synaptic_timesteps)
-for t in range(0, synaptic_timesteps):
-    # calculate the change in balloon model variables:
-    ds = v1_syn[t] - (1. / tau_s) * s - (1. / tau_f) * (f - 1)
-    df = s
-    dv = (1. / tau_0) * (f - v ** (1. / alpha))
-    dq = (1. / tau_0) * ((f * (1. - (1. - E_0) ** (1. / f)) / E_0) -
-                                  (v ** (1. / alpha)) * (q / v))
+# initial conditions vectors
+y_0_v1 = [s, f, v, q]      
+y_0_v4 = [s, f, v, q]      
+y_0_it = [s, f, v, q]      
+y_0_d1 = [s, f, v, q]      
+y_0_d2 = [s, f, v, q]      
+y_0_fs = [s, f, v, q]      
+y_0_fr = [s, f, v, q]      
 
-    # update ballon model variables with rates of change estimated above
-    s = s + ds
-    f = f + df
-    v = v + dv
-    q = q + dq
+# generate synaptic time array
+t_syn = np.arange(0, synaptic_timesteps)
 
-    # now, we need to calculate BOLD signal at each module
-    v1_BOLD[t] = V_0 * ((k1 + k2) * (1. - q) + (k3 - k2) * (1. - v))
+# generate time array for solution
+t = time_in_seconds
 
-#v4_BOLD = 
-#it_BOLD =
-#d1_BOLD =
-#d2_BOLD =
-#fs_BOLD =
-#fr_BOLD =
+# solve the ODEs for given initial conditions, parameters, and timesteps
+state_v1 = odeint(balloon_function, y_0_v1, t, args=(v1_syn,) )
+state_v4 = odeint(balloon_function, y_0_v4, t, args=(v4_syn,) )
+state_it = odeint(balloon_function, y_0_it, t, args=(it_syn,) )
+state_d1 = odeint(balloon_function, y_0_d1, t, args=(d1_syn,) )
+state_d2 = odeint(balloon_function, y_0_d2, t, args=(d2_syn,) )
+state_fs = odeint(balloon_function, y_0_fs, t, args=(fs_syn,) )
+state_fr = odeint(balloon_function, y_0_fr, t, args=(fr_syn,) )
+
+# Unpack the state variables used in the BOLD model
+s_v1 = state_v1[:, 0]
+f_v1 = state_v1[:, 1]
+v_v1 = state_v1[:, 2]
+q_v1 = state_v1[:, 3]        
+
+s_v4 = state_v4[:, 0]
+f_v4 = state_v4[:, 1]
+v_v4 = state_v4[:, 2]
+q_v4 = state_v4[:, 3]        
+
+s_it = state_it[:, 0]
+f_it = state_it[:, 1]
+v_it = state_it[:, 2]
+q_it = state_it[:, 3]        
+
+s_d1 = state_d1[:, 0]
+f_d1 = state_d1[:, 1]
+v_d1 = state_d1[:, 2]
+q_d1 = state_d1[:, 3]        
+
+s_d2 = state_d2[:, 0]
+f_d2 = state_d2[:, 1]
+v_d2 = state_d2[:, 2]
+q_d2 = state_d2[:, 3]        
+
+s_fs = state_fs[:, 0]
+f_fs = state_fs[:, 1]
+v_fs = state_fs[:, 2]
+q_fs = state_fs[:, 3]        
+
+s_fr = state_fr[:, 0]
+f_fr = state_fr[:, 1]
+v_fr = state_fr[:, 2]
+q_fr = state_fr[:, 3]        
+    
+# now, we need to calculate BOLD signal at each timestep, based on v and q obtained from solving
+# balloon model ODE above.
+v1_BOLD = np.array(V_0 * (k1 * (1. - q_v1) + k2 * (1. - q_v1 / v_v1) + k3 * (1. - v_v1)) )
+v4_BOLD = np.array(V_0 * (k1 * (1. - q_v4) + k2 * (1. - q_v4 / v_v4) + k3 * (1. - v_v4)) )
+it_BOLD = np.array(V_0 * (k1 * (1. - q_it) + k2 * (1. - q_it / v_it) + k3 * (1. - v_it)) )
+d1_BOLD = np.array(V_0 * (k1 * (1. - q_d1) + k2 * (1. - q_d1 / v_d1) + k3 * (1. - v_d1)) )
+d2_BOLD = np.array(V_0 * (k1 * (1. - q_d2) + k2 * (1. - q_d2 / v_d2) + k3 * (1. - v_d2)) )
+fs_BOLD = np.array(V_0 * (k1 * (1. - q_fs) + k2 * (1. - q_fs / v_fs) + k3 * (1. - v_fs)) )
+fr_BOLD = np.array(V_0 * (k1 * (1. - q_fr) + k2 * (1. - q_fr / v_fr) + k3 * (1. - v_fr)) )
+
+# downsample the BOLD signal to produce scan rate of 2 per second
+scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
+v1_BOLD = v1_BOLD[scanning_timescale]
+v4_BOLD = v4_BOLD[scanning_timescale]
+it_BOLD = it_BOLD[scanning_timescale]
+d1_BOLD = d1_BOLD[scanning_timescale]
+d2_BOLD = d2_BOLD[scanning_timescale]
+fs_BOLD = fs_BOLD[scanning_timescale]
+fr_BOLD = fr_BOLD[scanning_timescale]
 
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
@@ -226,22 +332,22 @@ for t in range(0, synaptic_timesteps):
 
 # remove first few scans from BOLD signal array (to eliminate edge effects from
 # convolution)
-#v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
-#v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
-#it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
-#d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
-#d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
-#fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
-#fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
+v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
+v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
+it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
+d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
+d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
+fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
+fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
 
 # create a numpy array of timeseries
-#lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, d1_BOLD, d2_BOLD, fs_BOLD, fr_BOLD])
+lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, d1_BOLD, d2_BOLD, fs_BOLD, fr_BOLD])
 
 # now, save all BOLD timeseries to a single file 
-#np.save(BOLD_file, lsnm_BOLD)
+np.save(BOLD_file, lsnm_BOLD)
 
 # Set up figure to plot synaptic activity
-plt.figure(1)
+plt.figure()
 
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 
@@ -251,33 +357,31 @@ plt.plot(it_syn)
 plt.plot(d1_syn)
 
 # Set up separate figures to plot fMRI BOLD signal
-plt.figure(2)
+plt.figure()
 
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V1/V2')
 
 plt.plot(v1_BOLD, linewidth=3.0, color='yellow')
 plt.gca().set_axis_bgcolor('black')
 
-print v1_BOLD.shape
+plt.figure()
 
-#plt.figure(4)
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
 
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
+plt.plot(v4_BOLD, linewidth=3.0, color='green')
+plt.gca().set_axis_bgcolor('black')
 
-#plt.plot(v4_BOLD, linewidth=3.0, color='green')
-#plt.gca().set_axis_bgcolor('black')
+plt.figure()
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
 
-#plt.figure(5)
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
+plt.plot(it_BOLD, linewidth=3.0, color='blue')
+plt.gca().set_axis_bgcolor('black')
 
-#plt.plot(it_BOLD, linewidth=3.0, color='blue')
-#plt.gca().set_axis_bgcolor('black')
+plt.figure()
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
 
-#plt.figure(6)
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
-
-#plt.plot(d1_BOLD, linewidth=3.0, color='red')
-#plt.gca().set_axis_bgcolor('black')
+plt.plot(d1_BOLD, linewidth=3.0, color='red')
+plt.gca().set_axis_bgcolor('black')
 
 # Show the plots on the screen
 plt.show()

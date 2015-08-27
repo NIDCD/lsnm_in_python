@@ -59,16 +59,16 @@ modules = np.arange(7)
 subjects = np.arange(10)
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_subj1 = '../visual_model/subject_1/output.36trials/lsnm_bold.npy'
-BOLD_subj2 = '../visual_model/subject_2/output.36trials/lsnm_bold.npy'
-BOLD_subj3 = '../visual_model/subject_3/output.36trials/lsnm_bold.npy'
-BOLD_subj4 = '../visual_model/subject_4/output.36trials/lsnm_bold.npy'
-BOLD_subj5 = '../visual_model/subject_5/output.36trials/lsnm_bold.npy'
-BOLD_subj6 = '../visual_model/subject_6/output.36trials/lsnm_bold.npy'
-BOLD_subj7 = '../visual_model/subject_7/output.36trials/lsnm_bold.npy'
-BOLD_subj8 = '../visual_model/subject_8/output.36trials/lsnm_bold.npy'
-BOLD_subj9 = '../visual_model/subject_9/output.36trials/lsnm_bold.npy'
-BOLD_subj10 = '../visual_model/subject_10/output.36trials/lsnm_bold.npy'
+BOLD_subj1 = '../visual_model/subject_1/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj2 = '../visual_model/subject_2/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj3 = '../visual_model/subject_3/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj4 = '../visual_model/subject_4/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj5 = '../visual_model/subject_5/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj6 = '../visual_model/subject_6/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj7 = '../visual_model/subject_7/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj8 = '../visual_model/subject_8/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj9 = '../visual_model/subject_9/output.36trials/lsnm_bold_balloon.npy'
+BOLD_subj10 = '../visual_model/subject_10/output.36trials/lsnm_bold_balloon.npy'
 
 
 # open files that contain fMRI BOLD timeseries

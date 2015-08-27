@@ -65,6 +65,10 @@ number_of_trials = 36
 
 synaptic_timesteps = experiment_length
 
+# define the name of the output file where the functional connectivity timeseries will be stored
+func_conn_dms_file = 'corr_fmri_IT_vs_all_dms.npy'
+func_conn_ctl_file = 'corr_fmri_IT_vs_all_ctl.npy'
+
 # define an array with location of control trials, and another array
 # with location of task-related trials, relative to
 # an array that contains all trials (task-related trials included)
@@ -374,6 +378,16 @@ funct_conn_it_d2_ctl = IT_ctl_ts.corr(D2_ctl_ts)
 funct_conn_it_fs_ctl = IT_ctl_ts.corr(FS_ctl_ts)
 funct_conn_it_fr_ctl = IT_ctl_ts.corr(FR_ctl_ts)
 
+func_conn_dms = np.array([funct_conn_it_v1_dms,funct_conn_it_v4_dms,
+                          funct_conn_it_d1_dms,funct_conn_it_d2_dms,
+                          funct_conn_it_fs_dms,funct_conn_it_fr_dms])
+func_conn_ctl = np.array([funct_conn_it_v1_ctl,funct_conn_it_v4_ctl,
+                          funct_conn_it_d1_ctl,funct_conn_it_d2_ctl,
+                          funct_conn_it_fs_ctl,funct_conn_it_fr_ctl])
+
+# now, save all correlation coefficients to a output files 
+np.save(func_conn_dms_file, func_conn_dms)
+np.save(func_conn_ctl_file, func_conn_ctl)
 
 # define number of groups to plot
 N = 2

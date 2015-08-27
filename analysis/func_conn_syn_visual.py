@@ -53,11 +53,25 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 
+#def plot_corr(df):
+#    '''Plots correlation matrix, taking a pandas DataFrame as input
+#    '''
+#    
+#    corr = df.corr()
+#    plt.matshow(corr)
+#    plt.xticks(range(len(corr.columns)), corr.columns);
+#    plt.yticks(range(len(corr.columns)), corr.columns);
+#    plt.colorbar()
+
 # what are the locations of relevant TVB nodes within TVB array?
 #v1_loc = 345
 #v4_loc = 393
 #it_loc = 413
 #pf_loc =  74
+
+# define the name of the output file where the functional connectivity timeseries will be stored
+func_conn_dms_file = 'corr_syn_IT_vs_all_dms.npy'
+func_conn_ctl_file = 'corr_syn_IT_vs_all_ctl.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the document:
@@ -225,6 +239,29 @@ d2_control_trials_ts = np.concatenate(d2_control_trials)
 fs_control_trials_ts = np.concatenate(fs_control_trials)
 fr_control_trials_ts = np.concatenate(fr_control_trials)
 
+############ TMP BEGINS
+# put all of the time-series together in preparation forthe correlation analysis
+#dms_trials = np.array([it_DMS_trials_ts, v1_DMS_trials_ts, v4_DMS_trials_ts,
+#                       d1_DMS_trials_ts, d2_DMS_trials_ts, fs_DMS_trials_ts,
+#                       fr_DMS_trials_ts])
+#ctl_trials = np.array([it_control_trials_ts, v1_control_trials_ts, v4_control_trials_ts,
+#                       d1_control_trials_ts, d2_control_trials_ts, fs_control_trials_ts,
+#                       fr_control_trials_ts])
+# extract the length of the time-series
+#ts_length = it_DMS_trials_ts.size
+# convert to Pandas dataframe, using the transpose to convert to a format where the names
+# of the modules are the labels for each time-series
+#dms_ts = pd.DataFrame(dms_trials.T,
+#                      columns=np.array(['V1', 'V4', 'IT', 'D1', 'D2', 'FS', 'FR']),
+#                      index=list(range(ts_length)) )
+#ctl_ts = pd.DataFrame(ctl_trials.T,
+#                      columns=np.array(['V1', 'V4', 'IT', 'D1', 'D2', 'FS', 'FR']),
+#                      index=list(range(ts_length)) )
+#plot_corr(dms_ts)
+#plot_corr(ctl_ts)
+#plt.show()
+############ TMP ENDS
+
 # now, convert DMS and control timeseries into pandas timeseries, so we can analyze it
 IT_dms_ts = pd.Series(it_DMS_trials_ts)
 V1_dms_ts = pd.Series(v1_DMS_trials_ts)
@@ -258,6 +295,17 @@ funct_conn_it_d1_ctl = IT_ctl_ts.corr(D1_ctl_ts, method='pearson')
 funct_conn_it_d2_ctl = IT_ctl_ts.corr(D2_ctl_ts, method='pearson')
 funct_conn_it_fs_ctl = IT_ctl_ts.corr(FS_ctl_ts, method='pearson')
 funct_conn_it_fr_ctl = IT_ctl_ts.corr(FR_ctl_ts, method='pearson')
+
+func_conn_dms = np.array([funct_conn_it_v1_dms,funct_conn_it_v4_dms,
+                          funct_conn_it_d1_dms,funct_conn_it_d2_dms,
+                          funct_conn_it_fs_dms,funct_conn_it_fr_dms])
+func_conn_ctl = np.array([funct_conn_it_v1_ctl,funct_conn_it_v4_ctl,
+                          funct_conn_it_d1_ctl,funct_conn_it_d2_ctl,
+                          funct_conn_it_fs_ctl,funct_conn_it_fr_ctl])
+
+# now, save all correlation coefficients to a output files 
+np.save(func_conn_dms_file, func_conn_dms)
+np.save(func_conn_ctl_file, func_conn_ctl)
 
 # define number of groups to plot
 N = 2
