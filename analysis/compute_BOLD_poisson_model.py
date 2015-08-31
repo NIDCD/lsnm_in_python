@@ -90,8 +90,8 @@ scans_to_remove = 7
 # They were taken from the document:
 #       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
 # Provided by Barry Horwitz
-# Please note that arrays in Python start from zero so one does to account for that and shift
-# indices given by the above document by one location.
+# Please note that arrays in Python start from zero so one does have to account for
+# that and shift indices given by the above document by one location.
 # Use all 10 nodes within rPCAL
 v1_loc = range(344, 354)
 

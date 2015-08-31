@@ -197,5 +197,7 @@ fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
 fig, ax = plt.subplots()
 fc_mean.plot(yerr=fc_std, ax=ax, kind='bar')
 
+plt.tight_layout()
+
 # Show the plots on the screen
 plt.show()

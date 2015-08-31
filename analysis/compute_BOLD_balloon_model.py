@@ -46,14 +46,13 @@
 # compute_BOLD_balloon_model.py
 #
 # Calculate and plot fMRI BOLD signal, using the
-# Balloon/Windkessel model, as described by Stephan et al (2007)
+# Balloon model, as described by Stephan et al (2007)
 # and Friston et al (2000), and
 # the BOLD signal model, as described by Stephan et al (2007) and
 # Friston et al (2000).
 # Parameters for both were taken from Friston et al (2000) and they were
-# estimated using a 2T scanner, with a TR of 1.7 seconds, 
+# estimated using a 2T scanner, with a TR of 2 seconds, 
 # 
-#
 # ... using data from visual delay-match-to-sample simulation.
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
@@ -68,18 +67,18 @@ from scipy.integrate import odeint
 BOLD_file = 'lsnm_bold_balloon.npy'
 
 # define balloon model parameters...
-tau_s = 1.54           # rate constant of vasodilatory signal decay in seconds
+tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
                       # from Friston et al, 2000
 
-tau_f = 0.4           # Time of flow-dependent elimination or feedback regulation
+tau_f = 4.5           # Time of flow-dependent elimination or feedback regulation
                       # in seconds, from Friston et al, 2000
 
-alpha = 0.38           # Grubb's vessel stiffness exponent, from Friston et al, 2000
+alpha = 0.2           # Grubb's vessel stiffness exponent, from Friston et al, 2000
 
-tau_0 = 0.98           # Hemodynamic transit time in seconds
+tau_0 = 1.0           # Hemodynamic transit time in seconds
                       # from Friston et al, 2000
 
-epsilon = 0.5         # efficacy of synaptic activity to induce the signal,
+epsilon = 0.1         # efficacy of synaptic activity to induce the signal,
                       # from Friston et al, 2000
                       
 # define BOLD model parameters...
@@ -89,12 +88,12 @@ r_0 = 25.0            # Slope of intravascular relaxation rate (Hz)
 nu_0 = 40.3           # Frequency offset at the outer surface of magnetized
                       # vessels (Hz) (Obata et al, 2004)
 
-epsilon = 1.43        # Ratio of intra- and extravascular BOLD signal at rest
-                      # (Obata et al, 2004)
+e = 1.43        # Ratio of intra- and extravascular BOLD signal at rest
+                       # (Obata et al, 2004)
 
 V_0 = 0.02            # Resting blood volume fraction, from Friston et al, 2000
 
-E_0 = 0.34             # Resting oxygen extraction fraction (Friston et al, 2000)
+E_0 = 0.8             # Resting oxygen extraction fraction (Friston et al, 2000)
 
 TE = 0.040            # Echo time for a 1.5T scanner (Friston et al, 2000)
 
@@ -108,7 +107,7 @@ TE = 0.040            # Echo time for a 1.5T scanner (Friston et al, 2000)
 #k2 = 2.0
 #k3 = 2.0 * E_0 - 0.2 
 k1 = 4.3 * nu_0 * E_0 * TE
-k2 = epsilon * r_0 * E_0 * TE
+k2 = e * r_0 * E_0 * TE
 k3 = 1.0 - epsilon
 
 def balloon_function(y, t, syn):
@@ -151,7 +150,7 @@ Ttrial = 5.5
 Tr = 2
 
 # how many scans do you want to remove from beginning of BOLD timeseries?
-scans_to_remove = 4
+scans_to_remove = 7
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the document:
@@ -258,6 +257,20 @@ t_syn = np.arange(0, synaptic_timesteps)
 
 # generate time array for solution
 t = time_in_seconds
+
+#v1_syn[0:300] = .01          # 15 seconds do nothing
+#v1_syn[300:320] = .1       # One-second stimulus
+#v1_syn[320:920] = .01        # 30-second do nothing
+#v1_syn[920:940] = .1       # two-second stimulus
+#v1_syn[940:1540] = .01       # 30-second do nothing
+#v1_syn[1540:1560]= .1      # three-second stimulus
+#v1_syn[1560:2160]= .01       # 30-second do nothing
+#v1_syn[2160:2180]= .1      # four-second stimulus
+#v1_syn[2180:2780]= .01       # 30-second do nothing
+#v1_syn[2780:2800]= .1      # five-second stimulus
+#v1_syn[2800:3400]= .01       # 30-second do nothing
+#v1_syn[3400:3420]= .1      # one-second stimulus
+#v1_syn[3420:3959]= .01       # 30-second do nothing
 
 # solve the ODEs for given initial conditions, parameters, and timesteps
 state_v1 = odeint(balloon_function, y_0_v1, t, args=(v1_syn,) )

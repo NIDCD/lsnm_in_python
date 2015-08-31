@@ -56,6 +56,8 @@ white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
 centres = white_matter.centres
 
 # Define the hypothetical Talairach locations of each LSNM visual modules
+# Please note that the locations below are the closest locations (to the original
+# hypothetical LSNM locations) within Hagmann's brain.
 v1 = [14, -86, 7]
 v4 = [33,-70,-7]
 it = [31,-39,-6]
@@ -65,6 +67,37 @@ fs = [47, 19, 9]
 d2 = [42, 39, 2]
 fr = [29, 25, 40]
 
+# The lists of nodes below defines Regions of Interest (ROIs) to be displayed,
+# which are the nodes that were used to compute synaptic activity and therefore
+# BOLD fMRI activity.
+# Use all 10 nodes within rPCAL (LSNM V1 module embedded in TVB node 345)
+#v1_loc = range(344, 354)
+v1_loc = range(344, 350)
+
+# Use all 22 nodes within rFUS (LSNM V4 module embedded in TVB node 393)
+#v4_loc = range(390, 412)
+v4_loc = range(390, 395)
+
+# Use all 6 nodes within rPARH (LSNM IT module embedded in TVB node 413)
+#it_loc = range(412, 418)
+it_loc = range(412, 417)
+
+# Use all 22 nodes within rRMF (LSNM D1 module embedded in TVB node 74)
+#d1_loc =  range(57, 79)
+d1_loc = range(74, 79)
+
+# Use all 8 nodes within rPTRI (LSNM D2 module embedded in TVB node 41)
+#d2_loc = range(39, 47)
+d2_loc = range(39, 44)
+
+# Use all 10 nodes within rPOPE (LSNM FS module embedded in TVB node 47)
+#fs_loc = range(47, 57)
+fs_loc = range(47, 52)
+
+# Use all 13 nodes within rCMF (LSNM FS module embedded in TVB node 125)
+#fr_loc = range(125, 138)
+fr_loc = range(125, 130)
+
 #fs = [46, 33, 10] ALTERNATE LOCATION
 #d2 = [42, 22, 18] ALTERNATE LOCATION
 #fr = [38, 19, 32] ALTERNATE LOCATION
@@ -72,36 +105,89 @@ fr = [29, 25, 40]
 # Define the hypothetical Talairach locations of each LSNM auditory modules
 a1 = [48,-26,10]
 a2 = [62,-32,10]
-# Ignore the posterior ST as we are especially interested in anterior (for now)
+# Ignore the ST posterior as we are especially interested in ST anterior (for now)
 #stp = [60,-39,12]
 sta = [59,-17,4]
 apf = [56,21,5]
 
-plot_surface(CORTEX, op=0.3)
+plot_surface(CORTEX, op=0.1)
 
 # Plot the 998 nodes of Hagmann's brain
-region_centres = mlab.points3d(centres[:, 0], 
-                               centres[:, 1], 
-                               centres[:, 2],
-                               color=(0.4, 0.4, 0.4),
-                               scale_factor = 2.)
+#region_centres = mlab.points3d(centres[:, 0], 
+#                               centres[:, 1], 
+#                               centres[:, 2],
+#                               color=(0.4, 0.4, 0.4),
+#                               scale_factor = 2.)
 
 # Now plot the hypothetical locations of LSNM visual modules
-# v1 is yellow, v4 is green, it is blue, pf is red
-# V1 in yellow
-v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 10.)
-# V4 in green
-v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 10.)
-# IT in blue
-it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 10.)
-# FS in orange
-fs_module = mlab.points3d(fs[0],fs[1],fs[2],color=(1, 0.5, 0),scale_factor = 10.)
-# D1 in red
-d1_module = mlab.points3d(d1[0],d1[1],d1[2],color=(1, 0, 0),scale_factor = 10.)
-# D2 in magenta
-d2_module = mlab.points3d(d2[0],d2[1],d2[2],color=(1, 0, 1),scale_factor = 10.)
-# FR in purple
-fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 10.)
+
+# V1 ROI in yellow
+v1_module = mlab.points3d(centres[v1_loc[0]:v1_loc[-1],0],
+                          centres[v1_loc[0]:v1_loc[-1],1],
+                          centres[v1_loc[0]:v1_loc[-1],2],
+                          color=(1, 1, 0),
+                          scale_factor = 5.)
+
+print centres[v1_loc[0]:v1_loc[-1],:]
+
+# V4 ROI in green
+v4_module = mlab.points3d(centres[v4_loc[0]:v4_loc[-1],0],
+                          centres[v4_loc[0]:v4_loc[-1],1],
+                          centres[v4_loc[0]:v4_loc[-1],2],
+                          color=(0, 1, 0),
+                          scale_factor = 1.)
+
+print centres[v4_loc[0]:v4_loc[-1],:]
+
+# IT ROI in blue
+it_module = mlab.points3d(centres[it_loc[0]:it_loc[-1],0],
+                          centres[it_loc[0]:it_loc[-1],1],
+                          centres[it_loc[0]:it_loc[-1],2],
+                          color=(0, 0, 1),
+                          scale_factor = 1.)
+
+print centres[it_loc[0]:it_loc[-1],:]
+
+
+# FS ROI in orange
+fs_module = mlab.points3d(centres[fs_loc[0]:fs_loc[-1],0],
+                          centres[fs_loc[0]:fs_loc[-1],1],
+                          centres[fs_loc[0]:fs_loc[-1],2],
+                          color=(1, 0.5, 0),
+                          scale_factor = 1.)
+
+print centres[fs_loc[0]:fs_loc[-1],:]
+
+
+# D1 ROI in red
+d1_module = mlab.points3d(centres[d1_loc[0]:d1_loc[-1],0],
+                          centres[d1_loc[0]:d1_loc[-1],1],
+                          centres[d1_loc[0]:d1_loc[-1],2],
+                          color=(1, 0, 0),
+                          scale_factor = 1.)
+
+print centres[d1_loc[0]:d1_loc[-1],:]
+
+
+# D2 ROI in magenta
+d2_module = mlab.points3d(centres[d2_loc[0]:d2_loc[-1],0],
+                          centres[d2_loc[0]:d2_loc[-1],1],
+                          centres[d2_loc[0]:d2_loc[-1],2],
+                          color=(1, 0, 1),
+                          scale_factor = 1.)
+
+print centres[d2_loc[0]:d2_loc[-1],:]
+
+
+# FR ROI in purple
+fr_module = mlab.points3d(centres[fr_loc[0]:fr_loc[-1],0],
+                          centres[fr_loc[0]:fr_loc[-1],1],
+                          centres[fr_loc[0]:fr_loc[-1],2],
+                          color=(0.5, 0, 0.5),
+                          scale_factor = 1.)
+
+print centres[fr_loc[0]:fr_loc[-1],:]
+
 
 # Now plot the hypothetical locations of LSNM auditory modules
 #a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 10.)
