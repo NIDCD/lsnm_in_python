@@ -42,7 +42,7 @@
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
-
+#
 # avg_func_conn_across_subjects.py
 #
 # Reads the correlation coefficients from several python (*.npy) data files, each
@@ -88,26 +88,26 @@ func_conn_syn_ctl_subj7 = '../visual_model/subject_7/output.36trials/corr_syn_IT
 func_conn_syn_ctl_subj8 = '../visual_model/subject_8/output.36trials/corr_syn_IT_vs_all_ctl.npy'
 func_conn_syn_ctl_subj9 = '../visual_model/subject_9/output.36trials/corr_syn_IT_vs_all_ctl.npy'
 func_conn_syn_ctl_subj10 = '../visual_model/subject_10/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_fmri_dms_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_dms_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_dms.npy'
-func_conn_fmri_ctl_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
-func_conn_fmri_ctl_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_ctl.npy'
+func_conn_fmri_dms_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_ctl_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
 
 # open files that contain correlation coefficients
 fc_syn_dms_subj1 = np.load(func_conn_syn_dms_subj1)
@@ -170,6 +170,13 @@ fc_fmri_ctl = np.array([fc_fmri_ctl_subj1, fc_fmri_ctl_subj2, fc_fmri_ctl_subj3,
                         fc_fmri_ctl_subj7, fc_fmri_ctl_subj8, fc_fmri_ctl_subj9,
                         fc_fmri_ctl_subj10 ]) 
 
+# now, we need to apply a Fisher Z transformation to the correlation coefficients,
+# prior to averaging.
+fc_syn_dms  = np.arctanh(fc_syn_dms)
+fc_syn_ctl  = np.arctanh(fc_syn_ctl)
+fc_fmri_dms = np.arctanh(fc_fmri_dms)
+fc_fmri_ctl = np.arctanh(fc_fmri_ctl)
+
 # calculate the mean of correlation coefficients across all given subjects
 fc_syn_dms_mean = np.mean(fc_syn_dms, axis=0)
 fc_syn_ctl_mean = np.mean(fc_syn_ctl, axis=0)
@@ -177,10 +184,16 @@ fc_fmri_dms_mean = np.mean(fc_fmri_dms, axis=0)
 fc_fmri_ctl_mean = np.mean(fc_fmri_ctl, axis=0)
 
 # calculate the standard deviation of correlation coefficients across subjects
-fc_syn_dms_std = np.std(fc_syn_dms, axis=0)
-fc_syn_ctl_std = np.std(fc_syn_ctl, axis=0)
-fc_fmri_dms_std = np.std(fc_fmri_dms, axis=0)
-fc_fmri_ctl_std = np.std(fc_fmri_ctl, axis=0)
+#fc_syn_dms_std = np.std(fc_syn_dms, axis=0)
+#fc_syn_ctl_std = np.std(fc_syn_ctl, axis=0)
+#fc_fmri_dms_std = np.std(fc_fmri_dms, axis=0)
+#fc_fmri_ctl_std = np.std(fc_fmri_ctl, axis=0)
+
+# now, convert back to from Z to R correlation coefficients, prior to plotting
+fc_syn_dms_mean  = np.tanh(fc_syn_dms_mean)
+fc_syn_ctl_mean  = np.tanh(fc_syn_ctl_mean)
+fc_fmri_dms_mean = np.tanh(fc_fmri_dms_mean)
+fc_fmri_ctl_mean = np.tanh(fc_fmri_ctl_mean)
 
 # convert to Pandas dataframe, using the transpose to convert to a format where the names
 # of the modules are the labels for each time-series
@@ -188,14 +201,14 @@ fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
                                  fc_fmri_dms_mean, fc_fmri_ctl_mean]),
                       columns=np.array(['V1', 'V4', 'D1', 'D2', 'FS', 'FR']),
                        index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
-fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
-                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
-                      columns=np.array(['V1', 'V4', 'D1', 'D2', 'FS', 'FR']),
-                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
+#fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
+#                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
+#                      columns=np.array(['V1', 'V4', 'D1', 'D2', 'FS', 'FR']),
+#                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
 
 # now, plot means and std's using 'pandas framework...
 fig, ax = plt.subplots()
-fc_mean.plot(yerr=fc_std, ax=ax, kind='bar')
+fc_mean.plot(ax=ax, kind='bar')
 
 plt.tight_layout()
 

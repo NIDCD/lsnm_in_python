@@ -150,7 +150,7 @@ Ttrial = 5.5
 Tr = 2
 
 # how many scans do you want to remove from beginning of BOLD timeseries?
-scans_to_remove = 7
+scans_to_remove = 8
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the document:
@@ -353,8 +353,17 @@ d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
 fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
 fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
 
+# ...and normalize the BOLD signal of each module (convert to percentage signal change)
+#v1_BOLD = v1_BOLD / np.mean(v1_BOLD) * 100. - 100.
+#v4_BOLD = v4_BOLD / np.mean(v4_BOLD) * 100. - 100.
+#it_BOLD = it_BOLD / np.mean(it_BOLD) * 100. - 100.
+#d1_BOLD = d1_BOLD / np.mean(d1_BOLD) * 100. - 100.
+#d2_BOLD = d2_BOLD / np.mean(d2_BOLD) * 100. - 100.
+#fs_BOLD = fs_BOLD / np.mean(fs_BOLD) * 100. - 100.
+#fr_BOLD = fr_BOLD / np.mean(fr_BOLD) * 100. - 100.
+
 # create a numpy array of timeseries
-lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, d1_BOLD, d2_BOLD, fs_BOLD, fr_BOLD])
+lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD])
 
 # now, save all BOLD timeseries to a single file 
 np.save(BOLD_file, lsnm_BOLD)

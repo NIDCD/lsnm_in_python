@@ -46,8 +46,7 @@
 #
 # Calculate and plot functional connectivity (within-task time series correlation)
 # of the BOLD timeseries in IT with the BOLD timeseries of all other simulated brain
-# regions. It reads the BOLD time-series from a python data file (*.npy) and writes
-# the correlation coefficients to an output data file (*.npy)
+# regions.
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,12 +65,9 @@ number_of_trials = 36
 
 synaptic_timesteps = experiment_length
 
-# define the name of the input file where the BOLD timeseries are contained
-BOLD_ts_file = 'lsnm_bold_balloon.npy'
-
 # define the name of the output file where the functional connectivity timeseries will be stored
-func_conn_dms_file = 'corr_fmri_IT_vs_all_dms.npy'
-func_conn_ctl_file = 'corr_fmri_IT_vs_all_ctl.npy'
+func_conn_dms_file = 'corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_ctl_file = 'corr_fmri_IT_vs_all_ctl_balloon.npy'
 
 # define an array with location of control trials, and another array
 # with location of task-related trials, relative to
@@ -102,27 +98,120 @@ Ttrial = 5.5
 # each fMRI image.
 Tr = 2
 
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the document:
+#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
+# Provided by Barry Horwitz
+# Please note that arrays in Python start from zero so one does to account for that and shift
+# indices given by the above document by one location.
+# Use all 10 nodes within rPCAL
+#v1_loc = range(344, 354)
+v1_loc = range(344, 350)
+
+# Use all 22 nodes within rFUS
+#v4_loc = range(390, 412)
+v4_loc = range(390, 396)
+
+# Use all 6 nodes within rPARH
+#it_loc = range(412, 418)
+it_loc = range(412, 418)
+
+# Use all 22 nodes within rRMF
+#d1_loc = range(57, 79)
+d1_loc = range(73, 79)
+
+# Use all nodes within rPTRI
+#d2_loc = range(39, 47)
+d2_loc = range(39, 45)
+
+# Use all nodes within rPOPE
+#fs_loc = range(47, 57)
+fs_loc = range(47, 53)
+
+# Use all nodes within rCMF
+#fr_loc = range(125, 138)
+fr_loc = range(125, 131)
+
+# Load TVB nodes synaptic activity
+tvb_synaptic = np.load("tvb_synaptic.npy")
+
+# Load TVB host node synaptic activities into separate numpy arrays
+tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
+tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
+tvb_ed2 = tvb_synaptic[:, 0, d2_loc[0]:d2_loc[-1]+1, 0]
+tvb_efs = tvb_synaptic[:, 0, fs_loc[0]:fs_loc[-1]+1, 0]
+tvb_efr = tvb_synaptic[:, 0, fr_loc[0]:fr_loc[-1]+1, 0]
+tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
+tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
+tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
+tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
+tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
+tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
+tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
+
+# Load LSNM synaptic activity data files into numpy arrays
+ev1h = np.loadtxt('ev1h_synaptic.out')
+ev1v = np.loadtxt('ev1v_synaptic.out')
+iv1h = np.loadtxt('iv1h_synaptic.out')
+iv1v = np.loadtxt('iv1v_synaptic.out')
+ev4h = np.loadtxt('ev4h_synaptic.out')
+ev4c = np.loadtxt('ev4c_synaptic.out')
+ev4v = np.loadtxt('ev4v_synaptic.out')
+iv4h = np.loadtxt('iv4h_synaptic.out')
+iv4c = np.loadtxt('iv4c_synaptic.out')
+iv4v = np.loadtxt('iv4v_synaptic.out')
+exss = np.loadtxt('exss_synaptic.out')
+inss = np.loadtxt('inss_synaptic.out')
+efd1 = np.loadtxt('efd1_synaptic.out')
+ifd1 = np.loadtxt('ifd1_synaptic.out')
+efd2 = np.loadtxt('efd2_synaptic.out')
+ifd2 = np.loadtxt('ifd2_synaptic.out')
+exfs = np.loadtxt('exfs_synaptic.out')
+infs = np.loadtxt('infs_synaptic.out')
+exfr = np.loadtxt('exfr_synaptic.out')
+infr = np.loadtxt('infr_synaptic.out')
+
+# add all units WITHIN each region together across space to calculate
+# synaptic activity in EACH brain region
+v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
+v4_syn = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
+it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
+d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1+tvb_id1, axis=1)
+d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
+fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
+fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
+
+# Extract number of timesteps from one of the synaptic activity arrays
+synaptic_timesteps = v1_syn.size
+
 # Construct a numpy array of time points
 time_in_seconds = np.arange(0, T, Tr)
 
+# the following calculates a Poisson distribution (that will represent a hemodynamic
+# function, given lambda (the Poisson time constant characterizing width and height
+# of hemodynamic function), and tau (the time step)
+# if you would do it manually you would do the following:
+#h = [lambda_ ** tau * m.exp(-lambda_) / m.factorial(tau) for tau in time_in_seconds]
+h = poisson.pmf(time_in_seconds, lambda_)
+
+# rescale the array containing the poisson to increase its size and match the size of
+# the synaptic activity array (using linear interpolation)
 scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
 synaptic_timescale = np.arange(0, synaptic_timesteps)
-
-# open file containing BOLD time-series
-BOLD_ts = np.load(BOLD_ts_file)
-
-print BOLD_ts.shape
+h = np.interp(synaptic_timescale, scanning_timescale, h)
 
 # now, we need to convolve the synaptic activity with the hemodynamic delay
 # function to generate a BOLD signal and then bring it back to a synaptic
 # timescale
-v1_BOLD = BOLD_ts[0,:]
-v4_BOLD = BOLD_ts[1,:]
-it_BOLD = BOLD_ts[2,:]
-d1_BOLD = BOLD_ts[3,:]
-d2_BOLD = BOLD_ts[4,:]
-fs_BOLD = BOLD_ts[5,:]
-fr_BOLD = BOLD_ts[6,:]
+v1_BOLD = np.convolve(v1_syn, h)[synaptic_timescale]
+v4_BOLD = np.convolve(v4_syn, h)[synaptic_timescale]
+it_BOLD = np.convolve(it_syn, h)[synaptic_timescale]
+d1_BOLD = np.convolve(d1_syn, h)[synaptic_timescale]
+d2_BOLD = np.convolve(d2_syn, h)[synaptic_timescale]
+fs_BOLD = np.convolve(fs_syn, h)[synaptic_timescale]
+fr_BOLD = np.convolve(fr_syn, h)[synaptic_timescale]
 
 ###############################################################################
 ###############################################################################

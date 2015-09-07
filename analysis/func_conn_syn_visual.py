@@ -80,25 +80,32 @@ func_conn_ctl_file = 'corr_syn_IT_vs_all_ctl.npy'
 # Please note that arrays in Python start from zero so one does need to account for that and shift
 # indices given by the above document by one location.
 # Use all 10 nodes within rPCAL
-v1_loc = range(344, 354)
+# OLD: v1_loc = range(344, 354)
+v1_loc = range(344, 350)
 
 # Use all 22 nodes within rFUS
-v4_loc = range(390, 412)
+# OLD: v4_loc = range(390, 412)
+v4_loc = range(390, 396)
 
 # Use all 6 nodes within rPARH
+# OLD: it_loc = range(412, 418)
 it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
-d1_loc = range(57, 79)
+# OLD: d1_loc = range(57, 79)
+d1_loc = range(73, 79)
 
 # Use all nodes within rPTRI
-d2_loc = range(39, 47)
+# OLD: d2_loc = range(39, 47)
+d2_loc = range(39, 45)
 
 # Use all nodes within rPOPE
-fs_loc = range(47, 57)
+# OLD: fs_loc = range(47, 57)
+fs_loc = range(47, 53)
 
 # Use all nodes within rCMF
-fr_loc = range(125, 138)
+# OLD: fr_loc = range(125, 138)
+fr_loc = range(125, 131)
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")

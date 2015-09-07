@@ -57,7 +57,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import poisson
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'lsnm_bold.npy'
+BOLD_file = 'lsnm_bold_poisson_normalized.npy'
 
 # define neural synaptic time interval in seconds. The simulation data is collected
 # one data point at synaptic intervals (10 simulation timesteps). Every simulation
@@ -70,7 +70,7 @@ lambda_ = 6
 # Total time of scanning experiment in seconds (timesteps X 5)
 T = 198
 
-# Time for one complete trial in milliseconds
+# Time for one complete trial in seconds
 Ttrial = 5.5
 
 # the scanning happened every Tr interval below (in milliseconds). This
@@ -79,7 +79,7 @@ Ttrial = 5.5
 Tr = 2
 
 # how many scans do you want to remove from beginning of BOLD timeseries?
-scans_to_remove = 7
+scans_to_remove = 8
 
 # what are the locations of relevant TVB nodes within TVB array?
 #v1_loc = 345
@@ -93,25 +93,32 @@ scans_to_remove = 7
 # Please note that arrays in Python start from zero so one does have to account for
 # that and shift indices given by the above document by one location.
 # Use all 10 nodes within rPCAL
-v1_loc = range(344, 354)
+#v1_loc = range(344, 354)
+v1_loc = range(344, 350)
 
 # Use all 22 nodes within rFUS
-v4_loc = range(390, 412)
+#v4_loc = range(390, 412)
+v4_loc = range(390, 396)
 
 # Use all 6 nodes within rPARH
+#it_loc = range(412, 418)
 it_loc = range(412, 418)
 
 # Use all 22 nodes within rRMF
-d1_loc =  range(57, 79)
+#d1_loc =  range(57, 79)
+d1_loc = range(73, 79)
 
 # Use all nodes within rPTRI
-d2_loc = range(39, 47)
+#d2_loc = range(39, 47)
+d2_loc = range(39, 45)
 
 # Use all nodes within rPOPE
-fs_loc = range(47, 57)
+#fs_loc = range(47, 57)
+fs_loc = range(47, 53)
 
 # Use all nodes within rCMF
-fr_loc = range(125, 138)
+#fr_loc = range(125, 138)
+fr_loc = range(125, 131)
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
@@ -171,22 +178,6 @@ h = poisson.pmf(time_in_seconds, lambda_)
 # the following calculates the impulse response (convolution kernel) of the gamma
 # function, approximating the BOLD response (Boynton model).
 
-# parameters for HRF gamma function
-# time constant
-#tau = 1.25
-# phase delay
-#n = 3
-# pure delay
-#delta = 2.5
-# this is just one of the calculations needed for the gamma function
-#a = (time_in_seconds - delta) / tau
-# 'clip' out negative numbers, if any
-#a = a.clip(min=0)
-# calculate the array containing the time points of the gamma function
-#h = [(x ** (n-1) * m.exp(-x)) / (tau * m.factorial(n-1)) for x in a]
-# now, convert to a numpy array
-#h = np.asarray(h)
-
 # rescale the array containing the poisson to increase its size and match the size of
 # the synaptic activity array (using linear interpolation)
 scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
@@ -230,12 +221,23 @@ d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
 fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
 fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
 
+# ...and normalize the BOLD signal of each module (convert to percentage signal change)
+v1_BOLD = v1_BOLD / np.mean(v1_BOLD) * 100. - 100.
+v4_BOLD = v4_BOLD / np.mean(v4_BOLD) * 100. - 100.
+it_BOLD = it_BOLD / np.mean(it_BOLD) * 100. - 100.
+d1_BOLD = d1_BOLD / np.mean(d1_BOLD) * 100. - 100.
+d2_BOLD = d2_BOLD / np.mean(d2_BOLD) * 100. - 100.
+fs_BOLD = fs_BOLD / np.mean(fs_BOLD) * 100. - 100.
+fr_BOLD = fr_BOLD / np.mean(fr_BOLD) * 100. - 100.
+
 # create a dictionary of timeseries indexed by module name
-lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, d1_BOLD, d2_BOLD, fs_BOLD, fr_BOLD])
+lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD])
 
 print lsnm_BOLD.shape
 
 # now, save all BOLD timeseries to a single file 
+# Please note that we are saving the original BOLD time-series, before removing the
+# edge effects
 np.save(BOLD_file, lsnm_BOLD)
 
 # Set up figure to plot synaptic activity
