@@ -317,8 +317,8 @@ class TaskThread(QtCore.QThread):
         white_matter_coupling = coupling.Linear(a=TVB_global_coupling_strength)
 
         #Initialise an Integrator
-        heunint = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
-        heunint.configure()
+        euler_int = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
+        euler_int.configure()
 
         # Define a monitor to be used for TVB simulation (i.e., which simulated data is
         # going to be collected
@@ -327,7 +327,7 @@ class TaskThread(QtCore.QThread):
         # Initialize a TVB simulator
         sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
                                   coupling=white_matter_coupling,
-                                  integrator=heunint, monitors=what_to_watch)
+                                  integrator=euler_int, monitors=what_to_watch)
 
         sim.configure()
 
@@ -408,7 +408,7 @@ class TaskThread(QtCore.QThread):
         
         # declare a gain for the link from TVB to LSNM (around which normally distributed
         # random numbers will be generated)
-        lsnm_tvb_gain = 0.001
+        lsnm_tvb_gain = 5e-05
         
         # declare an integration interval for the 'integrated' synaptic activity,
         # for fMRI computation, in number of timesteps.
@@ -633,8 +633,8 @@ class TaskThread(QtCore.QThread):
         # open one output file per module to record electrical and synaptic activities
         for module in modules.keys():
             # open one output file per module
-            fs_neuronal.append(open('./output/' + module + '.out', 'w'))
-            fs_synaptic.append(open('./output/' + module + '_synaptic.out', 'w'))
+            fs_neuronal.append(open(module + '.out', 'w'))
+            fs_synaptic.append(open(module + '_synaptic.out', 'w'))
 
         # create a dictionary so that each module name is associated with one output file
         fs_dict_neuronal = dict(zip(modules.keys(), fs_neuronal))

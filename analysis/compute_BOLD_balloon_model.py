@@ -56,12 +56,28 @@
 # ... using data from visual delay-match-to-sample simulation.
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
+#
+# The input data (synaptic activities) and the output (BOLD time-series) are numpy arrays
+# with columns in the following order:
+#
+# V1 ROI (right hemisphere, includes LSNM units and TVB nodes) 
+# V4 ROI (right hemisphere, includes LSNM units and TVB nodes)
+# IT ROI (right hemisphere, includes LSNM units and TVB nodes)
+# FS ROI (right hemisphere, includes LSNM units and TVB nodes)
+# D1 ROI (right hemisphere, includes LSNM units and TVB nodes)
+# D2 ROI (right hemisphere, includes LSNM units and TVB nodes)
+# FR ROI (right hemisphere, includes LSNM units and TVB nodes)
+# IT ROI (left hemisphere, contains only  TVB nodes)
+
 
 import numpy as np
 
 import matplotlib.pyplot as plt
 
 from scipy.integrate import odeint
+
+# define the name of the input file where the synaptic activities are stored
+SYN_file  = 'synaptic_in_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
 BOLD_file = 'lsnm_bold_balloon.npy'
@@ -152,90 +168,25 @@ Tr = 2
 # how many scans do you want to remove from beginning of BOLD timeseries?
 scans_to_remove = 8
 
-# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
-# They were taken from the document:
-#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
-# Provided by Barry Horwitz
-# Please note that arrays in Python start from zero so one does to account for that and shift
-# indices given by the above document by one location.
-# Use all 10 nodes within rPCAL
-v1_loc = range(344, 354)
+# read the input file that contains the synaptic activities of all ROIs
+syn = np.load(SYN_file)
 
-# Use all 22 nodes within rFUS
-v4_loc = range(390, 412)
-
-# Use all 6 nodes within rPARH
-it_loc = range(412, 418)
-
-# Use all 22 nodes within rRMF
-d1_loc =  range(57, 79)
-
-# Use all nodes within rPTRI
-d2_loc = range(39, 47)
-
-# Use all nodes within rPOPE
-fs_loc = range(47, 57)
-
-# Use all nodes within rCMF
-fr_loc = range(125, 138)
-
-# Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
-
-# Load TVB host node synaptic activities into separate numpy arrays
-tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
-tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_ed2 = tvb_synaptic[:, 0, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_efs = tvb_synaptic[:, 0, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_efr = tvb_synaptic[:, 0, fr_loc[0]:fr_loc[-1]+1, 0]
-tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
-tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
-
-# Load LSNM synaptic activity data files into a numpy arrays
-ev1h = np.loadtxt('ev1h_synaptic.out')
-ev1v = np.loadtxt('ev1v_synaptic.out')
-iv1h = np.loadtxt('iv1h_synaptic.out')
-iv1v = np.loadtxt('iv1v_synaptic.out')
-ev4h = np.loadtxt('ev4h_synaptic.out')
-ev4v = np.loadtxt('ev4v_synaptic.out')
-ev4c = np.loadtxt('ev4c_synaptic.out')
-iv4h = np.loadtxt('iv4h_synaptic.out')
-iv4v = np.loadtxt('iv4v_synaptic.out')
-iv4c = np.loadtxt('iv4c_synaptic.out')
-exss = np.loadtxt('exss_synaptic.out')
-inss = np.loadtxt('inss_synaptic.out')
-efd1 = np.loadtxt('efd1_synaptic.out')
-ifd1 = np.loadtxt('ifd1_synaptic.out')
-efd2 = np.loadtxt('efd2_synaptic.out')
-ifd2 = np.loadtxt('ifd2_synaptic.out')
-exfs = np.loadtxt('exfs_synaptic.out')
-infs = np.loadtxt('infs_synaptic.out')
-exfr = np.loadtxt('exfr_synaptic.out')
-infr = np.loadtxt('infr_synaptic.out')
+# extract the synaptic activities corresponding to each ROI:
+v1_syn = syn[0]
+v4_syn = syn[1]
+it_syn = syn[2]
+fs_syn = syn[3]
+d1_syn = syn[4]
+d2_syn = syn[5]
+fr_syn = syn[6]
+lit_syn= syn[7]
 
 # Extract number of timesteps from one of the synaptic activity arrays
-synaptic_timesteps = ev1h.shape[0]
+synaptic_timesteps = v1_syn.size
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)
 time_in_seconds = np.arange(0, T, Ti)
-
-# add all units WITHIN each region together across space to calculate
-# synaptic activity in EACH brain region
-v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
-v4_syn = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
-it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
-d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1+tvb_id1, axis=1)
-d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
-fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
-fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
 
 # Hard coded initial conditions
 s = 0.  # s, blood flow
@@ -247,10 +198,11 @@ q = 1.  # q, deoxyhemoglobin content
 y_0_v1 = [s, f, v, q]      
 y_0_v4 = [s, f, v, q]      
 y_0_it = [s, f, v, q]      
+y_0_fs = [s, f, v, q]      
 y_0_d1 = [s, f, v, q]      
 y_0_d2 = [s, f, v, q]      
-y_0_fs = [s, f, v, q]      
 y_0_fr = [s, f, v, q]      
+y_0_lit= [s, f, v, q]
 
 # generate synaptic time array
 t_syn = np.arange(0, synaptic_timesteps)
@@ -258,6 +210,7 @@ t_syn = np.arange(0, synaptic_timesteps)
 # generate time array for solution
 t = time_in_seconds
 
+# Use the following lines to test the balloon BOLD model
 #v1_syn[0:300] = .01          # 15 seconds do nothing
 #v1_syn[300:320] = .1       # One-second stimulus
 #v1_syn[320:920] = .01        # 30-second do nothing
@@ -280,6 +233,7 @@ state_d1 = odeint(balloon_function, y_0_d1, t, args=(d1_syn,) )
 state_d2 = odeint(balloon_function, y_0_d2, t, args=(d2_syn,) )
 state_fs = odeint(balloon_function, y_0_fs, t, args=(fs_syn,) )
 state_fr = odeint(balloon_function, y_0_fr, t, args=(fr_syn,) )
+state_lit= odeint(balloon_function, y_0_lit,t, args=(lit_syn,))
 
 # Unpack the state variables used in the BOLD model
 s_v1 = state_v1[:, 0]
@@ -297,6 +251,11 @@ f_it = state_it[:, 1]
 v_it = state_it[:, 2]
 q_it = state_it[:, 3]        
 
+s_fs = state_fs[:, 0]
+f_fs = state_fs[:, 1]
+v_fs = state_fs[:, 2]
+q_fs = state_fs[:, 3]        
+
 s_d1 = state_d1[:, 0]
 f_d1 = state_d1[:, 1]
 v_d1 = state_d1[:, 2]
@@ -307,25 +266,26 @@ f_d2 = state_d2[:, 1]
 v_d2 = state_d2[:, 2]
 q_d2 = state_d2[:, 3]        
 
-s_fs = state_fs[:, 0]
-f_fs = state_fs[:, 1]
-v_fs = state_fs[:, 2]
-q_fs = state_fs[:, 3]        
-
 s_fr = state_fr[:, 0]
 f_fr = state_fr[:, 1]
 v_fr = state_fr[:, 2]
 q_fr = state_fr[:, 3]        
-    
+
+s_lit= state_lit[:,0]
+f_lit= state_lit[:,1]
+v_lit= state_lit[:,2]
+q_lit= state_lit[:,3]
+
 # now, we need to calculate BOLD signal at each timestep, based on v and q obtained from solving
 # balloon model ODE above.
 v1_BOLD = np.array(V_0 * (k1 * (1. - q_v1) + k2 * (1. - q_v1 / v_v1) + k3 * (1. - v_v1)) )
 v4_BOLD = np.array(V_0 * (k1 * (1. - q_v4) + k2 * (1. - q_v4 / v_v4) + k3 * (1. - v_v4)) )
 it_BOLD = np.array(V_0 * (k1 * (1. - q_it) + k2 * (1. - q_it / v_it) + k3 * (1. - v_it)) )
+fs_BOLD = np.array(V_0 * (k1 * (1. - q_fs) + k2 * (1. - q_fs / v_fs) + k3 * (1. - v_fs)) )
 d1_BOLD = np.array(V_0 * (k1 * (1. - q_d1) + k2 * (1. - q_d1 / v_d1) + k3 * (1. - v_d1)) )
 d2_BOLD = np.array(V_0 * (k1 * (1. - q_d2) + k2 * (1. - q_d2 / v_d2) + k3 * (1. - v_d2)) )
-fs_BOLD = np.array(V_0 * (k1 * (1. - q_fs) + k2 * (1. - q_fs / v_fs) + k3 * (1. - v_fs)) )
 fr_BOLD = np.array(V_0 * (k1 * (1. - q_fr) + k2 * (1. - q_fr / v_fr) + k3 * (1. - v_fr)) )
+lit_BOLD= np.array(V_0 * (k1 * (1. - q_lit)+ k2 * (1. - q_lit/v_lit) + k3 * (1. - v_lit)) )
 
 # downsample the BOLD signal to produce scan rate of 2 per second
 scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
@@ -336,6 +296,7 @@ d1_BOLD = d1_BOLD[scanning_timescale]
 d2_BOLD = d2_BOLD[scanning_timescale]
 fs_BOLD = fs_BOLD[scanning_timescale]
 fr_BOLD = fr_BOLD[scanning_timescale]
+lit_BOLD=lit_BOLD[scanning_timescale]
 
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
@@ -352,6 +313,7 @@ d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
 d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
 fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
 fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
+lit_BOLD= np.delete(lit_BOLD,np.arange(scans_to_remove))
 
 # ...and normalize the BOLD signal of each module (convert to percentage signal change)
 #v1_BOLD = v1_BOLD / np.mean(v1_BOLD) * 100. - 100.
@@ -363,7 +325,9 @@ fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
 #fr_BOLD = fr_BOLD / np.mean(fr_BOLD) * 100. - 100.
 
 # create a numpy array of timeseries
-lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD, fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD])
+lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD,
+                      fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD,
+                      lit_BOLD ])
 
 # now, save all BOLD timeseries to a single file 
 np.save(BOLD_file, lsnm_BOLD)
@@ -403,6 +367,12 @@ plt.figure()
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
 
 plt.plot(d1_BOLD, linewidth=3.0, color='red')
+plt.gca().set_axis_bgcolor('black')
+
+plt.figure()
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN LIT')
+
+plt.plot(lit_BOLD, linewidth=3.0, color='pink')
 plt.gca().set_axis_bgcolor('black')
 
 # Show the plots on the screen

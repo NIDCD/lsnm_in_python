@@ -53,35 +53,36 @@ import matplotlib.pyplot as plt
 #it_loc = 413
 #pf_loc =  74
 
-# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
-# They were taken from the document:
-#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
-# Provided by Barry Horwitz
-# Please note that arrays in Python start from zero so one does to account for that and shift
-# indices given by the above document by one location.
-# Use all 10 nodes within rPCAL
-v1_loc = range(344, 354)
-
-# Use all 22 nodes within rFUS
-v4_loc = range(390, 412)
-
-# Use all 6 nodes within rPARH
-it_loc = range(412, 418)
-
-# Use all 22 nodes within rRMF
-d1_loc = range(57, 79)
-
-# Use all nodes within rPTRI
-d2_loc = range(39, 47)
-
-# Use all nodes within rPOPE
-fs_loc = range(47, 57)
-
-# Use all nodes within rCMF
-fr_loc = range(125, 138)
-
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_synaptic.npy")
+
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the excel document:
+#       "Hagmann's Talairach Coordinates (obtained from TVB).xlsx"
+# Extracted from The Virtual Brain Demo Data Sets
+# Please note that arrays in Python start from zero so one does need to account for that and shift
+# indices given by the above document by one location.
+# Use 6 nodes within rPCAL
+v1_loc = range(344, 350)     # Hagmann's brain nodes included within V1 ROI
+
+# Use 6 nodes within rFUS
+v4_loc = range(390, 396)     # Hagmann's brain nodes included within V4 ROI       
+
+# Use 6 nodes within rPARH
+it_loc = range(412, 418)     # Hagmann's brain nodes included within IT ROI
+
+# Use 6 nodes within rRMF
+d1_loc = range(73, 79)       # Hagmann's brain nodes included within D1 ROI
+
+# Use 6 nodes within rPTRI
+d2_loc = range(39, 45)       # Hagmann's brain nodes included within D2 ROI
+
+# Use 6 nodes within rPOPE
+fs_loc = range(47, 53)       # Hagmann's brain nodes included within FS ROI
+
+# Use 6 nodes within rCMF
+fr_loc = range(125, 131)     # Hagmann's brain nodes included within FR ROI
+
 
 # Load TVB host node synaptic activities into separate numpy arrays
 # the index '0' stores excitary (E) synaptic activity, and index '1'
@@ -132,10 +133,16 @@ plt.figure(1)
 
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 
+ax1=plt.subplot()
+
+ax1.set_ylim([400, 1800])
+
 # Plot V1 module
-plt.plot(t, v1)
-plt.plot(t, it)
-plt.plot(t, d1)
+plt.plot(t, v1, color='yellow')
+plt.plot(t, it, color='blue')
+plt.plot(t, d1, color='red')
+
+plt.gca().set_axis_bgcolor('black')
 
 # Show the plot on the screen
 plt.show()

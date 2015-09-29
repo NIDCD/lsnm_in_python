@@ -73,7 +73,7 @@ num_of_scans = T / Tr - scans_removed
 
 num_of_subjects = 10
 
-num_of_modules = 7
+num_of_modules = 8
 
 # construct array of indices of modules contained in an LSNM model
 modules = np.arange(num_of_modules)
@@ -97,16 +97,16 @@ syn_subj = ['../visual_model/subject_1/output.36trials/synaptic_in_ROI.npy',
             '../visual_model/subject_8/output.36trials/synaptic_in_ROI.npy',
             '../visual_model/subject_9/output.36trials/synaptic_in_ROI.npy',
             '../visual_model/subject_10/output.36trials/synaptic_in_ROI.npy']
-BOLD_subj = ['../visual_model/subject_1/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_2/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_3/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_4/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_5/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_6/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_7/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_8/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_9/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_10/output.36trials/lsnm_bold_balloon.npy']
+BOLD_subj = ['../visual_model/subject_1/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_2/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_3/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_4/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_5/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_6/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_7/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_8/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_9/output.36trials/lsnm_bold_poisson.npy',
+             '../visual_model/subject_10/output.36trials/lsnm_bold_poisson.npy']
 
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_syn = np.zeros((num_of_subjects, num_of_modules, experiment_length))
@@ -142,7 +142,7 @@ plt.figure(1)
 plt.suptitle('MEAN SYNAPTIC ACTIVITIES BOLD ACROSS SUBJECTS')
 
 plt.plot(syn_mean[0], linewidth=3.0, color='yellow')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[0]+BOLD_std[0], BOLD_mean[0]-BOLD_std[0],
+#plt.fill_between(BOLD_timescale, BOLD_mean[0]+BOLD_std[0], BOLD_mean[0]-BOLD_std[0],
 #                 facecolor='yellow', alpha=0.1)
 
 plt.gca().set_axis_bgcolor('black')
@@ -163,9 +163,10 @@ plt.figure(2)
 
 plt.suptitle('MEAN fMRI BOLD SIGNAL ACROSS SUBJECTS')
 
-plt.plot(BOLD_timescale, BOLD_mean[0], linewidth=3.0, color='yellow')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[0]+BOLD_std[0], BOLD_mean[0]-BOLD_std[0],
-#                 facecolor='yellow', alpha=0.1)
+# plot V1 BOLD time-series in yellow
+plt.plot(BOLD_timescale, 1000 + BOLD_mean[0], linewidth=3.0, color='yellow')
+#plt.fill_between(BOLD_timescale, BOLD_mean[0]+BOLD_std[0], BOLD_mean[0]-BOLD_std[0],
+#                 facecolor='yellow', alpha=0.5)
 
 # display gray bands in figure area to show where control blocks are located
 plt.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
@@ -176,53 +177,40 @@ plt.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
 plt.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(2)
-
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN V4 ACROSS SUBJECTS')
-
+# plot V4 BOLD time-series in green
 plt.plot(BOLD_timescale, BOLD_mean[1], linewidth=3.0, color='lime')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[1]+BOLD_std[1], BOLD_mean[1]-BOLD_std[1],
-#                 facecolor='green', alpha=0.1)
+#plt.fill_between(BOLD_timescale, BOLD_mean[1]+BOLD_std[1], BOLD_mean[1]-BOLD_std[1],
+#                 facecolor='green', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(3)
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN IT ACROSS SUBJECTS')
-
-plt.plot(BOLD_timescale, BOLD_mean[2], linewidth=3.0, color='blue')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[2]+BOLD_std[2], BOLD_mean[2]-BOLD_std[2],
-#                 facecolor='blue', alpha=0.1)
+# plot IT BOLD time-series in blue
+plt.plot(BOLD_timescale, 7500 + BOLD_mean[2], linewidth=3.0, color='blue')
+#plt.fill_between(BOLD_timescale, BOLD_mean[2]+BOLD_std[2], BOLD_mean[2]-BOLD_std[2],
+#                 facecolor='blue', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(4)
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN D1 ACROSS SUBJECTS')
-
-plt.plot(BOLD_timescale, BOLD_mean[3], linewidth=3.0, color='red')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[3]+BOLD_std[3], BOLD_mean[3]-BOLD_std[3],
-#                 facecolor='red', alpha=0.1)
+# plot FS BOLD time-series in orange
+plt.plot(BOLD_timescale, 2500 + BOLD_mean[3], linewidth=3.0, color='orange')
+#plt.fill_between(BOLD_timescale, BOLD_mean[3]+BOLD_std[3], BOLD_mean[3]-BOLD_std[3],
+#                 facecolor='red', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(5)
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN D2 ACROSS SUBJECTS')
-
-plt.plot(BOLD_timescale, BOLD_mean[4], linewidth=3.0, color='magenta')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[4]+BOLD_std[4], BOLD_mean[4]-BOLD_std[4],
-#                 facecolor='magenta', alpha=0.1)
+# plot D1 BOLD time-series in red
+plt.plot(BOLD_timescale, 2000 + BOLD_mean[4], linewidth=3.0, color='red')
+#plt.fill_between(BOLD_timescale, BOLD_mean[4]+BOLD_std[4], BOLD_mean[4]-BOLD_std[4],
+#                 facecolor='magenta', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(6)
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN FS ACROSS SUBJECTS')
-
-plt.plot(BOLD_timescale, BOLD_mean[5], linewidth=3.0, color='orange')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[5]+BOLD_std[5], BOLD_mean[5]-BOLD_std[5],
-#                 facecolor='orange', alpha=0.1)
+# plot D2 BOLD time-series in pink
+plt.plot(BOLD_timescale, -1500 + BOLD_mean[5], linewidth=3.0, color='pink')
+#plt.fill_between(BOLD_timescale, BOLD_mean[5]+BOLD_std[5], BOLD_mean[5]-BOLD_std[5],
+#                 facecolor='orange', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
-#plt.figure(7)
-#plt.suptitle('MEAN fMRI BOLD SIGNAL IN FR ACROSS SUBJECTS')
-
-plt.plot(BOLD_timescale, BOLD_mean[6], linewidth=3.0, color='darkorchid')
-#plt.fill_between(BOLD_ts_length, BOLD_mean[6]+BOLD_std[6], BOLD_mean[6]-BOLD_std[6],
-#                 facecolor='purple', alpha=0.1)
+# plot FR BOLD time-series in purple
+plt.plot(BOLD_timescale, -500 + BOLD_mean[6], linewidth=3.0, color='darkorchid')
+#plt.fill_between(BOLD_timescale, BOLD_mean[6]+BOLD_std[6], BOLD_mean[6]-BOLD_std[6],
+#                 facecolor='purple', alpha=0.5)
 #plt.gca().set_axis_bgcolor('black')
 
 # Show the plots on the screen

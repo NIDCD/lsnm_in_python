@@ -82,6 +82,10 @@ v4_loc = range(390, 396)
 #it_loc = range(412, 418)
 it_loc = range(412, 418)
 
+# Use all 10 nodes within rPOPE (LSNM FS module embedded in TVB node 47)
+#fs_loc = range(47, 57)
+fs_loc = range(47, 53)
+
 # Use all 22 nodes within rRMF (LSNM D1 module embedded in TVB node 74)
 #d1_loc =  range(57, 79)
 d1_loc = range(73, 79)
@@ -90,11 +94,7 @@ d1_loc = range(73, 79)
 #d2_loc = range(39, 47)
 d2_loc = range(39, 45)
 
-# Use all 10 nodes within rPOPE (LSNM FS module embedded in TVB node 47)
-#fs_loc = range(47, 57)
-fs_loc = range(47, 53)
-
-# Use all 13 nodes within rCMF (LSNM FS module embedded in TVB node 125)
+# Use all 13 nodes within rCMF (LSNM FR module embedded in TVB node 125)
 #fr_loc = range(125, 138)
 fr_loc = range(125, 131)
 

@@ -39,19 +39,24 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on July 9 2015  
+#   Last updated by Antonio Ulloa on September 7 2015  
 # **************************************************************************/
 
 # func_conn_syn_visual.py
 #
 # Calculate and plot functional connectivity (within-task time series correlation)
 # of IT with all other simulated brain areas, using the output 
-# from visual DMS task (integrated synaptic activity)
+# from visual DMS task (integrated synaptic activity) on a single subject.
 
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+
 import pandas as pd
+
+# set matplot lib parameters to produce visually appealing plots
+mpl.style.use('ggplot')
 
 #def plot_corr(df):
 #    '''Plots correlation matrix, taking a pandas DataFrame as input
@@ -69,64 +74,12 @@ import pandas as pd
 #it_loc = 413
 #pf_loc =  74
 
+# define the name of the input file where the synaptic activities are stored
+SYN_file  = 'synaptic_in_ROI.npy'
+
 # define the name of the output file where the functional connectivity timeseries will be stored
 func_conn_dms_file = 'corr_syn_IT_vs_all_dms.npy'
 func_conn_ctl_file = 'corr_syn_IT_vs_all_ctl.npy'
-
-# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
-# They were taken from the document:
-#       "Hagmann's Brain Talairach Coordinates (obtained from Barry).doc"
-# Provided by Barry Horwitz
-# Please note that arrays in Python start from zero so one does need to account for that and shift
-# indices given by the above document by one location.
-# Use all 10 nodes within rPCAL
-# OLD: v1_loc = range(344, 354)
-v1_loc = range(344, 350)
-
-# Use all 22 nodes within rFUS
-# OLD: v4_loc = range(390, 412)
-v4_loc = range(390, 396)
-
-# Use all 6 nodes within rPARH
-# OLD: it_loc = range(412, 418)
-it_loc = range(412, 418)
-
-# Use all 22 nodes within rRMF
-# OLD: d1_loc = range(57, 79)
-d1_loc = range(73, 79)
-
-# Use all nodes within rPTRI
-# OLD: d2_loc = range(39, 47)
-d2_loc = range(39, 45)
-
-# Use all nodes within rPOPE
-# OLD: fs_loc = range(47, 57)
-fs_loc = range(47, 53)
-
-# Use all nodes within rCMF
-# OLD: fr_loc = range(125, 138)
-fr_loc = range(125, 131)
-
-# Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
-
-# Load TVB host node synaptic activities into separate numpy arrays
-# the index '0' stores excitary (E) synaptic activity, and index '1'
-# stores inhibitory synaptic activity
-tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
-tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_ed2 = tvb_synaptic[:, 0, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_efs = tvb_synaptic[:, 0, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_efr = tvb_synaptic[:, 0, fr_loc[0]:fr_loc[-1]+1, 0]
-tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
-tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
 
 # define the length of both each trial and the whole experiment
 # in synaptic timesteps, as well as total number of trials
@@ -145,37 +98,18 @@ ITI_length = 20
 control_trials = [3,4,5,9,10,11,15,16,17,21,22,23,27,28,29,33,34,35]
 dms_trials =     [0,1,2,6,7,8,12,13,14,18,19,20,24,25,26,30,31,32]
 
-# Load LSNM synaptic activity data files into a numpy arrays
-ev1h = np.loadtxt('ev1h_synaptic.out')
-ev1v = np.loadtxt('ev1v_synaptic.out')
-iv1h = np.loadtxt('iv1h_synaptic.out')
-iv1v = np.loadtxt('iv1v_synaptic.out')
-ev4h = np.loadtxt('ev4h_synaptic.out')
-ev4v = np.loadtxt('ev4v_synaptic.out')
-ev4c = np.loadtxt('ev4c_synaptic.out')
-iv4h = np.loadtxt('iv4h_synaptic.out')
-iv4v = np.loadtxt('iv4v_synaptic.out')
-iv4c = np.loadtxt('iv4c_synaptic.out')
-exss = np.loadtxt('exss_synaptic.out')
-inss = np.loadtxt('inss_synaptic.out')
-efd1 = np.loadtxt('efd1_synaptic.out')
-ifd1 = np.loadtxt('ifd1_synaptic.out')
-efd2 = np.loadtxt('efd2_synaptic.out')
-ifd2 = np.loadtxt('ifd2_synaptic.out')
-exfs = np.loadtxt('exfs_synaptic.out')
-infs = np.loadtxt('infs_synaptic.out')
-exfr = np.loadtxt('exfr_synaptic.out')
-infr = np.loadtxt('infr_synaptic.out')
+# open file that contains the synaptic activities
+syn = np.load(SYN_file)
 
-# add all units WITHIN each region together across space to calculate
-# synaptic activity in EACH brain region
-v1_syn = np.sum(ev1h + ev1v + iv1h + iv1v, axis = 1) + np.sum(tvb_ev1+tvb_iv1, axis=1)
-v4_syn = np.sum(ev4h + ev4v + ev4c + iv4h + iv4v + iv4c, axis = 1) + np.sum(tvb_ev4+tvb_iv4, axis=1)
-it_syn = np.sum(exss + inss, axis = 1) + np.sum(tvb_eit+tvb_iit, axis=1)
-d1_syn = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1+tvb_id1, axis=1)
-d2_syn = np.sum(efd2 + ifd2, axis = 1) + np.sum(tvb_ed2+tvb_id2, axis=1)
-fs_syn = np.sum(exfs + infs, axis = 1) + np.sum(tvb_efs+tvb_ifs, axis=1)
-fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
+# extract synaptic activities for each ROI
+v1_syn = syn[0]
+v4_syn = syn[1]
+it_syn = syn[2]
+fs_syn = syn[3]
+d1_syn = syn[4]
+d2_syn = syn[5]
+fr_syn = syn[6]
+lit_syn= syn[7]
 
 # Gets rid of the control trials in the synaptic activity arrays,
 # by separating the task-related trials and concatenating them
@@ -190,6 +124,7 @@ d1_subarrays = np.split(d1_syn, number_of_trials)
 d2_subarrays = np.split(d2_syn, number_of_trials)
 fs_subarrays = np.split(fs_syn, number_of_trials)
 fr_subarrays = np.split(fr_syn, number_of_trials)
+lit_subarrays= np.split(lit_syn,number_of_trials)
 
 # we get rid of the inter-trial interval for each and all trials
 # 1 second at the end of each trial.
@@ -220,6 +155,8 @@ d1_DMS_trials = np.delete(d1_subarrays, control_trials, axis=0)
 d2_DMS_trials = np.delete(d2_subarrays, control_trials, axis=0)
 fs_DMS_trials = np.delete(fs_subarrays, control_trials, axis=0)
 fr_DMS_trials = np.delete(fr_subarrays, control_trials, axis=0)
+lit_DMS_trials= np.delete(lit_subarrays,control_trials, axis=0)
+
 # ... and concatenate the task-related trials together
 it_DMS_trials_ts = np.concatenate(it_DMS_trials)
 v1_DMS_trials_ts = np.concatenate(v1_DMS_trials)
@@ -228,6 +165,7 @@ d1_DMS_trials_ts = np.concatenate(d1_DMS_trials)
 d2_DMS_trials_ts = np.concatenate(d2_DMS_trials)
 fs_DMS_trials_ts = np.concatenate(fs_DMS_trials)
 fr_DMS_trials_ts = np.concatenate(fr_DMS_trials)
+lit_DMS_trials_ts= np.concatenate(lit_DMS_trials)
 
 # but also, get rid of the DMS task trials, to create arrays that contain only control trials
 it_control_trials = np.delete(it_subarrays, dms_trials, axis=0)
@@ -237,6 +175,8 @@ d1_control_trials = np.delete(d1_subarrays, dms_trials, axis=0)
 d2_control_trials = np.delete(d2_subarrays, dms_trials, axis=0)
 fs_control_trials = np.delete(fs_subarrays, dms_trials, axis=0)
 fr_control_trials = np.delete(fr_subarrays, dms_trials, axis=0)
+lit_control_trials= np.delete(lit_subarrays,dms_trials, axis=0)
+
 # ... and concatenate the control task trials together
 it_control_trials_ts = np.concatenate(it_control_trials)
 v1_control_trials_ts = np.concatenate(v1_control_trials)
@@ -245,6 +185,7 @@ d1_control_trials_ts = np.concatenate(d1_control_trials)
 d2_control_trials_ts = np.concatenate(d2_control_trials)
 fs_control_trials_ts = np.concatenate(fs_control_trials)
 fr_control_trials_ts = np.concatenate(fr_control_trials)
+lit_control_trials_ts= np.concatenate(lit_control_trials)
 
 ############ TMP BEGINS
 # put all of the time-series together in preparation forthe correlation analysis
@@ -277,6 +218,7 @@ D1_dms_ts = pd.Series(d1_DMS_trials_ts)
 D2_dms_ts = pd.Series(d2_DMS_trials_ts)
 FS_dms_ts = pd.Series(fs_DMS_trials_ts)
 FR_dms_ts = pd.Series(fr_DMS_trials_ts)
+LIT_dms_ts= pd.Series(lit_DMS_trials_ts)
 
 IT_ctl_ts = pd.Series(it_control_trials_ts)
 V1_ctl_ts = pd.Series(v1_control_trials_ts)
@@ -285,7 +227,7 @@ D1_ctl_ts = pd.Series(d1_control_trials_ts)
 D2_ctl_ts = pd.Series(d2_control_trials_ts)
 FS_ctl_ts = pd.Series(fs_control_trials_ts)
 FR_ctl_ts = pd.Series(fr_control_trials_ts)
-
+LIT_ctl_ts= pd.Series(lit_control_trials_ts)
 
 # ... and calculate the functional connectivity of IT with the other modules,
 # using the Pearson correlation coefficient
@@ -295,6 +237,7 @@ funct_conn_it_d1_dms = IT_dms_ts.corr(D1_dms_ts, method='pearson')
 funct_conn_it_d2_dms = IT_dms_ts.corr(D2_dms_ts, method='pearson')
 funct_conn_it_fs_dms = IT_dms_ts.corr(FS_dms_ts, method='pearson')
 funct_conn_it_fr_dms = IT_dms_ts.corr(FR_dms_ts, method='pearson')
+funct_conn_it_lit_dms= IT_dms_ts.corr(LIT_dms_ts,method='pearson')
 
 funct_conn_it_v1_ctl = IT_ctl_ts.corr(V1_ctl_ts, method='pearson')
 funct_conn_it_v4_ctl = IT_ctl_ts.corr(V4_ctl_ts, method='pearson')
@@ -302,13 +245,18 @@ funct_conn_it_d1_ctl = IT_ctl_ts.corr(D1_ctl_ts, method='pearson')
 funct_conn_it_d2_ctl = IT_ctl_ts.corr(D2_ctl_ts, method='pearson')
 funct_conn_it_fs_ctl = IT_ctl_ts.corr(FS_ctl_ts, method='pearson')
 funct_conn_it_fr_ctl = IT_ctl_ts.corr(FR_ctl_ts, method='pearson')
+funct_conn_it_lit_ctl= IT_ctl_ts.corr(LIT_ctl_ts,method='pearson')
 
+# pack correlation coefficients in preparation for saving to a file
 func_conn_dms = np.array([funct_conn_it_v1_dms,funct_conn_it_v4_dms,
-                          funct_conn_it_d1_dms,funct_conn_it_d2_dms,
-                          funct_conn_it_fs_dms,funct_conn_it_fr_dms])
+                          funct_conn_it_fs_dms,funct_conn_it_d1_dms,
+                          funct_conn_it_d2_dms,funct_conn_it_fr_dms,
+                          funct_conn_it_lit_dms])
+
 func_conn_ctl = np.array([funct_conn_it_v1_ctl,funct_conn_it_v4_ctl,
-                          funct_conn_it_d1_ctl,funct_conn_it_d2_ctl,
-                          funct_conn_it_fs_ctl,funct_conn_it_fr_ctl])
+                          funct_conn_it_fs_ctl,funct_conn_it_d1_ctl,
+                          funct_conn_it_d2_ctl,funct_conn_it_fr_ctl,
+                          funct_conn_it_lit_ctl])
 
 # now, save all correlation coefficients to a output files 
 np.save(func_conn_dms_file, func_conn_dms)
@@ -328,10 +276,11 @@ ax.set_ylim([0,1])
 # now, group the values to be plotted by brain module
 it_v1_corr = (funct_conn_it_v1_dms, funct_conn_it_v1_ctl)
 it_v4_corr = (funct_conn_it_v4_dms, funct_conn_it_v4_ctl)
+it_fs_corr = (funct_conn_it_fs_dms, funct_conn_it_fs_ctl)
 it_d1_corr = (funct_conn_it_d1_dms, funct_conn_it_d1_ctl)
 it_d2_corr = (funct_conn_it_d2_dms, funct_conn_it_d2_ctl)
-it_fs_corr = (funct_conn_it_fs_dms, funct_conn_it_fs_ctl)
 it_fr_corr = (funct_conn_it_fr_dms, funct_conn_it_fr_ctl)
+it_lit_corr= (funct_conn_it_lit_dms,funct_conn_it_lit_ctl)
 
 rects_v1 = ax.bar(index, it_v1_corr, width, color='purple', label='V1')
 
@@ -344,6 +293,8 @@ rects_d1 = ax.bar(index + width*3, it_d1_corr, width, color='lightblue', label='
 rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='yellow', label='D2')
 
 rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='red', label='FR')
+
+rects_lit= ax.bar(index + width*6, it_lit_corr, width, color='green', label='left IT')
 
 ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH ALL OTHER BRAIN REGIONS')
 

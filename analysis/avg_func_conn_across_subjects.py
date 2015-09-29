@@ -46,26 +46,39 @@
 # avg_func_conn_across_subjects.py
 #
 # Reads the correlation coefficients from several python (*.npy) data files, each
-# corresponding to a single subject, and calculates the average functional connectivity
-# across all subjects, as well as the standard deviation for each data point. It uses
+# corresponding to a single subject, and calculates:
+# (1) the average functional connectivity across all subjects,
+# (2) means, standard deviations and variances for each data point.
+# Means, standard deviations, and variances are stored in a text output file.
+# For the calculations, It uses
 # previously calculated correlation coefficients between IT and all other areas in both,
-# synapctic activity time-series, and fMRI bold time-series.
+# synaptic activity time-series and fMRI bold time-series.
+# It also performs a t-test for the comparison between the mean of each condition
+# (DMS vs CTL), and displays the t values.
 
 import numpy as np
 import matplotlib.pyplot as plt
+
+import plotly.plotly as py
+import plotly.tools as tls
 
 import matplotlib as mpl
 
 import pandas as pd
 
+from scipy.stats import t
+
 # set matplot lib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
 
 # construct array of indices of modules contained in an LSNM model, minus 1
-modules = np.arange(6)
+modules = np.arange(7)
 
 # construct array of subjects to be considered
 subjects = np.arange(10)
+
+# define output file where means, standard deviations, and variances will be stored
+fc_stats_FILE = 'fc_stats.txt'
 
 # define the names of the output files where the correlation coefficients were stored
 func_conn_syn_dms_subj1 = '../visual_model/subject_1/output.36trials/corr_syn_IT_vs_all_dms.npy'
@@ -177,6 +190,20 @@ fc_syn_ctl  = np.arctanh(fc_syn_ctl)
 fc_fmri_dms = np.arctanh(fc_fmri_dms)
 fc_fmri_ctl = np.arctanh(fc_fmri_ctl)
 
+plt.figure()
+ax1=plt.subplot(2,1,1)
+plt.boxplot(fc_syn_dms, showmeans=True)
+ax1.set_ylim([-.25, 1.5])
+#ax2=plt.subplot(2,2,2)
+#plt.boxplot(fc_syn_ctl, showmeans=True)
+#ax2.set_ylim([-.25, 1.6])
+ax3=plt.subplot(2,1,2)
+plt.boxplot(fc_fmri_dms, showmeans=True)
+ax3.set_ylim([-.25, 1.5])
+#ax4=plt.subplot(2,2,4)
+#plt.boxplot(fc_fmri_ctl, showmeans=True)
+#ax4.set_ylim([-.25, 1.6])
+
 # calculate the mean of correlation coefficients across all given subjects
 fc_syn_dms_mean = np.mean(fc_syn_dms, axis=0)
 fc_syn_ctl_mean = np.mean(fc_syn_ctl, axis=0)
@@ -184,10 +211,16 @@ fc_fmri_dms_mean = np.mean(fc_fmri_dms, axis=0)
 fc_fmri_ctl_mean = np.mean(fc_fmri_ctl, axis=0)
 
 # calculate the standard deviation of correlation coefficients across subjects
-#fc_syn_dms_std = np.std(fc_syn_dms, axis=0)
-#fc_syn_ctl_std = np.std(fc_syn_ctl, axis=0)
-#fc_fmri_dms_std = np.std(fc_fmri_dms, axis=0)
-#fc_fmri_ctl_std = np.std(fc_fmri_ctl, axis=0)
+fc_syn_dms_std = np.std(fc_syn_dms, axis=0)
+fc_syn_ctl_std = np.std(fc_syn_ctl, axis=0)
+fc_fmri_dms_std = np.std(fc_fmri_dms, axis=0)
+fc_fmri_ctl_std = np.std(fc_fmri_ctl, axis=0)
+
+# calculate the variance of the correlation coefficients across subjects
+fc_syn_dms_var = np.var(fc_syn_dms, axis=0)
+fc_syn_ctl_var = np.var(fc_syn_ctl, axis=0)
+fc_fmri_dms_var= np.var(fc_fmri_dms, axis=0)
+fc_fmri_ctl_var= np.var(fc_fmri_ctl, axis=0)
 
 # now, convert back to from Z to R correlation coefficients, prior to plotting
 fc_syn_dms_mean  = np.tanh(fc_syn_dms_mean)
@@ -195,11 +228,66 @@ fc_syn_ctl_mean  = np.tanh(fc_syn_ctl_mean)
 fc_fmri_dms_mean = np.tanh(fc_fmri_dms_mean)
 fc_fmri_ctl_mean = np.tanh(fc_fmri_ctl_mean)
 
+fc_syn_dms_std  = np.tanh(fc_syn_dms_std)
+fc_syn_ctl_std  = np.tanh(fc_syn_ctl_std)
+fc_fmri_dms_std = np.tanh(fc_fmri_dms_std)
+fc_fmri_ctl_std = np.tanh(fc_fmri_ctl_std)
+
+fc_syn_dms_var  = np.tanh(fc_syn_dms_var)
+fc_syn_ctl_var  = np.tanh(fc_syn_ctl_var)
+fc_fmri_dms_var = np.tanh(fc_fmri_dms_var)
+fc_fmri_ctl_var = np.tanh(fc_fmri_ctl_var)
+
+# ... and save above values to output file
+np.savetxt(fc_stats_FILE, [np.append(fc_syn_dms_mean, [fc_syn_ctl_mean,
+                                     fc_fmri_dms_mean, fc_fmri_ctl_mean]),
+                           np.append(fc_syn_dms_std, [fc_syn_ctl_std,
+                                     fc_fmri_dms_std, fc_fmri_ctl_std]),
+                           np.append(fc_syn_dms_var, [fc_syn_ctl_var,
+                                     fc_fmri_dms_var, fc_fmri_ctl_var] )],
+           fmt='%.4f',
+           header='Synaptic activities correlation stats (DMS and CTL) grouped by module')
+
+# Calculate the statistical significance by using a one-tailed t-test:
+# We are going to have two groups: DMS group and control group (each sample size is 10 subjects)
+# Our research hypothesis is:
+#          * The correlations in the DMS group are larger than the correlations in the CTL group.
+# The NULL hypothesis is:
+#          * Correlations in the DMS group are not larger than Correlations in the CTL group.
+# The value of alpha (p-threshold) will be 0.05
+# STEPS:
+#     (1) subtract the mean of control group from the mean of DMS group:
+fc_syn_mean_diff = fc_syn_ctl_mean - fc_syn_dms_mean
+fc_fmri_mean_diff= fc_fmri_ctl_mean- fc_fmri_dms_mean
+#     (2) Calculate, for both control and DMS, the variance divided by sample size minus 1:
+fc_syn_ctl_a = fc_syn_ctl_var / 9.0
+fc_syn_dms_a = fc_syn_dms_var / 9.0
+fc_fmri_ctl_a= fc_fmri_ctl_var / 9.0
+fc_fmri_dms_a= fc_fmri_dms_var / 9.0
+#     (3) Add results obtained for CTL and DMS in step (2) together:
+fc_syn_a = fc_syn_ctl_a + fc_syn_dms_a
+fc_fmri_a= fc_fmri_ctl_a+ fc_fmri_dms_a
+#     (4) Take the square root the results in step (3):
+sqrt_fc_syn_a = np.sqrt(fc_syn_a)
+sqrt_fc_fmri_a= np.sqrt(fc_fmri_a)
+#     (5) Divide the results of step (1) by the results of step (4) to obtain 't':
+fc_syn_t = fc_syn_mean_diff  / sqrt_fc_syn_a
+fc_fmri_t= fc_fmri_mean_diff / sqrt_fc_fmri_a
+#     (6) Calculate the degrees of freedom (add up number of observations for each group
+#         minus number of groups):
+dof = 10 + 10 - 2
+#     (7) find the p-values for the above 't' and 'degrees of freedom':
+fc_syn_p_values  = t.sf(fc_syn_t, dof)
+fc_fmri_p_values = t.sf(fc_fmri_t, dof)
+
+print 't-values for synaptic activity correlations: ', fc_syn_t
+print 't-values for fmri time-series correlations: ', fc_fmri_t
+
 # convert to Pandas dataframe, using the transpose to convert to a format where the names
 # of the modules are the labels for each time-series
 fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
                                  fc_fmri_dms_mean, fc_fmri_ctl_mean]),
-                      columns=np.array(['V1', 'V4', 'D1', 'D2', 'FS', 'FR']),
+                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'LIT']),
                        index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
 #fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
 #                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
@@ -207,10 +295,19 @@ fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
 #                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
 
 # now, plot means and std's using 'pandas framework...
-fig, ax = plt.subplots()
-fc_mean.plot(ax=ax, kind='bar')
+
+mpl_fig = plt.figure()  # start a new figure
+
+ax = plt.gca()          # get hold of the axes
+
+fc_mean.plot(ax=ax, kind='bar', ylim=[-0.4,1])
 
 plt.tight_layout()
 
 # Show the plots on the screen
 plt.show()
+
+# send figure to plot.ly website for showing others:
+#plotly_fig = tls.mpl_to_plotly(mpl_fig)
+
+#unique_url = py.plot(plotly_fig)

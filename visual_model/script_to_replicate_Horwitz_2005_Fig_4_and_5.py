@@ -8,8 +8,10 @@
 #
 # The number of timesteps in each trial is 1100 = 5.5 seconds
 #
+# Each trial is 3300 timesteps = 16.5 seconds
+#
 # Both DMS trials and control trials are: MATCH, MISMATCH, MATCH.
-# The attention parameter in DMS trials is varied from 0.24 to 0.34 in steps of 0.02
+# The attention parameter in DMS trials is varied from 0.2 to 0.3 in steps of 0.02
 # The control trials constitute 'passive viewing': degraded shapes are presented and
 # the same low attention (0.05) is used throughout the control trials
 #
@@ -27,7 +29,7 @@
 # Each timestep is roughly equivalent to 5ms
 LSNM_simulation_time = 39600
 
-# Define list of parameters the the script is going to need to modify the LSNM neural network
+# Define list of parameters the script is going to need to modify the LSNM neural network
 # They are organized in the following order:
 # [lo_att_level, hi_att_level, lo_inp_level, hi_inp_level, att_step, ri1, ri2]
 script_params = [0.05, 0.2, 0.05, 0.7, 0.02, [], []]
@@ -168,7 +170,6 @@ def increase_attention(modules, script_params):
 # define a dictionary of simulation events functions, each associated with
 # a specific simulation timestep
 simulation_events = {        
-            
     ################### FIRST BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
     '200': o_shape,                
 

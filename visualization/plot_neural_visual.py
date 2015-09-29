@@ -33,13 +33,13 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plot_neuronal_visual.py) was created on December 1, 2014.
+#   This file (plot_neural_visual.py) was created on December 1, 2014.
 #
 #
 #   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 19 2015  
 # **************************************************************************/
 
-# plot_neuronal_visual.py
+# plot_neural_visual.py
 #
 # Plot output data files of visual delay-match-to-sample simulation
 
