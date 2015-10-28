@@ -138,12 +138,12 @@ for tvb_node in nodes_to_be_examined:
         connected = centres[connected_node]
 
         connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2],
-                                  color = (0.5, 0.5, 0.5),
-                                  tube_radius=white_matter.weights[connected_node, tvb_node])
+                                  color = (0, 0, 0),
+                                  tube_radius=0.1)
         
         connected = mlab.points3d(connected[0], connected[1], connected[2],
-                                color=(1, 0, 1),
-                                scale_factor = 4.)
+                                color=(0.5, 0.5, 0.5),
+                                scale_factor = 1.)
 
 # Finally, show everything on screen
 mlab.show(stop=True)

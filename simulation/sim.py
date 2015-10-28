@@ -316,7 +316,7 @@ class TaskThread(QtCore.QThread):
         # Define the coupling function between white matter tracts and brain regions
         white_matter_coupling = coupling.Linear(a=TVB_global_coupling_strength)
 
-        #Initialise an Integrator
+        #Initialize an Integrator for TVB
         euler_int = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
         euler_int.configure()
 

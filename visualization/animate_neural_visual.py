@@ -48,17 +48,17 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
 # Load data files
-lgns = np.loadtxt('../../output/lgns.out')
-efd1 = np.loadtxt('../../output/efd1.out')
-efd2 = np.loadtxt('../../output/efd2.out')
-ev1h = np.loadtxt('../../output/ev1h.out')
-ev1v = np.loadtxt('../../output/ev1v.out')
-ev4c = np.loadtxt('../../output/ev4c.out')
-ev4h = np.loadtxt('../../output/ev4h.out')
-ev4v = np.loadtxt('../../output/ev4v.out')
-exfr = np.loadtxt('../../output/exfr.out')
-exfs = np.loadtxt('../../output/exfs.out')
-exss = np.loadtxt('../../output/exss.out')
+lgns = np.loadtxt('lgns.out')
+efd1 = np.loadtxt('efd1.out')
+efd2 = np.loadtxt('efd2.out')
+ev1h = np.loadtxt('ev1h.out')
+ev1v = np.loadtxt('ev1v.out')
+ev4c = np.loadtxt('ev4c.out')
+ev4h = np.loadtxt('ev4h.out')
+ev4v = np.loadtxt('ev4v.out')
+exfr = np.loadtxt('exfr.out')
+exfs = np.loadtxt('exfs.out')
+exss = np.loadtxt('exss.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = lgns.shape[0]
@@ -79,9 +79,12 @@ fd2 = efd2.reshape(timesteps,d,d)
 fs  = exfs.reshape(timesteps,d,d)
 fr  = exfr.reshape(timesteps,d,d)
 
-fig = plt.figure(1)
+fig, ax = plt.subplots()
 
-plt.suptitle('SIMULATED NEURAL ACTIVITY')
+# increase font size
+plt.rcParams.update({'font.size': 30})
+
+#plt.suptitle('SIMULATED NEURAL ACTIVITY')
 
 # Render LGN array in a colormap
 plt.subplot(3,4,1)
@@ -149,9 +152,12 @@ plt.imshow(fr[0,:,:], vmin=0, vmax=1, cmap='hot')
 plt.title('FR')
 plt.axis('off')
 
+# increase padding between subplots
+fig.subplots_adjust(hspace=.35)
+
 # Display reference colorbar [left, bottom, width, height]
-cbaxes = fig.add_axes([0.92, 0.1, 0.03, 0.8])
-cb = plt.colorbar(cax=cbaxes)
+#cbaxes = fig.add_axes([0.92, 0.1, 0.03, 0.8])
+#cb = plt.colorbar(cax=cbaxes)
 
 # now draw interactive slider at [x, y, length, width]   
 axtimesteps = plt.axes([0.1, 0, 0.8, 0.03])
@@ -196,6 +202,8 @@ def update(val):
     plt.imshow(fr[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
     
 stimesteps.on_changed(update)
+
+#plt.tight_layout()
 
 # Show the plot on the screen
 plt.show()

@@ -119,8 +119,8 @@ ifd1 = np.loadtxt('ifd1_synaptic.out')
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
 
-# Construct a numpy array of timesteps (data points provided in data files)
-t = np.arange(0, timesteps, 1)
+# Contruct a numpy array of timesteps (data points provided in data file)
+t = np.linspace(0, 659*5/1000., num=660)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
@@ -131,16 +131,20 @@ d1 = np.sum(efd1 + ifd1, axis = 1) + np.sum(tvb_ed1 + tvb_id1, axis=1)
 # Set up plot
 plt.figure(1)
 
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
+#plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
+
+# increase font size
+plt.rcParams.update({'font.size': 30})
 
 ax1=plt.subplot()
 
-ax1.set_ylim([400, 1800])
+ax1.set_ylim([480, 1640])
+ax1.set_xlim(0,3.295)
 
 # Plot V1 module
-plt.plot(t, v1, color='yellow')
-plt.plot(t, it, color='blue')
-plt.plot(t, d1, color='red')
+plt.plot(t, v1[0:660], color='yellow', linewidth=2)
+plt.plot(t, d1[0:660], color='red', linewidth=2)
+plt.plot(t, it[0:660], color='blue', linewidth=2)
 
 plt.gca().set_axis_bgcolor('black')
 

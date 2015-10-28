@@ -190,6 +190,9 @@ fc_syn_ctl  = np.arctanh(fc_syn_ctl)
 fc_fmri_dms = np.arctanh(fc_fmri_dms)
 fc_fmri_ctl = np.arctanh(fc_fmri_ctl)
 
+# increase font size
+plt.rcParams.update({'font.size': 30})
+
 plt.figure()
 ax1=plt.subplot(2,1,1)
 plt.boxplot(fc_syn_dms, showmeans=True)
@@ -298,11 +301,22 @@ fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
 
 mpl_fig = plt.figure()  # start a new figure
 
+# create more space to the right of the plot for the legend
+#ax = mpl_fig.add_axes([0.1, 0.1, 0.6, 0.75])
+
 ax = plt.gca()          # get hold of the axes
 
-fc_mean.plot(ax=ax, kind='bar', ylim=[-0.4,1])
+bars=fc_mean.plot(ax=ax, kind='bar',
+                  color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'grey'],
+                  ylim=[-0.16,1])
 
-plt.tight_layout()
+# change the location of the legend
+ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+           ncol=7, mode="expand", borderaxespad=0.,prop={'size':30})
+
+ax.set_xticklabels( ('DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri'), rotation=0, ha='center')
+
+#plt.tight_layout()
 
 # Show the plots on the screen
 plt.show()
