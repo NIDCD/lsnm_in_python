@@ -49,8 +49,9 @@ import matplotlib.pyplot as plt
 
 # threshold for a single unit to be considered responding 'match'
 # The number of single units firing is 'threshold_module'
-# The threshold for a single unit to consider to fire is 'threshold_single_unit'
-# For example, below, we need 5 units firing at or above 0.6 to consider a match.
+# The threshold for a single unit to be considered firing is 'threshold'
+# For example, below, we need 2 units firing at or above 0.6 to consider a match.
+number_of_trials = 18
 threshold  = 0.6
 threshold_module = 2
 
@@ -88,10 +89,12 @@ correct_nonmatch = int(np.count_nonzero(np.amax(exfr[180:200] >= threshold, axis
                    int(np.count_nonzero(np.amax(exfr[3480:3500] >= threshold, axis=0)) < threshold_module)
 
 correct_responses = correct_match + correct_nonmatch
+pct_correct = correct_responses * 100. / number_of_trials
 
 print '# Correct matches were:', correct_match
 print '# Correct nonmatches were:', correct_nonmatch
 print '# Correct responses were: ', correct_responses
+print 'Performance was: ', pct_correct, '%'
 
 # Contruct a numpy array of timesteps (data points provided in data file)
 t = np.arange(0, timesteps, 1)

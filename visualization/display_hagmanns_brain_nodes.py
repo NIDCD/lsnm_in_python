@@ -114,15 +114,21 @@ plot_surface(CORTEX, op=0.1)
 
 # Plot the 998 nodes of Hagmann's brain (uncomment if needed for visualization
 # purposes
-#region_centres = mlab.points3d(centres[:, 0], 
-#                               centres[:, 1], 
-#                               centres[:, 2],
-#                               color=(0.4, 0.4, 0.4),
-#                               scale_factor = 2.)
+region_centres = mlab.points3d(centres[:, 0], 
+                               centres[:, 1], 
+                               centres[:, 2],
+                               color=(0.4, 0.4, 0.4),
+                               scale_factor = 2.)
 
 # Now plot the hypothetical locations of LSNM visual modules
 
 # V1 ROI in yellow
+#v1_module = mlab.points3d(centres[v1_loc[1],0],
+#                          centres[v1_loc[1],1],
+#                          centres[v1_loc[0],2],
+#                          color=(1, 1, 0),
+#                          scale_factor = 6.)
+
 v1_module = mlab.points3d(centres[v1_loc[0]:v1_loc[-1],0],
                           centres[v1_loc[0]:v1_loc[-1],1],
                           centres[v1_loc[0]:v1_loc[-1],2],
@@ -134,6 +140,12 @@ print centres[v1_loc[0]:v1_loc[-1],:]
 print ''
 
 # V4 ROI in green
+#v4_module = mlab.points3d(centres[v4_loc[3],0],
+#                          centres[v4_loc[3],1],
+#                          centres[v4_loc[3],2],
+#                          color=(0, 1, 0),
+#                          scale_factor = 6.)
+
 v4_module = mlab.points3d(centres[v4_loc[0]:v4_loc[-1],0],
                           centres[v4_loc[0]:v4_loc[-1],1],
                           centres[v4_loc[0]:v4_loc[-1],2],
@@ -145,6 +157,12 @@ print centres[v4_loc[0]:v4_loc[-1],:]
 print ''
 
 # IT ROI in blue
+#it_module = mlab.points3d(centres[it_loc[1],0],
+#                          centres[it_loc[1],1],
+#                          centres[it_loc[1],2],
+#                          color=(0, 0, 1),
+#                          scale_factor = 6.)
+
 it_module = mlab.points3d(centres[it_loc[0]:it_loc[-1],0],
                           centres[it_loc[0]:it_loc[-1],1],
                           centres[it_loc[0]:it_loc[-1],2],
@@ -156,6 +174,12 @@ print centres[it_loc[0]:it_loc[-1],:]
 print ''
 
 # FS ROI in orange
+#fs_module = mlab.points3d(centres[fs_loc[0],0],
+#                          centres[fs_loc[0],1],
+#                          centres[fs_loc[0],2],
+#                          color=(1, 0.5, 0),
+#                          scale_factor = 6.)
+
 fs_module = mlab.points3d(centres[fs_loc[0]:fs_loc[-1],0],
                           centres[fs_loc[0]:fs_loc[-1],1],
                           centres[fs_loc[0]:fs_loc[-1],2],
@@ -167,6 +191,12 @@ print centres[fs_loc[0]:fs_loc[-1],:]
 print ''
 
 # D1 ROI in red
+#d1_module = mlab.points3d(centres[d1_loc[1],0],
+#                          centres[d1_loc[1],1],
+#                          centres[d1_loc[1],2],
+#                          color=(1, 0, 0),
+#                          scale_factor = 6.)
+
 d1_module = mlab.points3d(centres[d1_loc[0]:d1_loc[-1],0],
                           centres[d1_loc[0]:d1_loc[-1],1],
                           centres[d1_loc[0]:d1_loc[-1],2],
@@ -178,6 +208,12 @@ print centres[d1_loc[0]:d1_loc[-1],:]
 print ''
 
 # D2 ROI in magenta
+#d2_module = mlab.points3d(centres[d2_loc[2],0],
+#                          centres[d2_loc[2],1],
+#                          centres[d2_loc[2],2],
+#                          color=(1, 0, 1),
+#                          scale_factor = 6.)
+
 d2_module = mlab.points3d(centres[d2_loc[0]:d2_loc[-1],0],
                           centres[d2_loc[0]:d2_loc[-1],1],
                           centres[d2_loc[0]:d2_loc[-1],2],
@@ -189,6 +225,12 @@ print centres[d2_loc[0]:d2_loc[-1],:]
 print ''
 
 # FR ROI in purple
+#fr_module = mlab.points3d(centres[fr_loc[0],0],
+#                          centres[fr_loc[0],1],
+#                          centres[fr_loc[0],2],
+#                          color=(0.5, 0, 0.5),
+#                          scale_factor = 6.)
+
 fr_module = mlab.points3d(centres[fr_loc[0]:fr_loc[-1],0],
                           centres[fr_loc[0]:fr_loc[-1],1],
                           centres[fr_loc[0]:fr_loc[-1],2],

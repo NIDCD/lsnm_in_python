@@ -284,6 +284,10 @@ class TaskThread(QtCore.QThread):
         # [timestep, state_variable_E, state_variable_I, node_number, mode]
         #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
 
+        # define a flag that tells the network whether to send feedback connections
+        # from LSNM to TVB
+        FEEDBACK = False
+        
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
 
@@ -777,9 +781,9 @@ class TaskThread(QtCore.QThread):
             # Brain, and adds the product of each TVB -> LSNM unit value times their respective
             # connection weight (provided by white matter tract weights) to the sum of excitatory
             # activities of each embedded LSNM unit. THIS IS THE STEP
-            # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION IS SO FAR
-            # UNIDIRECTIONAL TVB -> LSNM, but will add a feedback connection soon.
-            # Please note that whereas the previous 'for loop' goes though the network updating
+            # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION GOES IN BOTH DIRECTIONS,
+            # I.E., TVB -> LSNM and LSNM -> TVB.
+            # Please note that whereas the previous 'for loop' goes through the network updating
             # unit sum of activities at destination units, the 'for loop' below goes through the
             # network updating the sum of activities of the CURRENT unit
 
@@ -833,6 +837,11 @@ class TaskThread(QtCore.QThread):
                                 # ... but store the total of inputs separately as well
                                 modules[m][8][x][y][1] += value_x_weight
 
+                                # And modify the connectome node that is providing the current
+                                # connecting weight i
+                                if FEEDBACK:
+                                    raw[0][1][0][tvb_conn[i]][0] += modules[m][8][x][y][0] * wm[i] 
+                                
             # the following variable will keep track of total number of units in the network
             unit_count = 0
 
