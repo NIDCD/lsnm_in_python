@@ -56,7 +56,7 @@ import matplotlib.pyplot as plt
 experiment_length = 3960
 
 # scans that were removed from BOLD computation
-scans_removed = 8
+scans_removed = 0
 
 # Total time of scanning experiment in seconds (timesteps X 5)
 T = 198
@@ -83,30 +83,30 @@ subjects = np.arange(10)
 
 # declare a file name for storing the average BOLD time-series across subjects
 avg_syn_file  = 'avg_syn_across_subjs.npy'
-avg_BOLD_file = 'avg_BOLD_across_subjs_balloon.npy' 
+avg_BOLD_file = 'avg_BOLD_across_subjs.npy' 
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-syn_subj = ['../visual_model/subject_1/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_2/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_3/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_4/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_5/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_6/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_7/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_8/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_9/output.36trials/synaptic_in_ROI.npy',
-            '../visual_model/subject_10/output.36trials/synaptic_in_ROI.npy']
-BOLD_subj = ['../visual_model/subject_1/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_2/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_3/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_4/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_5/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_6/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_7/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_8/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_9/output.36trials/lsnm_bold_balloon.npy',
-             '../visual_model/subject_10/output.36trials/lsnm_bold_balloon.npy']
+syn_subj = ['subject_11/output.36trials/synaptic_in_ROI.npy',
+            'subject_12/output.36trials/synaptic_in_ROI.npy',
+            'subject_13/output.36trials/synaptic_in_ROI.npy',
+            'subject_14/output.36trials/synaptic_in_ROI.npy',
+            'subject_15/output.36trials/synaptic_in_ROI.npy',
+            'subject_16/output.36trials/synaptic_in_ROI.npy',
+            'subject_17/output.36trials/synaptic_in_ROI.npy',
+            'subject_18/output.36trials/synaptic_in_ROI.npy',
+            'subject_19/output.36trials/synaptic_in_ROI.npy',
+            'subject_20/output.36trials/synaptic_in_ROI.npy']
+BOLD_subj = ['subject_11/output.36trials/lsnm_bold_balloon.npy',
+             'subject_12/output.36trials/lsnm_bold_balloon.npy',
+             'subject_13/output.36trials/lsnm_bold_balloon.npy',
+             'subject_14/output.36trials/lsnm_bold_balloon.npy',
+             'subject_15/output.36trials/lsnm_bold_balloon.npy',
+             'subject_16/output.36trials/lsnm_bold_balloon.npy',
+             'subject_17/output.36trials/lsnm_bold_balloon.npy',
+             'subject_18/output.36trials/lsnm_bold_balloon.npy',
+             'subject_19/output.36trials/lsnm_bold_balloon.npy',
+             'subject_20/output.36trials/lsnm_bold_balloon.npy']
 
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_syn = np.zeros((num_of_subjects, num_of_modules, experiment_length))
@@ -139,7 +139,7 @@ BOLD_std = np.std(lsnm_BOLD, axis=0)
 # Set up figure to plot fMRI BOLD signal
 plt.figure(1)
 
-plt.suptitle('MEAN SYNAPTIC ACTIVITIES BOLD ACROSS SUBJECTS')
+#plt.suptitle('MEAN SYNAPTIC ACTIVITIES BOLD ACROSS SUBJECTS')
 
 plt.plot(syn_mean[0], linewidth=3.0, color='yellow')
 #plt.fill_between(BOLD_timescale, BOLD_mean[0]+BOLD_std[0], BOLD_mean[0]-BOLD_std[0],

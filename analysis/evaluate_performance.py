@@ -52,7 +52,9 @@ import matplotlib.pyplot as plt
 # The threshold for a single unit to be considered firing is 'threshold'
 # For example, below, we need 2 units firing at or above 0.6 to consider a match.
 number_of_trials = 18
-threshold  = 0.6
+# threshold  = 0.7 THIS IS THE ONE THAT WORKS
+# threshold module = 2 THIS IS THE ONE THAT WORKS
+threshold = 0.7
 threshold_module = 2
 
 # Load response data file

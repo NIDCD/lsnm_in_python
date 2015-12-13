@@ -71,7 +71,7 @@ import matplotlib as mpl
 mpl.style.use('ggplot')
 
 # define the name of the output file where the BOLD timeseries will be stored
-syn_file = 'synaptic_in_ROI.npy'
+syn_file = 'synaptic_in_ROI_test_ignore.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
@@ -79,25 +79,25 @@ syn_file = 'synaptic_in_ROI.npy'
 # Extracted from The Virtual Brain Demo Data Sets
 # Please note that arrays in Python start from zero so one does need to account for that and shift
 # indices given by the above document by one location.
-# Use 6 nodes within rPCAL
+# Use 6 nodes within rPCAL including host node 345
 v1_loc = range(344, 350)     # Hagmann's brain nodes included within V1 ROI
 
-# Use 6 nodes within rFUS
+# Use 6 nodes within rFUS including host node 393
 v4_loc = range(390, 396)     # Hagmann's brain nodes included within V4 ROI       
 
-# Use 6 nodes within rPARH
+# Use 6 nodes within rPARH including host node 413
 it_loc = range(412, 418)     # Hagmann's brain nodes included within IT ROI
 
-# Use 6 nodes within rRMF
+# Use 6 nodes within rRMF including host node 74
 d1_loc = range(73, 79)       # Hagmann's brain nodes included within D1 ROI
 
-# Use 6 nodes within rPTRI
+# Use 6 nodes within rPTRI including host node 41
 d2_loc = range(39, 45)       # Hagmann's brain nodes included within D2 ROI
 
-# Use 6 nodes within rPOPE
+# Use 6 nodes within rPOPE including host node 47
 fs_loc = range(47, 53)       # Hagmann's brain nodes included within FS ROI
 
-# Use 6 nodes within rCMF
+# Use 6 nodes within rCMF including host node 125
 fr_loc = range(125, 131)     # Hagmann's brain nodes included within FR ROI
 
 # Use 6 nodes within lPARH
@@ -162,14 +162,14 @@ fr_syn = np.sum(exfr + infr, axis = 1) + np.sum(tvb_efr+tvb_ifr, axis=1)
 lit_syn = np.sum(tvb_elit + tvb_ilit, axis=1)
 
 # get rid of the first time point ('zero point') bc it could skew correlations later
-#v1_syn = np.delete(v1_syn, 0)
-#v4_syn = np.delete(v4_syn, 0)
-#it_syn = np.delete(it_syn, 0)
-#d1_syn = np.delete(d1_syn, 0)
-#d2_syn = np.delete(d2_syn, 0)
-#fs_syn = np.delete(fs_syn, 0)
-#fr_syn = np.delete(fr_syn, 0)
-#lit_syn= np.delete(lit_syn,0)
+#v1_syn[0] = v1_syn[1]
+#v4_syn[0] = v4_syn[1]
+#it_syn[0] = it_syn[1]
+#d1_syn[0] = d1_syn[1]
+#d2_syn[0] = d2_syn[1]
+#fs_syn[0] = fs_syn[1]
+#fr_syn[0] = fr_syn[1]
+#lit_syn[0] = lit_syn[1]
 
 # ...and normalize the synaptic activities of each module (convert to percentage signal change)
 #v1_syn = v1_syn / np.mean(v1_syn) * 100. - 100.
@@ -184,13 +184,28 @@ lit_syn = np.sum(tvb_elit + tvb_ilit, axis=1)
 # create a numpy array of timeseries
 synaptic = np.array([v1_syn, v4_syn, it_syn, fs_syn, d1_syn, d2_syn, fr_syn, lit_syn])
 
-# now, save all BOLD timeseries to a single file 
+# now, save all synaptic timeseries to a single file 
 np.save(syn_file, synaptic)
+
+# Extract number of timesteps from one of the matrices
+timesteps = v1_syn.shape[0]
+print 'Timesteps = ', timesteps
+
+# Construct a numpy array of timesteps (data points provided in data file)
+# to convert from timesteps to time in seconds we do the following:
+# Each simulation time-step equals 5 milliseconds
+# However, we are recording only once every 10 time-steps
+# Therefore, each data point in the output files represents 50 milliseconds.
+# Thus, we need to multiply the datapoint times 50 ms...
+# ... and divide by 1000 to convert to seconds
+#t = np.linspace(0, 659*50./1000., num=660)
+t = np.linspace(0, timesteps * 50.0 / 1000., num=timesteps)
+
 
 # Set up figures to plot synaptic activity
 plt.figure()
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN V1')
-plt.plot(v1_syn)
+plt.plot(t, v1_syn)
 # Set up figures to plot synaptic activity
 plt.figure()
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN V4')

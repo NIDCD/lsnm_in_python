@@ -71,7 +71,7 @@ trial_length = 110
 number_of_trials = 36
 
 # define intertrial interval duration in number of synaptic timesteps
-ITI_length = 20
+#ITI_length = 20
 
 # open file that contains the synaptic activities
 syn = np.load(SYN_file)

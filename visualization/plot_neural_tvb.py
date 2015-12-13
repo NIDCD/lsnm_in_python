@@ -72,7 +72,7 @@ tvb_fr = tvb[:, 0, fr_loc, 0]
 timesteps = tvb_v1.shape[0]
 
 # what was the duration of simulation in real time (in ms)?
-real_duration = 16500
+real_duration = 198
 
 print timesteps
 
@@ -86,44 +86,44 @@ fig1=plt.figure(1, facecolor='white')
 ax = plt.subplot(7,1,1)
 ax.plot(real_time, tvb_v1, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 ax.set_title('SIMULATED ELECTRICAL ACTIVITY, HAGMANNS BRAIN')
 plt.ylabel('V1', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,2)
 ax.plot(real_time, tvb_v4, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('V4', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,3)
 ax.plot(real_time, tvb_it, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('IT', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,4)
 ax.plot(real_time, tvb_fs, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,5)
 ax.plot(real_time, tvb_d1, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,6)
 ax.plot(real_time, tvb_d2, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 
 ax = plt.subplot(7,1,7)
 ax.plot(real_time, tvb_fr, color='b', linewidth=2)
 ax.set_yticks([0, 0.5, 1])
-ax.set_xlim(0,real_duration)
+ax.set_xlim(0,36.5)
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
 
 plt.tight_layout()

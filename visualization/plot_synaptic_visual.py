@@ -118,9 +118,17 @@ ifd1 = np.loadtxt('ifd1_synaptic.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
+print timesteps
 
-# Contruct a numpy array of timesteps (data points provided in data file)
-t = np.linspace(0, 659*5/1000., num=660)
+# Construct a numpy array of timesteps (data points provided in data file)
+# to convert from timesteps to time in seconds we do the following:
+# Each simulation time-step equals 5 milliseconds
+# However, we are recording only once every 10 time-steps
+# Therefore, each data point in the output files represents 50 milliseconds.
+# Thus, we need to multiply the datapoint times 50 ms...
+# ... and divide by 1000 to convert to seconds
+#t = np.linspace(0, 659*50./1000., num=660)
+t = np.linspace(0, timesteps * 50.0 / 1000., num=timesteps)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
@@ -138,13 +146,13 @@ plt.rcParams.update({'font.size': 30})
 
 ax1=plt.subplot()
 
-ax1.set_ylim([480, 1640])
-ax1.set_xlim(0,3.295)
+ax1.set_ylim([400, 1800])
+ax1.set_xlim(0,32.95)
 
 # Plot V1 module
-plt.plot(t, v1[0:660], color='yellow', linewidth=2)
-plt.plot(t, d1[0:660], color='red', linewidth=2)
-plt.plot(t, it[0:660], color='blue', linewidth=2)
+plt.plot(t, v1[0:timesteps], color='yellow', linewidth=2)
+plt.plot(t, d1[0:timesteps], color='red', linewidth=2)
+plt.plot(t, it[0:timesteps], color='blue', linewidth=2)
 
 plt.gca().set_axis_bgcolor('black')
 

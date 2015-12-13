@@ -301,15 +301,18 @@ class TaskThread(QtCore.QThread):
         # the following are the weights used among excitatory and inhibitory populations
         # in the TVB's implementation of the Wilson-Cowan equations. These values were
         # taken from the default values in the TVB source code in script "models.npy"
-        # The values are also in Table 11 Column a of Sanz-Leon et al (2015)
+        # The values are also in Table 11 Column a of Sanz-Leon et al (2015). Note that
+        # the subscripts in Sanz-Leon's notation are reversed, thus w_ei, in her notation,
+        # means a weight from inhibitory to excitatory. In our notation, W_ei means a
+        # weight from excitatory to inhibitory.
         #
         # The reason we re-defined the weights below is to be able to calculate local
         # synaptic activity at each timestep, as the TVB original source code does not
         # calculate synaptic activities
         w_ee = 12.0
         w_ii = 11.0
-        w_ei =  4.0
-        w_ie = 13.0
+        w_ei = 13.0
+        w_ie =  4.0
         
         # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
         white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -409,10 +412,14 @@ class TaskThread(QtCore.QThread):
         # (integration) during a given number of timesteps. Every number of timesteps
         # (given by 'synaptic_interval'), the array below is re-initialized to zero.
         current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+
+        # number of units in each LSNM sub-module
+        n = 81
         
         # declare a gain for the link from TVB to LSNM (around which normally distributed
-        # random numbers will be generated)
-        lsnm_tvb_gain = 5e-05
+        # random numbers will be generated). I obtained this number of diving the TVB gain used
+        # within the connectome nodes by 81 (# of units in each LSNM module).
+        lsnm_tvb_gain = TVB_global_coupling_strength / n
         
         # declare an integration interval for the 'integrated' synaptic activity,
         # for fMRI computation, in number of timesteps.
@@ -782,7 +789,8 @@ class TaskThread(QtCore.QThread):
             # connection weight (provided by white matter tract weights) to the sum of excitatory
             # activities of each embedded LSNM unit. THIS IS THE STEP
             # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION GOES IN BOTH DIRECTIONS,
-            # I.E., TVB -> LSNM and LSNM -> TVB.
+            # I.E., TVB -> LSNM and LSNM -> TVB. There is a constant called "FEEDBACK" that has to be
+            # set to TRUE at the beginning of this file for the connections TVB->LSNM to occur.
             # Please note that whereas the previous 'for loop' goes through the network updating
             # unit sum of activities at destination units, the 'for loop' below goes through the
             # network updating the sum of activities of the CURRENT unit
@@ -838,9 +846,9 @@ class TaskThread(QtCore.QThread):
                                 modules[m][8][x][y][1] += value_x_weight
 
                                 # And modify the connectome node that is providing the current
-                                # connecting weight i
+                                # connecting weight i (but only if the 'feedback' flag is TRUE)
                                 if FEEDBACK:
-                                    raw[0][1][0][tvb_conn[i]][0] += modules[m][8][x][y][0] * wm[i] 
+                                    raw[0][1][0][tvb_conn[i]][0] += modules[m][8][x][y][0] * wm[i] * TVB_global_coupling_strength
                                 
             # the following variable will keep track of total number of units in the network
             unit_count = 0

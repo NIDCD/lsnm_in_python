@@ -8,7 +8,7 @@
 #
 # The number of timesteps in each trial is 1100 = 5.5 seconds
 #
-# Each trial is 3300 timesteps = 16.5 seconds
+# Each block is 3300 timesteps = 16.5 seconds
 #
 # Both DMS trials and control trials are: MATCH, MISMATCH, MATCH.
 # The attention parameter in DMS trials is varied from 0.2 to 0.3 in steps of 0.02

@@ -51,11 +51,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+
 import pandas as pd
 
 import math as m
 
 from scipy.stats import poisson
+
+# set matplotlib parameters to produce visually appealing plots
+mpl.style.use('ggplot')
 
 # define the length of both each trial and the whole experiment
 # in synaptic timesteps, as well as total number of trials
@@ -65,11 +70,11 @@ number_of_trials = 36
 
 num_of_fmri_blocks = 12
 
-blocks_removed = 1
+blocks_removed = 0
 
-scans_removed = 8
+scans_removed = 0
 
-trials_removed = 3
+trials_removed = 0
 
 trials = number_of_trials - trials_removed
 
@@ -78,19 +83,18 @@ fmri_blocks = num_of_fmri_blocks - blocks_removed
 synaptic_timesteps = experiment_length
 
 # define the name of the input file where the BOLD timeseries are stored
-BOLD_file = 'lsnm_bold_balloon.npy'
+BOLD_file = 'tvb_bold_balloon_test_ignore.npy'
 
 # define the name of the output file where the functional connectivity timeseries will be stored
-func_conn_dms_file = 'corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_ctl_file = 'corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_dms_file = 'corr_fmri_IT_vs_all_dms_balloon_test_ignore.npy'
+func_conn_ctl_file = 'corr_fmri_IT_vs_all_ctl_balloon_test_ignore.npy'
 
 # define an array with location of control trials, and another array
 # with location of task-related trials, relative to
 # an array that contains all trials (task-related trials included)
-# because we lost 3 trials at the beginning of the fmri experiment, we
-#  were left with only 33 trials,
-control_trials = np.array([1,2,3,7,8,9,13,14,15,19,20,21,25,26,27,31,32,33])
-dms_trials =     np.array([0,4,5,6,10,11,12,16,17,18,22,23,24,28,29,30])
+control_trials = np.array([3,4,5,9,10,11,15,16,17,21,22,23,27,28,29,33,34,35])
+dms_trials =     np.array([0,1,2,6,7,8,12,13,14,18,19,20,24,25,26,30,31,32])
+
 
 # load fMRI BOLD time-series into an array
 BOLD = np.load(BOLD_file)
@@ -104,19 +108,6 @@ d1_BOLD = BOLD[4]
 d2_BOLD = BOLD[5]
 fr_BOLD = BOLD[6]
 lit_BOLD= BOLD[7]
-
-# And now we scale it up 100 times its size, so that we can subdivide the arrays
-# in equally sized subarrays
-#x_100 = np.linspace(0, v1_BOLD.size-1, num=v1_BOLD.size*100.)
-#scanning_timescale = np.linspace(0, v1_BOLD.size-1, v1_BOLD.size)
-#v1_BOLD  = np.interp(x_100, scanning_timescale, v1_BOLD)
-#v4_BOLD  = np.interp(x_100, scanning_timescale, v4_BOLD)
-#it_BOLD  = np.interp(x_100, scanning_timescale, it_BOLD)
-#fs_BOLD  = np.interp(x_100, scanning_timescale, fs_BOLD)
-#d1_BOLD  = np.interp(x_100, scanning_timescale, d1_BOLD)
-#d2_BOLD  = np.interp(x_100, scanning_timescale, d2_BOLD)
-#fr_BOLD  = np.interp(x_100, scanning_timescale, fr_BOLD)
-#lit_BOLD = np.interp(x_100, scanning_timescale, lit_BOLD)
 
 # Get rid of the control trials in the BOLD signal arrays,
 # by separating the task-related trials and concatenating them
@@ -132,18 +123,6 @@ d1_subarrays = np.array_split(d1_BOLD, trials)
 d2_subarrays = np.array_split(d2_BOLD, trials)
 fr_subarrays = np.array_split(fr_BOLD, trials)
 lit_subarrays= np.array_split(lit_BOLD,trials)
-
-# we get rid of the inter-trial interval for each and all trials (1 second at the
-# end of each trial. 2 seconds = 1 scan.
-#for idx in range(len(it_subarrays)):
-#    it_subarrays[idx] = np.delete(it_subarrays[idx], -1)
-#    v1_subarrays[idx] = np.delete(v1_subarrays[idx], -1)
-#    v4_subarrays[idx] = np.delete(v4_subarrays[idx], -1)
-#    fs_subarrays[idx] = np.delete(fs_subarrays[idx], -1)
-#    d1_subarrays[idx] = np.delete(d1_subarrays[idx], -1)
-#    d2_subarrays[idx] = np.delete(d2_subarrays[idx], -1)
-#    fr_subarrays[idx] = np.delete(fr_subarrays[idx], -1)
-#    lit_subarrays[idx]= np.delete(lit_subarrays[idx], -1)
 
 # now, get rid of the control trials...
 it_DMS_trials = np.delete(it_subarrays, control_trials, axis=0)
@@ -245,7 +224,7 @@ width = 0.1                     # width of the bars
 
 fig, ax = plt.subplots()
 
-ax.set_ylim([0,1])
+ax.set_ylim([-0.2,1])
 
 # now, group the values to be plotted by brain module
 it_v1_corr = (funct_conn_it_v1_dms, funct_conn_it_v1_ctl)
@@ -256,27 +235,29 @@ it_fs_corr = (funct_conn_it_fs_dms, funct_conn_it_fs_ctl)
 it_fr_corr = (funct_conn_it_fr_dms, funct_conn_it_fr_ctl)
 it_lit_corr= (funct_conn_it_lit_dms,funct_conn_it_lit_ctl)
 
-rects_v1 = ax.bar(index, it_v1_corr, width, color='purple', label='V1')
+rects_v1 = ax.bar(index, it_v1_corr, width, color='yellow', label='V1')
 
-rects_v4 = ax.bar(index + width, it_v4_corr, width, color='darkred', label='V4')
+rects_v4 = ax.bar(index + width, it_v4_corr, width, color='green', label='V4')
 
-rects_fs = ax.bar(index + width*2, it_fs_corr, width, color='lightyellow', label='FS')
+rects_fs = ax.bar(index + width*2, it_fs_corr, width, color='orange', label='FS')
 
-rects_d1 = ax.bar(index + width*3, it_d1_corr, width, color='lightblue', label='D1')
+rects_d1 = ax.bar(index + width*3, it_d1_corr, width, color='red', label='D1')
 
-rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='yellow', label='D2')
+rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='pink', label='D2')
 
-rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='red', label='FR')
+rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='purple', label='FR')
 
-rects_fr = ax.bar(index + width*6, it_lit_corr, width, color='pink', label='LIT')
+rects_fr = ax.bar(index + width*6, it_lit_corr, width, color='lightblue', label='cIT')
 
-ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH OTHER BRAIN REGIONS (fMRI)')
+#ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH OTHER BRAIN REGIONS (fMRI)')
 
 # get rid of x axis ticks and labels
 ax.set_xticks([])
 
 ax.set_xlabel('DMS TASK                                        CONTROL TASK')
 ax.xaxis.set_label_coords(0.5, -0.025)
+
+ax.set_ylabel('r-value')
 
 # Shrink current axis by 10% to make space for legend
 box = ax.get_position()

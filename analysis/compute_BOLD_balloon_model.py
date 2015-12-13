@@ -40,7 +40,6 @@
 #
 #   Last updated by Antonio Ulloa on August 11 2015
 #
-#   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
 # compute_BOLD_balloon_model.py
@@ -77,10 +76,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_ROI.npy'
+SYN_file  = 'synaptic_in_ROI_test_ignore.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'lsnm_bold_balloon.npy'
+BOLD_file = 'tvb_bold_balloon_test_ignore.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -155,7 +154,8 @@ def balloon_function(y, t, syn):
 Ti = 0.005 * 10
 
 # Total time of scanning experiment in seconds (timesteps X 5)
-T = 198
+#T = 198
+T = 213
 
 # Time for one complete trial in milliseconds
 Ttrial = 5.5
@@ -171,25 +171,48 @@ scans_to_remove = 8
 # read the input file that contains the synaptic activities of all ROIs
 syn = np.load(SYN_file)
 
-# extract the synaptic activities corresponding to each ROI:
-v1_syn = syn[0]
-v4_syn = syn[1]
-it_syn = syn[2]
-fs_syn = syn[3]
-d1_syn = syn[4]
-d2_syn = syn[5]
-fr_syn = syn[6]
-lit_syn= syn[7]
+print 'LENGTH OF SYNAPTIC TIME-SERIES: ', syn[0].size
+
+# Throw away first value of each synaptic array (it is always zero)
+v1_syn = np.delete(syn[0], 0)
+v4_syn = np.delete(syn[1], 0)
+it_syn = np.delete(syn[2], 0)
+fs_syn = np.delete(syn[3], 0)
+d1_syn = np.delete(syn[4], 0)
+d2_syn = np.delete(syn[5], 0)
+fr_syn = np.delete(syn[6], 0)
+lit_syn = np.delete(syn[7], 0)
+
+# extract the synaptic activities corresponding to each ROI, and normalize to (0,1):
+v1_syn = np.append(np.ones(320)*0.4, (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min()))
+v4_syn = np.append(np.ones(320)*0.4, (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min()))
+it_syn = np.append(np.ones(320)*0.4, (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min()))
+fs_syn = np.append(np.ones(320)*0.4, (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min()))
+d1_syn = np.append(np.ones(320)*0.4, (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min()))
+d2_syn = np.append(np.ones(320)*0.4, (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min()))
+fr_syn = np.append(np.ones(320)*0.4, (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min()))
+lit_syn= np.append(np.ones(320)*0.4, (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min()))
+
+#v1_syn = (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min())
+#v4_syn = (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min())
+#it_syn = (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min())
+#fs_syn = (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min())
+#d1_syn = (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min())
+#d2_syn = (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min())
+#fr_syn = (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min())
+#lit_syn= (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min())
+
 
 # Extract number of timesteps from one of the synaptic activity arrays
 synaptic_timesteps = v1_syn.size
+print 'Size of synaptic arrays: ', synaptic_timesteps
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)
 time_in_seconds = np.arange(0, T, Ti)
 
 # Hard coded initial conditions
-s = 0.  # s, blood flow
+s = 0   # s, blood flow
 f = 1.  # f, blood inflow
 v = 1.  # v, venous blood volume
 q = 1.  # q, deoxyhemoglobin content
@@ -287,8 +310,20 @@ d2_BOLD = np.array(V_0 * (k1 * (1. - q_d2) + k2 * (1. - q_d2 / v_d2) + k3 * (1. 
 fr_BOLD = np.array(V_0 * (k1 * (1. - q_fr) + k2 * (1. - q_fr / v_fr) + k3 * (1. - v_fr)) )
 lit_BOLD= np.array(V_0 * (k1 * (1. - q_lit)+ k2 * (1. - q_lit/v_lit) + k3 * (1. - v_lit)) )
 
-# downsample the BOLD signal to produce scan rate of 2 per second
+# The following is for display purposes only:
+# Construct a numpy array of timesteps (data points provided in data file)
+# to convert from timesteps to time in seconds we do the following:
+# Each simulation time-step equals 5 milliseconds
+# However, we are recording only once every 10 time-steps
+# Therefore, each data point in the output files represents 50 milliseconds.
+# Thus, we need to multiply the datapoint times 50 ms...
+# ... and divide by 1000 to convert to seconds
+#t = np.linspace(0, 659*50./1000., num=660)
+t = np.linspace(0, synaptic_timesteps * 50.0 / 1000., num=synaptic_timesteps)
+
+# downsample the BOLD signal arrays to produce scan rate of 2 per second
 scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
+mr_time = t[scanning_timescale]
 v1_BOLD = v1_BOLD[scanning_timescale]
 v4_BOLD = v4_BOLD[scanning_timescale]
 it_BOLD = it_BOLD[scanning_timescale]
@@ -298,14 +333,16 @@ fs_BOLD = fs_BOLD[scanning_timescale]
 fr_BOLD = fr_BOLD[scanning_timescale]
 lit_BOLD=lit_BOLD[scanning_timescale]
 
+print 'Size of BOLD arrays before deleting scans: ', v1_BOLD.size
+
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
 #synaptic_ticks = Ttrial/Ti
 # estimate how many 'MR ticks' there are in each trial
 #mr_ticks = round(Ttrial/Tr)
 
-# remove first few scans from BOLD signal array (to eliminate edge effects from
-# convolution)
+# remove first few scans from BOLD signal array and from BOLD timescale array
+mr_time = np.delete(mr_time, np.arange(scans_to_remove))
 v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
 v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
 it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
@@ -315,22 +352,21 @@ fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
 fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
 lit_BOLD= np.delete(lit_BOLD,np.arange(scans_to_remove))
 
-# ...and normalize the BOLD signal of each module (convert to percentage signal change)
-#v1_BOLD = v1_BOLD / np.mean(v1_BOLD) * 100. - 100.
-#v4_BOLD = v4_BOLD / np.mean(v4_BOLD) * 100. - 100.
-#it_BOLD = it_BOLD / np.mean(it_BOLD) * 100. - 100.
-#d1_BOLD = d1_BOLD / np.mean(d1_BOLD) * 100. - 100.
-#d2_BOLD = d2_BOLD / np.mean(d2_BOLD) * 100. - 100.
-#fs_BOLD = fs_BOLD / np.mean(fs_BOLD) * 100. - 100.
-#fr_BOLD = fr_BOLD / np.mean(fr_BOLD) * 100. - 100.
+# round of mr time for display purposes
+mr_time = np.round(mr_time, decimals=0)
 
 # create a numpy array of timeseries
 lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD,
                       fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD,
                       lit_BOLD ])
 
+print 'Size of BOLD time-series after removing scans: ', v1_BOLD.size
+
 # now, save all BOLD timeseries to a single file 
 np.save(BOLD_file, lsnm_BOLD)
+
+# increase font size for display purposes
+plt.rcParams.update({'font.size': 30})
 
 # Set up figure to plot synaptic activity
 plt.figure()
@@ -338,42 +374,46 @@ plt.figure()
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 
 # Plot synaptic activities
-plt.plot(v1_syn)
-plt.plot(it_syn)
-plt.plot(d1_syn)
+plt.plot(t, v1_syn, linewidth=3.0, color='yellow')
+plt.plot(t, it_syn, linewidth=3.0, color='blue')
+plt.plot(t, d1_syn, linewidth=3.0, color='red')
+plt.gca().set_axis_bgcolor('black')
 
 # Set up separate figures to plot fMRI BOLD signal
 plt.figure()
 
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V1/V2')
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL V1, IT, D1')
 
-plt.plot(v1_BOLD, linewidth=3.0, color='yellow')
+plt.plot(mr_time, v1_BOLD, linewidth=3.0, color='yellow')
 plt.gca().set_axis_bgcolor('black')
 
-plt.figure()
+#plt.figure()
 
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
+#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
 
-plt.plot(v4_BOLD, linewidth=3.0, color='green')
+#plt.plot(v4_BOLD, linewidth=3.0, color='green')
+#plt.gca().set_axis_bgcolor('black')
+
+#plt.figure()
+#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
+
+plt.plot(mr_time, it_BOLD, linewidth=3.0, color='blue')
 plt.gca().set_axis_bgcolor('black')
 
-plt.figure()
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
+#plt.figure()
+#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
 
-plt.plot(it_BOLD, linewidth=3.0, color='blue')
-plt.gca().set_axis_bgcolor('black')
+plt.plot(mr_time, d1_BOLD, linewidth=3.0, color='red')
+#plt.gca().set_axis_bgcolor('black')
 
-plt.figure()
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
+plt.plot(mr_time, d2_BOLD, linewidth=3.0, color='pink')
+#plt.gca().set_axis_bgcolor('black')
 
-plt.plot(d1_BOLD, linewidth=3.0, color='red')
-plt.gca().set_axis_bgcolor('black')
+#plt.figure()
+#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN LIT')
 
-plt.figure()
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN LIT')
-
-plt.plot(lit_BOLD, linewidth=3.0, color='pink')
-plt.gca().set_axis_bgcolor('black')
+#plt.plot(lit_BOLD, linewidth=3.0, color='pink')
+#plt.gca().set_axis_bgcolor('black')
 
 # Show the plots on the screen
 plt.show()

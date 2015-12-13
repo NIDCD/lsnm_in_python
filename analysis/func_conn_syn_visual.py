@@ -55,7 +55,7 @@ import matplotlib as mpl
 
 import pandas as pd
 
-# set matplot lib parameters to produce visually appealing plots
+# set matplotlib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
 
 #def plot_corr(df):
@@ -75,11 +75,11 @@ mpl.style.use('ggplot')
 #pf_loc =  74
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_ROI.npy'
+SYN_file  = 'synaptic_in_ROI_test_ignore.npy'
 
 # define the name of the output file where the functional connectivity timeseries will be stored
-func_conn_dms_file = 'corr_syn_IT_vs_all_dms.npy'
-func_conn_ctl_file = 'corr_syn_IT_vs_all_ctl.npy'
+func_conn_dms_file = 'corr_syn_IT_vs_all_dms_test_ignore.npy'
+func_conn_ctl_file = 'corr_syn_IT_vs_all_ctl_test_ignore.npy'
 
 # define the length of both each trial and the whole experiment
 # in synaptic timesteps, as well as total number of trials
@@ -271,7 +271,7 @@ width = 0.1                     # width of the bars
 
 fig, ax = plt.subplots()
 
-ax.set_ylim([0,1])
+ax.set_ylim([-0.2,1])
 
 # now, group the values to be plotted by brain module
 it_v1_corr = (funct_conn_it_v1_dms, funct_conn_it_v1_ctl)
@@ -282,27 +282,29 @@ it_d2_corr = (funct_conn_it_d2_dms, funct_conn_it_d2_ctl)
 it_fr_corr = (funct_conn_it_fr_dms, funct_conn_it_fr_ctl)
 it_lit_corr= (funct_conn_it_lit_dms,funct_conn_it_lit_ctl)
 
-rects_v1 = ax.bar(index, it_v1_corr, width, color='purple', label='V1')
+rects_v1 = ax.bar(index, it_v1_corr, width, color='yellow', label='V1')
 
-rects_v4 = ax.bar(index + width, it_v4_corr, width, color='darkred', label='V4')
+rects_v4 = ax.bar(index + width, it_v4_corr, width, color='green', label='V4')
 
-rects_fs = ax.bar(index + width*2, it_fs_corr, width, color='lightyellow', label='FS')
+rects_fs = ax.bar(index + width*2, it_fs_corr, width, color='orange', label='FS')
 
-rects_d1 = ax.bar(index + width*3, it_d1_corr, width, color='lightblue', label='D1')
+rects_d1 = ax.bar(index + width*3, it_d1_corr, width, color='red', label='D1')
 
-rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='yellow', label='D2')
+rects_d2 = ax.bar(index + width*4, it_d2_corr, width, color='pink', label='D2')
 
-rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='red', label='FR')
+rects_fr = ax.bar(index + width*5, it_fr_corr, width, color='purple', label='FR')
 
-rects_lit= ax.bar(index + width*6, it_lit_corr, width, color='green', label='left IT')
+rects_lit= ax.bar(index + width*6, it_lit_corr, width, color='lightblue', label='cIT')
 
-ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH ALL OTHER BRAIN REGIONS')
+#ax.set_title('FUNCTIONAL CONNECTIVITY OF IT WITH ALL OTHER BRAIN REGIONS')
 
 # get rid of x axis ticks and labels
 ax.set_xticks([])
 
 ax.set_xlabel('DMS TASK                                        CONTROL TASK')
 ax.xaxis.set_label_coords(0.5, -0.025)
+
+ax.set_ylabel('r-value')
 
 # Shrink current axis by 10% to make space for legend
 box = ax.get_position()

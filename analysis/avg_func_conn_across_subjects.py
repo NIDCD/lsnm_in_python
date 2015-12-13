@@ -53,7 +53,7 @@
 # For the calculations, It uses
 # previously calculated correlation coefficients between IT and all other areas in both,
 # synaptic activity time-series and fMRI bold time-series.
-# It also performs a t-test for the comparison between the mean of each condition
+# It also performs a two-tailed t-test for the comparison between the mean of each condition
 # (DMS vs CTL), and displays the t values.
 
 import numpy as np
@@ -78,49 +78,49 @@ modules = np.arange(7)
 subjects = np.arange(10)
 
 # define output file where means, standard deviations, and variances will be stored
-fc_stats_FILE = 'fc_stats.txt'
+fc_stats_FILE = 'fc_stats_repeat.txt'
 
-# define the names of the output files where the correlation coefficients were stored
-func_conn_syn_dms_subj1 = '../visual_model/subject_1/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj2 = '../visual_model/subject_2/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj3 = '../visual_model/subject_3/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj4 = '../visual_model/subject_4/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj5 = '../visual_model/subject_5/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj6 = '../visual_model/subject_6/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj7 = '../visual_model/subject_7/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj8 = '../visual_model/subject_8/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj9 = '../visual_model/subject_9/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj10 = '../visual_model/subject_10/output.36trials/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_ctl_subj1 = '../visual_model/subject_1/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj2 = '../visual_model/subject_2/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj3 = '../visual_model/subject_3/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj4 = '../visual_model/subject_4/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj5 = '../visual_model/subject_5/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj6 = '../visual_model/subject_6/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj7 = '../visual_model/subject_7/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj8 = '../visual_model/subject_8/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj9 = '../visual_model/subject_9/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj10 = '../visual_model/subject_10/output.36trials/corr_syn_IT_vs_all_ctl.npy'
-func_conn_fmri_dms_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_ctl_subj1 = '../visual_model/subject_1/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj2 = '../visual_model/subject_2/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj3 = '../visual_model/subject_3/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj4 = '../visual_model/subject_4/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj5 = '../visual_model/subject_5/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj6 = '../visual_model/subject_6/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj7 = '../visual_model/subject_7/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj8 = '../visual_model/subject_8/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj9 = '../visual_model/subject_9/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj10 = '../visual_model/subject_10/output.36trials/corr_fmri_IT_vs_all_ctl_balloon.npy'
+# define the names of the input files where the correlation coefficients were stored
+func_conn_syn_dms_subj1 = 'subject_11/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj2 = 'subject_12/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj3 = 'subject_13/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj4 = 'subject_14/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj5 = 'subject_15/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj6 = 'subject_16/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj7 = 'subject_17/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj8 = 'subject_18/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj9 = 'subject_19/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj10 = 'subject_20/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_ctl_subj1 = 'subject_11/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj2 = 'subject_12/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj3 = 'subject_13/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj4 = 'subject_14/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj5 = 'subject_15/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj6 = 'subject_16/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj7 = 'subject_17/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj8 = 'subject_18/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj9 = 'subject_19/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj10 = 'subject_20/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
+func_conn_fmri_dms_subj1 = 'subject_11/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj2 = 'subject_12/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj3 = 'subject_13/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj4 = 'subject_14/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj5 = 'subject_15/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj6 = 'subject_16/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj7 = 'subject_17/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj8 = 'subject_18/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj9 = 'subject_19/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj10 = 'subject_20/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_ctl_subj1 = 'subject_11/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj2 = 'subject_12/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj3 = 'subject_13/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj4 = 'subject_14/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj5 = 'subject_15/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj6 = 'subject_16/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj7 = 'subject_17/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj8 = 'subject_18/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj9 = 'subject_19/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj10 = 'subject_20/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
 
 # open files that contain correlation coefficients
 fc_syn_dms_subj1 = np.load(func_conn_syn_dms_subj1)
@@ -249,9 +249,9 @@ np.savetxt(fc_stats_FILE, [np.append(fc_syn_dms_mean, [fc_syn_ctl_mean,
                            np.append(fc_syn_dms_var, [fc_syn_ctl_var,
                                      fc_fmri_dms_var, fc_fmri_ctl_var] )],
            fmt='%.4f',
-           header='Synaptic activities correlation stats (DMS and CTL) grouped by module')
+           header='Synaptic and BOLD correlation stats (DMS and CTL) grouped by module')
 
-# Calculate the statistical significance by using a one-tailed t-test:
+# Calculate the statistical significance by using a two-tailed t-test:
 # We are going to have two groups: DMS group and control group (each sample size is 10 subjects)
 # Our research hypothesis is:
 #          * The correlations in the DMS group are larger than the correlations in the CTL group.
@@ -290,7 +290,7 @@ print 't-values for fmri time-series correlations: ', fc_fmri_t
 # of the modules are the labels for each time-series
 fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
                                  fc_fmri_dms_mean, fc_fmri_ctl_mean]),
-                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'LIT']),
+                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
                        index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
 #fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
 #                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
@@ -307,8 +307,8 @@ mpl_fig = plt.figure()  # start a new figure
 ax = plt.gca()          # get hold of the axes
 
 bars=fc_mean.plot(ax=ax, kind='bar',
-                  color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'grey'],
-                  ylim=[-0.16,1])
+                  color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'lightblue'],
+                  ylim=[-0.02,1])
 
 # change the location of the legend
 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,

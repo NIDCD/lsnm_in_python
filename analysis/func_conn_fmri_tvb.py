@@ -72,11 +72,11 @@ number_of_trials = 36
 
 num_of_fmri_blocks = 12
 
-blocks_removed = 1
+blocks_removed = 0
 
-scans_removed = 8
+scans_removed = 0
 
-trials_removed = 3
+trials_removed = 0
 
 trials = number_of_trials - trials_removed
 
@@ -85,10 +85,10 @@ fmri_blocks = num_of_fmri_blocks - blocks_removed
 synaptic_timesteps = experiment_length
 
 # define the name of the input file where the BOLD timeseries are stored
-BOLD_file = 'lsnm_bold_poisson_tvb.npy'
+BOLD_file = 'tvb_bold_balloon.npy'
 
 # define the name of the output file where the functional connectivity timeseries will be stored
-func_conn_dms_file = 'corr_fmri_IT_vs_all_poisson_tvb.npy'
+func_conn_dms_file = 'corr_fmri_IT_vs_all_balloon_tvb.npy'
 
 # load fMRI BOLD time-series into an array
 BOLD = np.load(BOLD_file)
