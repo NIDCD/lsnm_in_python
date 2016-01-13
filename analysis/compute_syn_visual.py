@@ -70,8 +70,8 @@ import matplotlib as mpl
 # set matplot lib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
 
-# define the name of the output file where the BOLD timeseries will be stored
-syn_file = 'synaptic_in_ROI_test_ignore.npy'
+# define the name of the output file where the integrated synaptic activity will be stored
+syn_file = 'synaptic_in_ROI.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
@@ -104,7 +104,7 @@ fr_loc = range(125, 131)     # Hagmann's brain nodes included within FR ROI
 lit_loc= range(911, 917)     # Hagmann's brain nodes included within left IT ROI
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
+tvb_synaptic = np.load("tvb_abs_syn.npy")
 
 # Load TVB host node synaptic activities into separate numpy arrays
 tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
@@ -127,26 +127,26 @@ tvb_elit = tvb_synaptic[:, 0, lit_loc[0]:lit_loc[-1]+1, 0]
 tvb_ilit = tvb_synaptic[:, 1, lit_loc[0]:lit_loc[-1]+1, 0]
 
 # Load LSNM synaptic activity data files into a numpy arrays
-ev1h = np.loadtxt('ev1h_synaptic.out')
-ev1v = np.loadtxt('ev1v_synaptic.out')
-iv1h = np.loadtxt('iv1h_synaptic.out')
-iv1v = np.loadtxt('iv1v_synaptic.out')
-ev4h = np.loadtxt('ev4h_synaptic.out')
-ev4v = np.loadtxt('ev4v_synaptic.out')
-ev4c = np.loadtxt('ev4c_synaptic.out')
-iv4h = np.loadtxt('iv4h_synaptic.out')
-iv4v = np.loadtxt('iv4v_synaptic.out')
-iv4c = np.loadtxt('iv4c_synaptic.out')
-exss = np.loadtxt('exss_synaptic.out')
-inss = np.loadtxt('inss_synaptic.out')
-efd1 = np.loadtxt('efd1_synaptic.out')
-ifd1 = np.loadtxt('ifd1_synaptic.out')
-efd2 = np.loadtxt('efd2_synaptic.out')
-ifd2 = np.loadtxt('ifd2_synaptic.out')
-exfs = np.loadtxt('exfs_synaptic.out')
-infs = np.loadtxt('infs_synaptic.out')
-exfr = np.loadtxt('exfr_synaptic.out')
-infr = np.loadtxt('infr_synaptic.out')
+ev1h = np.loadtxt('ev1h_abs_syn.out')
+ev1v = np.loadtxt('ev1v_abs_syn.out')
+iv1h = np.loadtxt('iv1h_abs_syn.out')
+iv1v = np.loadtxt('iv1v_abs_syn.out')
+ev4h = np.loadtxt('ev4h_abs_syn.out')
+ev4v = np.loadtxt('ev4v_abs_syn.out')
+ev4c = np.loadtxt('ev4c_abs_syn.out')
+iv4h = np.loadtxt('iv4h_abs_syn.out')
+iv4v = np.loadtxt('iv4v_abs_syn.out')
+iv4c = np.loadtxt('iv4c_abs_syn.out')
+exss = np.loadtxt('exss_abs_syn.out')
+inss = np.loadtxt('inss_abs_syn.out')
+efd1 = np.loadtxt('efd1_abs_syn.out')
+ifd1 = np.loadtxt('ifd1_abs_syn.out')
+efd2 = np.loadtxt('efd2_abs_syn.out')
+ifd2 = np.loadtxt('ifd2_abs_syn.out')
+exfs = np.loadtxt('exfs_abs_syn.out')
+infs = np.loadtxt('infs_abs_syn.out')
+exfr = np.loadtxt('exfr_abs_syn.out')
+infr = np.loadtxt('infr_abs_syn.out')
 
 # add all units WITHIN each region together across space to calculate
 # synaptic activity in EACH brain region

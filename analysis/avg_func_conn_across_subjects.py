@@ -191,7 +191,13 @@ fc_fmri_dms = np.arctanh(fc_fmri_dms)
 fc_fmri_ctl = np.arctanh(fc_fmri_ctl)
 
 # increase font size
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 15})
+
+# optional caption for figure
+txt = '''Figure 2. Functional connectivities between IT and all other brain modules expressed as the average correlation coefficients among 
+the selected ROIs across subjects.  Shown are both task (DMS) and passive viewing control (CTL) conditions and integrated synaptic 
+(SYN) and BOLD (fmri) time-series.  The Y-axis represents the correlation coefficient r-value. cIT corresponds to the IT module 
+contralateral to the task-based IT module, which generates only noise activity. '''
 
 plt.figure()
 ax1=plt.subplot(2,1,1)
@@ -317,6 +323,10 @@ ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
 ax.set_xticklabels( ('DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri'), rotation=0, ha='center')
 
 #plt.tight_layout()
+
+# optional figure caption
+mpl_fig.subplots_adjust(bottom=0.2)
+mpl_fig.text(.1, 0.03, txt)
 
 # Show the plots on the screen
 plt.show()

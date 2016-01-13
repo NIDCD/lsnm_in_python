@@ -87,106 +87,118 @@ timesteps = lgns.shape[0]
 print timesteps
 
 # Construct a numpy array of timesteps (data points provided in data file)
-t = np.linspace(0, 659*50./1000., num=660)
+t = np.linspace(0, 2199*50./1000., num=2200)
 
 # Set up plot
 fig1=plt.figure(1, facecolor='white')
 
 # increase font size
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 15})
+
+# optional caption for figure
+#txt = '''Figure 1. Plots of electrical activity of all submodules of the LSNM visual model (red lines) and host nodes of the TVB connectome 
+#(blue lines), for a representative simulated subject. The simulated tasks were: three DMS trials (match, mismatch, match), followed 
+#by three control trials where degraded shapes were used as inputs and the attention parameter was set to low (passive viewing). 
+#The y axis of each of the plots represents level of electrical activity, between zero and one. The x axis of the plots represents 
+#time in seconds.'''
 
 # Plot V1 module
-ax = plt.subplot(5,1,1)
-ax.plot(t, tvb_v1[0:660], color='b', linewidth=2)
-ax.plot(t, ev1h[0:660], color='r')
+ax = plt.subplot(10,1,1)
+ax.plot(t, tvb_v1[0:2200], color='b', linewidth=2)
+ax.plot(t, ev1h[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 #ax.set_title('SIMULATED ELECTRICAL ACTIVITY, V1 and V4')
 plt.ylabel('V1h', rotation='horizontal', horizontalalignment='right')
 
-ax = plt.subplot(5,1,2)
-ax.plot(t, tvb_v1[0:660], color='b', linewidth=2)
-ax.plot(t, ev1v[0:660], color='r')
+ax = plt.subplot(10,1,2)
+ax.plot(t, tvb_v1[0:2200], color='b', linewidth=2)
+ax.plot(t, ev1v[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V1v', rotation='horizontal', horizontalalignment='right')
 
 # Plot V4 module
-ax = plt.subplot(5,1,3)
-ax.plot(t, tvb_v4[0:660], color='b', linewidth=2)
-ax.plot(t, ev4h[0:660], color='r')
+ax = plt.subplot(10,1,3)
+ax.plot(t, tvb_v4[0:2200], color='b', linewidth=2)
+ax.plot(t, ev4h[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4h', rotation='horizontal', horizontalalignment='right')
 
-ax = plt.subplot(5,1,4)
-ax.plot(t, tvb_v4[0:660], color='b', linewidth=2)
-ax.plot(t, ev4c[0:660], color='r')
+ax = plt.subplot(10,1,4)
+ax.plot(t, tvb_v4[0:2200], color='b', linewidth=2)
+ax.plot(t, ev4c[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4c', rotation='horizontal', horizontalalignment='right')
 
-ax = plt.subplot(5,1,5)
-ax.plot(t, tvb_v4[0:660], color='b', linewidth=2)
-ax.plot(t, ev4v[0:660], color='r')
+ax = plt.subplot(10,1,5)
+ax.plot(t, tvb_v4[0:2200], color='b', linewidth=2)
+ax.plot(t, ev4v[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
+plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4v', rotation='horizontal', horizontalalignment='right')
 
 #plt.tight_layout()
 
 
 # start a second figure 
-plt.figure(2, facecolor='white')
+#plt.figure(2, facecolor='white')
 
 # Plot IT module
-ax = plt.subplot(5,1,1)
-ax.plot(t, tvb_it[0:660], color='b', linewidth=2)
-ax.plot(t, exss[0:660], color='r')
+ax = plt.subplot(10,1,6)
+ax.plot(t, tvb_it[0:2200], color='b', linewidth=2)
+ax.plot(t, exss[0:2200], color='r')
 ax.set_yticks([])
 #ax.set_title('SIMULATED ELECTRICAL ACTIVITY, IT and PFC')
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('IT', rotation='horizontal', horizontalalignment='right')
 
 # Plot PFC modules FS, FD1, and FD2
-ax = plt.subplot(5,1,2)
-ax.plot(t, tvb_fs[0:660], color='b', linewidth=2)
-ax.plot(t, exfs[0:660], color='r')
+ax = plt.subplot(10,1,7)
+ax.plot(t, tvb_fs[0:2200], color='b', linewidth=2)
+ax.plot(t, exfs[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
 
-ax = plt.subplot(5,1,3)
-ax.plot(t, tvb_d1[0:660], color='b', linewidth=2)
-ax.plot(t, efd1[0:660], color='r')
+ax = plt.subplot(10,1,8)
+ax.plot(t, tvb_d1[0:2200], color='b', linewidth=2)
+ax.plot(t, efd1[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
 
-ax = plt.subplot(5,1,4)
-ax.plot(t, tvb_d2[0:660], color='b', linewidth=2)
-ax.plot(t, efd2[0:660], color='r')
+ax = plt.subplot(10,1,9)
+ax.plot(t, tvb_d2[0:2200], color='b', linewidth=2)
+ax.plot(t, efd2[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 
 # Plot FR (Response module)
-ax = plt.subplot(5,1,5)
-ax.plot(t, tvb_fr[0:660], color='b', linewidth=2)
-ax.plot(t, exfr[0:660], color='r')
+ax = plt.subplot(10,1,10)
+ax.plot(t, tvb_fr[0:2200], color='b', linewidth=2)
+ax.plot(t, exfr[0:2200], color='r')
 ax.set_yticks([])
-ax.set_xlim(0,32.95)
+ax.set_xlim(0,110)
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
 
 #plt.tight_layout()
+
+# optional figure caption
+#fig1.subplots_adjust(bottom=0.2)
+#fig1.text(.1, 0.03, txt)
 
 # Show the plot on the screen
 plt.show()

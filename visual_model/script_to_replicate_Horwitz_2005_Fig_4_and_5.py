@@ -40,7 +40,7 @@ rand_shape1 = rdm.sample(range(81),18)
 rand_indeces1 = np.unravel_index(rand_shape1,(9,9))
 script_params[5] = zip(*rand_indeces1)
 
-# A second random shape in inserted for a mismatch
+# A second random shape is inserted for a mismatch
 # Contributed by John Gilbert
 rand_shape2 = rdm.sample(range(81),18)
 rand_indeces2 = np.unravel_index(rand_shape2,(9,9))

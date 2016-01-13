@@ -54,7 +54,7 @@ import matplotlib.pyplot as plt
 #pf_loc =  74
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
+tvb_synaptic = np.load("tvb_abs_syn.npy")
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
@@ -103,18 +103,18 @@ tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
 tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('ev1h_synaptic.out')
-ev1v = np.loadtxt('ev1v_synaptic.out')
-iv1h = np.loadtxt('iv1h_synaptic.out')
-iv1v = np.loadtxt('iv1v_synaptic.out')
+ev1h = np.loadtxt('ev1h_abs_syn.out')
+ev1v = np.loadtxt('ev1v_abs_syn.out')
+iv1h = np.loadtxt('iv1h_abs_syn.out')
+iv1v = np.loadtxt('iv1v_abs_syn.out')
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('exss_synaptic.out')
-inss = np.loadtxt('inss_synaptic.out')
+exss = np.loadtxt('exss_abs_syn.out')
+inss = np.loadtxt('inss_abs_syn.out')
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('efd1_synaptic.out')
-ifd1 = np.loadtxt('ifd1_synaptic.out')
+efd1 = np.loadtxt('efd1_abs_syn.out')
+ifd1 = np.loadtxt('ifd1_abs_syn.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]

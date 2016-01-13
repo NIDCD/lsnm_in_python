@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 1 2015
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 17 2015
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -401,8 +401,11 @@ class TaskThread(QtCore.QThread):
         #                 'infr': 44
         #}
 
-        # create an array to store synaptic activity for each and all TVB nodes
-        tvb_syna = []
+        # create two arrays to store synaptic activity for each and all TVB nodes,
+        # one for absolute values of synaptic activities (for fMRI computation):
+        tvb_abs_syna = []
+        # ... and the other one for signed values of synaptic activity (for MEG computation):
+        tvb_signed_syna = []
         # also, create an array to store electrical activity for all TVB nodes
         tvb_elec = []
 
@@ -411,8 +414,11 @@ class TaskThread(QtCore.QThread):
         # The synaptic activity for each node is zero at first, then it accumulates values
         # (integration) during a given number of timesteps. Every number of timesteps
         # (given by 'synaptic_interval'), the array below is re-initialized to zero.
-        current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
-
+        # One array is for accumulating the absolute value of synaptic activity (for BOLD computation):
+        current_tvb_abs_syn =    [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+        # ... and another array for accumulating the signed values of synaptic activity (for MEG computation):
+        current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+        
         # number of units in each LSNM sub-module
         n = 81
         
@@ -538,12 +544,12 @@ class TaskThread(QtCore.QThread):
         # 5: Wilson-Cowan parameter 'delta'
         # 6: Wilson-Cowan parameter 'K'
         # 7: Wilson-Cowan parameter 'N'
-        # 8: A python list of lists of X x Y elements containing the follwing elements:
+        # 8: A python list of lists of X x Y elements containing the following elements:
         #     0: neural activity of current unit
         #     1: Sum of all inputs to current unit
         #     2: Sum of excitatory inputs to current unit
         #     3: Sum of inhibitory inputs to current unit
-        #     4: a Python list of lists containing all outgoing weight of current unit, There as
+        #     4: a Python list of lists containing all outgoing connections arising from current unit, There are as
         #        many elements as outgoing connection weights and each element contains the following:
         #         0: destination module (where is the connection going to)
         #         1: X coordinate of location of destination unit
@@ -638,18 +644,22 @@ class TaskThread(QtCore.QThread):
 
         # the following files store values over time of all units (electrical activity,
         # synaptic activity, to output data files in text format
-        fs_neuronal = []
-        fs_synaptic = []
+        fs_neuronal   = []
+        fs_abs_syn    = []
+        fs_signed_syn = []
         
-        # open one output file per module to record electrical and synaptic activities
+        # open one output file per module to record electrical, absolute synaptic activity (used for fMRI BOLD),
+        # and signed synaptic activity (used for MEG source activity computation)
         for module in modules.keys():
             # open one output file per module
             fs_neuronal.append(open(module + '.out', 'w'))
-            fs_synaptic.append(open(module + '_synaptic.out', 'w'))
+            fs_abs_syn.append(open(module + '_abs_syn.out', 'w'))
+            fs_signed_syn.append(open(module + '_signed_syn.out', 'w'))
 
         # create a dictionary so that each module name is associated with one output file
-        fs_dict_neuronal = dict(zip(modules.keys(), fs_neuronal))
-        fs_dict_synaptic = dict(zip(modules.keys(), fs_synaptic))
+        fs_dict_neuronal  = dict(zip(modules.keys(), fs_neuronal))
+        fs_dict_abs_syn   = dict(zip(modules.keys(), fs_abs_syn))
+        fs_dict_signed_syn= dict(zip(modules.keys(), fs_signed_syn))
 
         # open the file with the experimental script and store the script in a string
         with open(script) as s:
@@ -769,19 +779,25 @@ class TaskThread(QtCore.QThread):
                     # update synaptic activity in excitatory population, by multiplying each
                     # incoming connection weight times the value of the node sending such
                     # connection
-                    current_tvb_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
+                    current_tvb_abs_syn[0][tvb_node]    += wm[cxn] * tvb_origin_node[cxn][0]
+                    current_tvb_signed_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
 
                 # now, add the influence of the local (within the same node) connectivity
-                # onto the synaptic activity of the current node, excitatory population
-                current_tvb_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
- 
+                # onto the synaptic activity of the current node, excitatory population, USING ABSOLUTE
+                # VALUES OF SYNAPTIC ACTIVITIES (for BOLD computation).
+                current_tvb_abs_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
+
+                # ... but also do a sum of synaptic activities using the sign of the synaptic activity (for MEG
+                # computation:
+                current_tvb_signed_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] - w_ie * current_tvb_neu[1][tvb_node]
 
                 # now, update synaptic activity in inhibitory population
                 # Please note that we are assuming that there are no incoming connections
                 # to inhibitory nodes from other nodes (in the Virtual Brain nodes).
                 # Therefore, only the local (within the same node) connections are
-                # considered
-                current_tvb_syn[1][tvb_node] += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+                # considered (store both aboslute synaptic and signed synaptic):
+                current_tvb_abs_syn[1][tvb_node]    += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+                current_tvb_signed_syn[1][tvb_node] += w_ei * current_tvb_neu[0][tvb_node] - w_ii * current_tvb_neu[1][tvb_node] 
     
                 
             # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
@@ -868,9 +884,12 @@ class TaskThread(QtCore.QThread):
                         if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
                             # write out neural activity first...
                             fs_dict_neuronal[m].write(repr(modules[m][8][x][y][0]) + ' ')
-                            # now calculate and write out synaptic activity...
-                            synaptic = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
-                            fs_dict_synaptic[m].write(repr(synaptic) + ' ')
+                            # now calculate and write out absolute sum of synaptic activity (for fMRI)...
+                            abs_syn = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
+                            fs_dict_abs_syn[m].write(repr(abs_syn) + ' ')
+                            # ... and calculate and write out signed sum of synaptic activity (for MEG):
+                            signed_syn = modules[m][8][x][y][2] + modules[m][8][x][y][3]
+                            fs_dict_signed_syn[m].write(repr(signed_syn) + ' ')
                             # ...finally, reset synaptic activity (but not neural activity).
                             modules[m][8][x][y][2] = 0.0
                             modules[m][8][x][y][3] = 0.0                            
@@ -879,7 +898,8 @@ class TaskThread(QtCore.QThread):
                 # finally, insert a newline character so we can start next set of units on a
                 # new line
                 fs_dict_neuronal[m].write('\n')
-                fs_dict_synaptic[m].write('\n')
+                fs_dict_abs_syn[m].write('\n')
+                fs_dict_signed_syn[m].write('\n')
 
             # also write neural and synaptic activity of all TVB nodes to output files at
             # the current
@@ -889,9 +909,11 @@ class TaskThread(QtCore.QThread):
                 # append the current TVB node electrical activity to array
                 tvb_elec.append(current_tvb_neu)
                 # append current synaptic activity array to synaptic activity timeseries
-                tvb_syna.append(current_tvb_syn)
+                tvb_abs_syna.append(current_tvb_abs_syn)
+                tvb_signed_syna.append(current_tvb_signed_syn)
                 # reset TVB synaptic activity, but not TVB neuroelectrical activity
-                current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+                current_tvb_abs_syn    = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+                current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
 
             
             # the following 'for loop' computes the neural activity at each unit in the network,
@@ -942,16 +964,20 @@ class TaskThread(QtCore.QThread):
         # be safe and close output files properly
         for f in fs_neuronal:
             f.close()
-        for f in fs_synaptic:
+        for f in fs_abs_syn:
+            f.close()
+        for f in fs_signed_syn:
             f.close()
         
         # convert electrical and synaptic activity of TVB nodes into numpy arrays
-        TVB_elec = numpy.array(tvb_elec)
-        TVB_syna = numpy.array(tvb_syna)
+        TVB_elec        = numpy.array(tvb_elec)
+        TVB_abs_syna    = numpy.array(tvb_abs_syna)
+        TVB_signed_syna = numpy.array(tvb_signed_syna) 
 
         # now, save the TVB electrical and synaptic activities to separate files
         numpy.save("tvb_neuronal.npy", TVB_elec)
-        numpy.save("tvb_synaptic.npy", TVB_syna)
+        numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
+        numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
             
         print '\r Simulation Finished.'
         print '\r Output data files saved.'

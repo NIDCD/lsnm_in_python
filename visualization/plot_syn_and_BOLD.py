@@ -79,8 +79,8 @@ modules = np.arange(num_of_modules)
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-syn_subj = 'synaptic_in_ROI_tvb.npy'
-BOLD_subj = 'tvb_bold_balloon.npy'
+syn_subj = 'synaptic_in_ROI.npy'
+BOLD_subj = 'lsnm_bold_balloon.npy'
             
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_syn = np.load(syn_subj)
@@ -95,10 +95,17 @@ BOLD_timescale = np.arange(time_removed, total_time, Tr)
 print BOLD_timescale
 
 # increase font size prior to plotting
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 15})
+
+# optional caption for figure
+txt = '''Figure 1. Simulated fMRI BOLD signal using the Balloon hemodynamic response model in combined visual LSNM/TVB modules, 
+corresponding to a representative subject.  Thirty-six trials were simulated in groups of six task (DMS) trials followed by six passive 
+viewing trials. X-axis represents time in seconds and the Y-axis is in arbitrary coordinates.  Grey areas highlight the timing of the 
+passive viewing trials. FS, D1, D2 and FR represent submodules within the PFC region. '''
+
 
 # Set up figure to plot synaptic signal
-plt.figure(1)
+fig1=plt.figure(1)
 
 #plt.suptitle('SYNAPTIC ACTIVITIES')
 
@@ -216,7 +223,7 @@ plt.gca().set_axis_bgcolor('black')
 
 
 #set up figure to plot BOLD signal
-plt.figure(2)
+fig2=plt.figure(2)
 
 
 #plt.suptitle('fMRI BOLD SIGNAL')
@@ -338,6 +345,10 @@ ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
 ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
+
+# optional figure caption
+fig2.subplots_adjust(bottom=0.2)
+fig2.text(.1, 0.03, txt)
 
 # Show the plots on the screen
 plt.show()

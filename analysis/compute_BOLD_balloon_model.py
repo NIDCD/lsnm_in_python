@@ -76,10 +76,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_ROI_test_ignore.npy'
+SYN_file  = 'synaptic_in_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'tvb_bold_balloon_test_ignore.npy'
+BOLD_file = 'tvb_bold_balloon.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -155,7 +155,7 @@ Ti = 0.005 * 10
 
 # Total time of scanning experiment in seconds (timesteps X 5)
 #T = 198
-T = 213
+T = 110
 
 # Time for one complete trial in milliseconds
 Ttrial = 5.5
@@ -166,7 +166,7 @@ Ttrial = 5.5
 Tr = 2
 
 # how many scans do you want to remove from beginning of BOLD timeseries?
-scans_to_remove = 8
+scans_to_remove = 0
 
 # read the input file that contains the synaptic activities of all ROIs
 syn = np.load(SYN_file)
@@ -184,23 +184,23 @@ fr_syn = np.delete(syn[6], 0)
 lit_syn = np.delete(syn[7], 0)
 
 # extract the synaptic activities corresponding to each ROI, and normalize to (0,1):
-v1_syn = np.append(np.ones(320)*0.4, (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min()))
-v4_syn = np.append(np.ones(320)*0.4, (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min()))
-it_syn = np.append(np.ones(320)*0.4, (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min()))
-fs_syn = np.append(np.ones(320)*0.4, (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min()))
-d1_syn = np.append(np.ones(320)*0.4, (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min()))
-d2_syn = np.append(np.ones(320)*0.4, (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min()))
-fr_syn = np.append(np.ones(320)*0.4, (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min()))
-lit_syn= np.append(np.ones(320)*0.4, (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min()))
+#v1_syn = np.append(np.ones(320)*0.4, (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min()))
+#v4_syn = np.append(np.ones(320)*0.4, (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min()))
+#it_syn = np.append(np.ones(320)*0.4, (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min()))
+#fs_syn = np.append(np.ones(320)*0.4, (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min()))
+#d1_syn = np.append(np.ones(320)*0.4, (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min()))
+#d2_syn = np.append(np.ones(320)*0.4, (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min()))
+#fr_syn = np.append(np.ones(320)*0.4, (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min()))
+#lit_syn= np.append(np.ones(320)*0.4, (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min()))
 
-#v1_syn = (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min())
-#v4_syn = (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min())
-#it_syn = (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min())
-#fs_syn = (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min())
-#d1_syn = (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min())
-#d2_syn = (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min())
-#fr_syn = (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min())
-#lit_syn= (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min())
+v1_syn = (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min())
+v4_syn = (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min())
+it_syn = (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min())
+fs_syn = (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min())
+d1_syn = (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min())
+d2_syn = (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min())
+fr_syn = (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min())
+lit_syn= (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min())
 
 
 # Extract number of timesteps from one of the synaptic activity arrays
@@ -342,15 +342,15 @@ print 'Size of BOLD arrays before deleting scans: ', v1_BOLD.size
 #mr_ticks = round(Ttrial/Tr)
 
 # remove first few scans from BOLD signal array and from BOLD timescale array
-mr_time = np.delete(mr_time, np.arange(scans_to_remove))
-v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
-v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
-it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
-d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
-d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
-fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
-fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
-lit_BOLD= np.delete(lit_BOLD,np.arange(scans_to_remove))
+#mr_time = np.delete(mr_time, np.arange(scans_to_remove))
+#v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
+#v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
+#it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
+#d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
+#d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
+#fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
+#fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
+#lit_BOLD= np.delete(lit_BOLD,np.arange(scans_to_remove))
 
 # round of mr time for display purposes
 mr_time = np.round(mr_time, decimals=0)
@@ -382,7 +382,7 @@ plt.gca().set_axis_bgcolor('black')
 # Set up separate figures to plot fMRI BOLD signal
 plt.figure()
 
-plt.suptitle('SIMULATED fMRI BOLD SIGNAL V1, IT, D1')
+plt.suptitle('SIMULATED fMRI BOLD SIGNAL V1')
 
 plt.plot(mr_time, v1_BOLD, linewidth=3.0, color='yellow')
 plt.gca().set_axis_bgcolor('black')
@@ -391,7 +391,7 @@ plt.gca().set_axis_bgcolor('black')
 
 #plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
 
-#plt.plot(v4_BOLD, linewidth=3.0, color='green')
+plt.plot(mr_time, v4_BOLD, linewidth=3.0, color='green')
 #plt.gca().set_axis_bgcolor('black')
 
 #plt.figure()

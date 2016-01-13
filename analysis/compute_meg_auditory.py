@@ -33,7 +33,7 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (megVisual.py) was created on June 7, 2015.
+#   This file (compute_meg_auditory.py) was created on June 7, 2015.
 #
 #   Based on Sanz-Leon et al (2015) and Sarvas (1987) and on TVB's monitors.py
 #
@@ -42,58 +42,50 @@
 #   Last updated by Antonio Ulloa on December 14 2015  
 # **************************************************************************/
 
-# megVisual.py
+# compute_meg_auditory.py
 #
-# Calculate and plot MEG signal at source locations based on data from visual
+# Calculate and plot MEG signal at source locations based on data from auditory
 # delay-match-to-sample simulation
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-#mu_0 = 1.25663706e-6 # mH/mm
-
-# hypothesized Talairach coordinates of LSNM brain regions
-v1_loc = [18, -88, 8]
-
-v4_loc = [30, -72, -12]
-
-it_loc = [28, -36, -8]
-
-pf_loc = [42, 26, 20]
+#the magnetic constant = 1.25663706 × 10-6 m kg s-2 A-2  (H/m)
+mu_0 = 1.25663706e-6 #mH/mm
 
 # define the hypothetical Talairach locations of each LSNM auditory module
-#a1_lsnm = [48,-26,10]
-#a2_lsnm = [62,-32,10]
-#st_lsnm = [59,-17,4]
-#pf_lsnm= [56,21,5]
+a1_loc = [48,-26,10]
+a2_loc = [62,-32,10]
+st_loc = [59,-17,4]
+pf_loc = [56,21,5]
 
 
 # initialize source positions
-r_0 = [v1_loc, v4_loc, it_loc, pf_loc] 
+r_0 = [a1_loc, a2_loc, it_loc, pf_loc] 
 
 #initialize vector from sources to sensor
-#Q = simulator.connectivity.orientations
+Q = simulator.connectivity.orientations
 
-#centre = numpy.mean(r_0, axis=0)[numpy.newaxis, :]
-#radius = 1.01 * max(numpy.sqrt(numpy.sum((r_0 - centre)**2, axis=1)))
+centre = numpy.mean(r_0, axis=0)[numpy.newaxis, :]
+radius = 1.01 * max(numpy.sqrt(numpy.sum((r_0 - centre)**2, axis=1)))
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('ev1h_signed_syn.out')
-ev1v = np.loadtxt('ev1v_signed_syn.out')
+ev1h = np.loadtxt('../simulator/output/ev1h_signed_syn.out')
+ev1v = np.loadtxt('../simulator/output/ev1v__signed_syn.out')
 
 # Load V4 synaptic activity data files into a numpy array
-ev4h = np.loadtxt('ev4h_signed_syn.out')
-ev4c = np.loadtxt('ev4c_signed_syn.out')
-ev4v = np.loadtxt('ev4v_signed_syn.out')
+ev4h = np.loadtxt('../simulator/output/ev4h_signed_syn.out')
+ev4c = np.loadtxt('../simulator/output/ev4c_signed_syn.out')
+ev4v = np.loadtxt('../simulator/output/ev4v_signed_syn.out')
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('exss_signed_syn.out')
+exss = np.loadtxt('../simulator/output/exss_signed_syn.out')
 
 # Load PFC synaptic activity data files into a numpy array
-efd1 = np.loadtxt('efd1_signed_syn.out')
-efd2 = np.loadtxt('efd2_signed_syn.out')
-exfs = np.loadtxt('exfs_signed_syn.out')
-exfr = np.loadtxt('exfr_signed_syn.out')
+efd1 = np.loadtxt('../simulator/output/efd1_signed_syn.out')
+efd2 = np.loadtxt('../simulator/output/efd2_signed_syn.out')
+exfs = np.loadtxt('../simulator/output/exfs_signed_syn.out')
+exfr = np.loadtxt('../simulator/output/exfr_signed_syn.out')
 
 # Extract number of timesteps from one of the synaptic activity arrays
 synaptic_timesteps = ev1h.shape[0]
