@@ -33,13 +33,13 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plotAuditory.py) was created on March 25, 2015.
+#   This file (plot_neural_auditory.py) was created on March 25, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on March 25, 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on January 14, 2016  
 # **************************************************************************/
 
-# plotAuditory.py
+# plot_neural_auditory.py
 #
 # Plot output data files of auditory delay-match-to-sample simulation
 
@@ -47,20 +47,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load data files
-mgns = np.loadtxt('../auditory_model/output/mgns.out')
-efd1 = np.loadtxt('../auditory_model/output/efd1.out')
-efd2 = np.loadtxt('../auditory_model/output/efd2.out')
-ea1d = np.loadtxt('../auditory_model/output/ea1d.out')
-ea1u = np.loadtxt('../auditory_model/output/ea1u.out')
-ea2d = np.loadtxt('../auditory_model/output/ea2d.out')
-ea2u = np.loadtxt('../auditory_model/output/ea2u.out')
-ea2c = np.loadtxt('../auditory_model/output/ea2c.out')
-exfr = np.loadtxt('../auditory_model/output/exfr.out')
-exfs = np.loadtxt('../auditory_model/output/exfs.out')
-estg = np.loadtxt('../auditory_model/output/estg.out')
+mgns = np.loadtxt('mgns.out')
+ea1d = np.loadtxt('ea1d.out')
+ea1u = np.loadtxt('ea1u.out')
+ea2d = np.loadtxt('ea2d.out')
+ea2u = np.loadtxt('ea2u.out')
+ea2c = np.loadtxt('ea2c.out')
+estg = np.loadtxt('estg.out')
+exfs = np.loadtxt('exfs.out')
+efd1 = np.loadtxt('efd1.out')
+efd2 = np.loadtxt('efd2.out')
+exfr = np.loadtxt('exfr.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = mgns.shape[0]
+
+print timesteps
 
 # Contruct a numpy array of timesteps (data points provided in data file)
 t = np.arange(0, timesteps, 1)

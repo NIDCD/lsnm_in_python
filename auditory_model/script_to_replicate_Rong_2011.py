@@ -2,7 +2,7 @@
 #
 # The following script replicates the results of Rong et al (2011).
 #
-# The script has the following 5 blocks: REST, DMS, REST, CTL, REST
+# The script has the following 4 blocks: , DMS, REST, CTL, REST
 #
 # We have a total of 8 trials (4 DMS and 4 CTL) in each block
 #

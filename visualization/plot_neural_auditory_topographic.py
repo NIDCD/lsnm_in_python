@@ -33,13 +33,13 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plotTopographic.py) was created on March 26, 2015.
+#   This file (plot_neural_auditory_topographic.py) was created on March 26, 2015.
 #
 #
 #   Author: Antonio Ulloa. Last updated by Antonio Ulloa March 26, 2015  
 # **************************************************************************/
 
-# plotTopographic.py
+# plot_neural_auditory_topographic.py
 #
 # Plays a movie using output data files of visual delay-match-to-sample simulation
 
@@ -47,17 +47,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load data files
-mgns = np.loadtxt('../../output/mgns.out')
-efd1 = np.loadtxt('../../output/efd1.out')
-efd2 = np.loadtxt('../../output/efd2.out')
-ea1u = np.loadtxt('../../output/ea1u.out')
-ea1d = np.loadtxt('../../output/ea1d.out')
-ea2u = np.loadtxt('../../output/ea2u.out')
-ea2d = np.loadtxt('../../output/ea2d.out')
-ea2c = np.loadtxt('../../output/ea2c.out')
-exfr = np.loadtxt('../../output/exfr.out')
-exfs = np.loadtxt('../../output/exfs.out')
-estg = np.loadtxt('../../output/estg.out')
+mgns = np.loadtxt('mgns.out')
+efd1 = np.loadtxt('efd1.out')
+efd2 = np.loadtxt('efd2.out')
+ea1u = np.loadtxt('ea1u.out')
+ea1d = np.loadtxt('ea1d.out')
+ea2u = np.loadtxt('ea2u.out')
+ea2d = np.loadtxt('ea2d.out')
+ea2c = np.loadtxt('ea2c.out')
+exfr = np.loadtxt('exfr.out')
+exfs = np.loadtxt('exfs.out')
+estg = np.loadtxt('estg.out')
 
 fig = plt.figure(1)
 

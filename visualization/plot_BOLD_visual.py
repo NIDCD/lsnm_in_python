@@ -33,19 +33,19 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plot_syn_and_BOLD.py) was created on December 6, 2015.
+#   This file (plot_BOLD_visual.py) was created on February 2, 2016.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on December 6 2015
+#   Last updated by Antonio Ulloa on February 2 2016
 #
 # **************************************************************************/
 
-# plot_syn_and_BOLD.py
+# plot_BOLD_visual.py
 #
-# Reads the synaptic and BOLD timeseries from a python (*.npy) data files, and it
-# displays, separately, synaptic and BOLD timeseries, per each brain area. It also
+# Reads the BOLD timeseries from a python (*.npy) data files, and it
+# displays, separately, per each brain area. It also
 # displays grey bands in the plot are to show where the control trials are located
 # in the timescale.
 
@@ -79,15 +79,13 @@ modules = np.arange(num_of_modules)
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-syn_subj = 'synaptic_in_ROI.npy'
 BOLD_subj = 'lsnm_bold_balloon.npy'
             
 # open files that contain synaptic and fMRI BOLD timeseries
-lsnm_syn = np.load(syn_subj)
 lsnm_BOLD = np.load(BOLD_subj)
 
 # construct array indexing scan number of the BOLD timeseries
-# (take into account scans that were removed)
+# (take into account scans that were removed, if any)
 total_scans = lsnm_BOLD[0].shape[-1] + scans_removed
 total_time = total_scans * Tr
 time_removed = scans_removed * Tr
@@ -107,126 +105,8 @@ plt.rcParams.update({'font.size': 15})
 #submodules within the PFC region. '''
 
 
-# Set up figure to plot synaptic signal
-fig1=plt.figure(1)
-
-#plt.suptitle('SYNAPTIC ACTIVITIES')
-
-# plot V1 BOLD time-series in yellow
-ax = plt.subplot(7,1,1)
-ax.set_yticks([])
-ax.set_xticks([])
-ax.set_xlim(0,200)
-ax.plot(lsnm_syn[0,1:], linewidth=3.0, color='yellow')
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('V1/V2', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot V4 BOLD time-series in green
-ax = plt.subplot(7,1,2)
-ax.plot(lsnm_syn[1,1:], linewidth=3.0, color='lime')
-ax.set_yticks([])
-ax.set_xticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('V4', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot IT BOLD time-series in blue
-ax = plt.subplot(7,1,3)
-ax.plot(lsnm_syn[2,1:], linewidth=3.0, color='blue')
-ax.set_yticks([])
-ax.set_xticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('IT', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot FS BOLD time-series in orange
-ax = plt.subplot(7,1,4)
-ax.plot(lsnm_syn[3,1:], linewidth=3.0, color='orange')
-ax.set_yticks([])
-ax.set_xticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot D1 BOLD time-series in red
-ax = plt.subplot(7,1,5)
-ax.plot(lsnm_syn[4,1:], linewidth=3.0, color='red')
-ax.set_yticks([])
-ax.set_xticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot D2 BOLD time-series in pink
-ax = plt.subplot(7,1,6)
-ax.plot(lsnm_syn[5,1:], linewidth=3.0, color='pink')
-ax.set_yticks([])
-ax.set_xticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-# plot FR BOLD time-series in purple
-ax = plt.subplot(7,1,7)
-ax.plot(lsnm_syn[6,1:], linewidth=3.0, color='darkorchid')
-ax.set_yticks([])
-
-# display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
-plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
-plt.gca().set_axis_bgcolor('black')
-
-
 #set up figure to plot BOLD signal
-fig2=plt.figure(2)
+fig=plt.figure(1)
 
 
 #plt.suptitle('fMRI BOLD SIGNAL')
@@ -352,6 +232,8 @@ plt.gca().set_axis_bgcolor('black')
 # optional figure caption
 #fig2.subplots_adjust(bottom=0.2)
 #fig2.text(.1, 0.03, txt)
+
+plt.xlabel('Time (s)')
 
 # Show the plots on the screen
 plt.show()

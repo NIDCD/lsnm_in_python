@@ -54,7 +54,7 @@ import matplotlib.pyplot as plt
 #pf_loc =  74
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_abs_syn.npy")
+tvb_synaptic = np.load("tvb_synaptic.npy")
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
@@ -103,22 +103,27 @@ tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
 tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
 
 # Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('ev1h_abs_syn.out')
-ev1v = np.loadtxt('ev1v_abs_syn.out')
-iv1h = np.loadtxt('iv1h_abs_syn.out')
-iv1v = np.loadtxt('iv1v_abs_syn.out')
+ev1h = np.loadtxt('ev1h_synaptic.out')
+ev1v = np.loadtxt('ev1v_synaptic.out')
+iv1h = np.loadtxt('iv1h_synaptic.out')
+iv1v = np.loadtxt('iv1v_synaptic.out')
 
 # Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('exss_abs_syn.out')
-inss = np.loadtxt('inss_abs_syn.out')
+exss = np.loadtxt('exss_synaptic.out')
+inss = np.loadtxt('inss_synaptic.out')
 
 # Load D1 synaptic activity data files into a numpy array
-efd1 = np.loadtxt('efd1_abs_syn.out')
-ifd1 = np.loadtxt('ifd1_abs_syn.out')
+efd1 = np.loadtxt('efd1_synaptic.out')
+ifd1 = np.loadtxt('ifd1_synaptic.out')
 
 # Extract number of timesteps from one of the matrices
 timesteps = ev1h.shape[0]
 print timesteps
+
+# the following variable defines the timesteps we will see in the resulting plot
+# we also convert the number of timesteps to seconds by multiplying by 50 and dividng by 1000
+ts_to_plot = 660
+x_lim = ts_to_plot * 50. / 1000.
 
 # Construct a numpy array of timesteps (data points provided in data file)
 # to convert from timesteps to time in seconds we do the following:
@@ -127,8 +132,7 @@ print timesteps
 # Therefore, each data point in the output files represents 50 milliseconds.
 # Thus, we need to multiply the datapoint times 50 ms...
 # ... and divide by 1000 to convert to seconds
-#t = np.linspace(0, 659*50./1000., num=660)
-t = np.linspace(0, timesteps * 50.0 / 1000., num=timesteps)
+t = np.linspace(0, (ts_to_plot-1) * 50.0 / 1000., num=ts_to_plot)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
@@ -146,15 +150,19 @@ plt.rcParams.update({'font.size': 30})
 
 ax1=plt.subplot()
 
-ax1.set_ylim([400, 1800])
+ax1.set_ylim([600, 2100])
 ax1.set_xlim(0,32.95)
 
 # Plot V1 module
-plt.plot(t, v1[0:timesteps], color='yellow', linewidth=2)
-plt.plot(t, d1[0:timesteps], color='red', linewidth=2)
-plt.plot(t, it[0:timesteps], color='blue', linewidth=2)
+plt.plot(t, v1[0:ts_to_plot], color='yellow', linewidth=2)
+plt.plot(t, d1[0:ts_to_plot], color='red', linewidth=2)
+plt.plot(t, it[0:ts_to_plot], color='blue', linewidth=2)
 
 plt.gca().set_axis_bgcolor('black')
+
+plt.xlabel('Time (s)')
+
+plt.tight_layout()
 
 # Show the plot on the screen
 plt.show()

@@ -33,19 +33,18 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (sim.py) was created on February 5, 2015.
+#   This file (sim_without_TVB.py) was created on January 28, 2016.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 17 2015
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on January 28 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
 # **************************************************************************/
 
-# sim.py
+# sim_without_TVB.py
 #
-# Simulates delayed match-to-sample experiment using Wilson-Cowan neuronal
-# population model.
+# Simulates a large-scale neural network using the Wilson-Cowan neuronal population model.
 
 # import regular expression modules (useful for reading weight files)
 import re
@@ -55,13 +54,6 @@ import random as rdm
 
 # import math function modules
 import math
-
-# the following modules are imported from TVB library
-from tvb.simulator.lab import *
-import tvb.datatypes.time_series
-from tvb.simulator.plot.tools import *
-import tvb.simulator.plot.timeseries_interactive as ts_int
-# end of TVB modules import
 
 # import 'pyplot' modules to visualize outputs
 import matplotlib.pyplot as plt
@@ -249,15 +241,6 @@ class LSNM(QtGui.QWidget):
         self.runTextEdit.moveCursor(QtGui.QTextCursor.End)
         self.runTextEdit.insertPlainText(message)
 
-class WilsonCowanPositive(models.WilsonCowan):
-    "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
-    "only allows values between 0 and 1 at integration time. In other words, it clips state"
-    "variables to the range [0,1] when a stochastic integration is used"
-    def dfun(self, state_variables, coupling, local_coupling=0.0):
-        state_variables[state_variables < 0.0] = 0.0
-        state_variables[state_variables > 1.0] = 1.0
-        return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
-            
 class TaskThread(QtCore.QThread):
 
     def __init__(self):
@@ -286,7 +269,7 @@ class TaskThread(QtCore.QThread):
 
         # define a flag that tells the network whether to send feedback connections
         # from LSNM to TVB
-        FEEDBACK = True
+        FEEDBACK = False
         
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0

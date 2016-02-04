@@ -37,7 +37,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on December 2, 2015  
+#   Last updated by Antonio Ulloa on February 4, 2016  
 # **************************************************************************/
 
 # compute_PSC.py
@@ -45,9 +45,12 @@
 # Calculate and plot the Percent Signal Change (PSC) of fMRI BOLD timeseries across
 # subjects for 2 conditions: DMS and passive viewing.
 #
-# The inputs are BOLD timeseries for each subject. We take each timeseries and convert
+# The inputs are BOLD timeseries for each subject, one timeseries per brain module.
+# We take each timeseries and convert
 # each to PSC by dividing every time point by the baseline (the mean of the whole
-# time course), then multiplying by 100 and resting 100. That way, we obtain a
+# time course for a given subject and brain area), then multiplying by 100
+# (Source: BrainVoyager v20.0 User's Guide). That way,
+# we obtain a
 # whole-experiment timecourse in percent signal change, per brain area, per subject.
 # Then, we average together all time points for each condition, DMS and control,
 # separately, across subjects, per brain area. That gives us one PSC number per
@@ -67,6 +70,8 @@ import pandas as pd
 import math as m
 
 from scipy.stats import poisson
+
+from scipy.stats import t
 
 # define the length of both each trial and the whole experiment
 # in synaptic timesteps, as well as total number of trials
@@ -96,27 +101,16 @@ total_fmri_blocks = num_of_fmri_blocks * num_of_subjects
 synaptic_timesteps = experiment_length - synaptic_steps_removed
 
 # define the names of the input files where the BOLD timeseries are contained
-BOLD_ts_subj=np.array(['subject_11/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_12/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_13/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_14/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_15/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_16/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_17/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_18/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_19/output.36trials/lsnm_bold_balloon.npy',
-                       'subject_20/output.36trials/lsnm_bold_balloon.npy'])
-
-#syn_ts_subj=np.array(['subject_11/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_12/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_13/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_14/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_15/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_16/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_17/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_18/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_19/output.36trials/synaptic_in_ROI.npy',
-#                       'subject_20/output.36trials/synaptic_in_ROI.npy'])
+BOLD_ts_subj=np.array(['subject_11/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_12/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_13/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_14/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_15/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_16/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_17/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_18/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_19/output.36trials.with_feedback/lsnm_bold_balloon.npy',
+                       'subject_20/output.36trials.with_feedback/lsnm_bold_balloon.npy'])
 
 # set matplot lib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
@@ -146,27 +140,34 @@ num_of_scans = T / Tr - scans_removed
 time_in_seconds = np.arange(0, T, Tr)
 
 scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
-#synaptic_timescale = np.arange(0, synaptic_timesteps)
 
 # open files containing BOLD time-series
 BOLD_ts = np.zeros((num_of_subjects, num_of_modules, num_of_scans))
-#syn_ts = np.zeros((num_of_subjects, num_of_modules, synaptic_timesteps))
 for idx in range(0, num_of_subjects):
-#    syn_ts[idx] = np.load(syn_ts_subj[idx])
     BOLD_ts[idx] = np.load(BOLD_ts_subj[idx])    
 
+# Perform time-course normalization by converting each timeseries to percent signal change
+# for each subject and for each module relative to the mean of each time course.
+for s in range(0, num_of_subjects):
+    for m in range(0, num_of_modules):
+        timecourse_mean = np.mean(BOLD_ts[s,m])
+        BOLD_ts[s,m] = BOLD_ts[s,m] / timecourse_mean * 100. - 100.
+
+mean_PSC = np.zeros((num_of_subjects, num_of_modules))
+# now, perform a mean of PSCs of scan 3, 4, 5 of each condition
+for s in range(0, num_of_subjects):
+    for m in range(0, num_of_modules):
+        scan_counter = 0
+        for b in range(1, num_of_fmri_blocks/2 + 1):
+            mean_PSC_dms[s,m] = (BOLD_ts[s,m,n+5] + BOLD_ts[s,m,n+6] + BOLD_ts[s,m,n+7])
+            mean_PSC_ctl[s,m] = (BOLD_ts[s,m,n+13]+ BOLD_ts[s,m,n+14]+ BOLD_ts[s,m,n+15])
+            scan_counter = scan_counter + 8
+
+        
 # Concatenate the time-series of each module together, across all subjects:
-#syn_ts = np.reshape(syn_ts, (num_of_modules, num_of_subjects*synaptic_timesteps))
-BOLD_ts = np.reshape(BOLD_ts, (num_of_modules, num_of_subjects*num_of_scans))
+# BOLD_ts = np.reshape(BOLD_ts, (num_of_modules, num_of_subjects*num_of_scans))
 
 # now, split all time-series in blocks
-#syn_ts_v1=np.array_split(syn_ts[0], total_syn_blocks)
-#syn_ts_v4=np.array_split(syn_ts[1], total_syn_blocks)
-#syn_ts_it=np.array_split(syn_ts[2], total_syn_blocks)
-#syn_ts_fs=np.array_split(syn_ts[3], total_syn_blocks)
-#syn_ts_d1=np.array_split(syn_ts[4], total_syn_blocks)
-#syn_ts_d2=np.array_split(syn_ts[5], total_syn_blocks)
-#syn_ts_fr=np.array_split(syn_ts[6], total_syn_blocks)
 BOLD_ts_v1=np.array_split(BOLD_ts[0], total_fmri_blocks)
 BOLD_ts_v4=np.array_split(BOLD_ts[1], total_fmri_blocks)
 BOLD_ts_it=np.array_split(BOLD_ts[2], total_fmri_blocks)
@@ -174,24 +175,14 @@ BOLD_ts_fs=np.array_split(BOLD_ts[3], total_fmri_blocks)
 BOLD_ts_d1=np.array_split(BOLD_ts[4], total_fmri_blocks)
 BOLD_ts_d2=np.array_split(BOLD_ts[5], total_fmri_blocks)
 BOLD_ts_fr=np.array_split(BOLD_ts[6], total_fmri_blocks)
-BOLD_ts_lit=np.array_split(BOLD_ts[7], total_fmri_blocks)
 
 # define an array with location of control blocks, and another array
 # with location of task (DMS) blocks, relative to
 # an array that contains all blocks (task-related blocks included)
-#syn_control_block_ids = np.arange(1, total_syn_blocks, 2)
-#syn_dms_block_ids =     np.arange(0, total_syn_blocks, 2)
 fmri_control_block_ids = np.arange(1, total_fmri_blocks, 2)
 fmri_dms_block_ids =     np.arange(0, total_fmri_blocks, 2)
 
 # now, create an array of BOLD time-series containing DMS trials only: 
-#syn_v1_dms_blocks = np.delete(np.asarray(syn_ts_v1), syn_control_block_ids, axis=0)
-#syn_v4_dms_blocks = np.delete(np.asarray(syn_ts_v4), syn_control_block_ids, axis=0)
-#syn_it_dms_blocks = np.delete(np.asarray(syn_ts_it), syn_control_block_ids, axis=0)
-#syn_fs_dms_blocks = np.delete(np.asarray(syn_ts_fs), syn_control_block_ids, axis=0)
-#syn_d1_dms_blocks = np.delete(np.asarray(syn_ts_d1), syn_control_block_ids, axis=0)
-#syn_d2_dms_blocks = np.delete(np.asarray(syn_ts_d2), syn_control_block_ids, axis=0)
-#syn_fr_dms_blocks = np.delete(np.asarray(syn_ts_fr), syn_control_block_ids, axis=0)
 BOLD_v1_dms_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_control_block_ids, axis=0)
 BOLD_v4_dms_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_control_block_ids, axis=0)
 BOLD_it_dms_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_control_block_ids, axis=0)
@@ -199,16 +190,8 @@ BOLD_fs_dms_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_control_block_ids, a
 BOLD_d1_dms_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_control_block_ids, axis=0)
 BOLD_d2_dms_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_control_block_ids, axis=0)
 BOLD_fr_dms_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_control_block_ids, axis=0)
-BOLD_lit_dms_blocks = np.delete(np.asarray(BOLD_ts_lit), fmri_control_block_ids, axis=0)
 
 # ... and concatenate those DMS BOLD timeseries together
-#syn_v1_dms_ts = np.concatenate(syn_v1_dms_blocks)
-#syn_v4_dms_ts = np.concatenate(syn_v4_dms_blocks)
-#syn_it_dms_ts = np.concatenate(syn_it_dms_blocks)
-#syn_fs_dms_ts = np.concatenate(syn_fs_dms_blocks)
-#syn_d1_dms_ts = np.concatenate(syn_d1_dms_blocks)
-#syn_d2_dms_ts = np.concatenate(syn_d2_dms_blocks)
-#syn_fr_dms_ts = np.concatenate(syn_fr_dms_blocks)
 BOLD_v1_dms_ts = np.concatenate(BOLD_v1_dms_blocks)
 BOLD_v4_dms_ts = np.concatenate(BOLD_v4_dms_blocks)
 BOLD_it_dms_ts = np.concatenate(BOLD_it_dms_blocks)
@@ -216,16 +199,8 @@ BOLD_fs_dms_ts = np.concatenate(BOLD_fs_dms_blocks)
 BOLD_d1_dms_ts = np.concatenate(BOLD_d1_dms_blocks)
 BOLD_d2_dms_ts = np.concatenate(BOLD_d2_dms_blocks)
 BOLD_fr_dms_ts = np.concatenate(BOLD_fr_dms_blocks)
-BOLD_lit_dms_ts = np.concatenate(BOLD_lit_dms_blocks)
 
 # but also, get rid of the DMS blocks, to create arrays with only control trials
-#syn_v1_control_blocks = np.delete(np.asarray(syn_ts_v1), syn_dms_block_ids, axis=0)
-#syn_v4_control_blocks = np.delete(np.asarray(syn_ts_v4), syn_dms_block_ids, axis=0)
-#syn_it_control_blocks = np.delete(np.asarray(syn_ts_it), syn_dms_block_ids, axis=0)
-#syn_fs_control_blocks = np.delete(np.asarray(syn_ts_fs), syn_dms_block_ids, axis=0)
-#syn_d1_control_blocks = np.delete(np.asarray(syn_ts_d1), syn_dms_block_ids, axis=0)
-#syn_d2_control_blocks = np.delete(np.asarray(syn_ts_d2), syn_dms_block_ids, axis=0)
-#syn_fr_control_blocks = np.delete(np.asarray(syn_ts_fr), syn_dms_block_ids, axis=0)
 BOLD_v1_control_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_dms_block_ids, axis=0)
 BOLD_v4_control_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_dms_block_ids, axis=0)
 BOLD_it_control_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_dms_block_ids, axis=0)
@@ -233,16 +208,8 @@ BOLD_fs_control_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_dms_block_ids, a
 BOLD_d1_control_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_dms_block_ids, axis=0)
 BOLD_d2_control_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_dms_block_ids, axis=0)
 BOLD_fr_control_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_dms_block_ids, axis=0)
-BOLD_lit_control_blocks = np.delete(np.asarray(BOLD_ts_lit), fmri_dms_block_ids, axis=0)
 
 # ... and concatenate the control blocks together
-#syn_v1_ctl_ts = np.concatenate(syn_v1_control_blocks)
-#syn_v4_ctl_ts = np.concatenate(syn_v4_control_blocks)
-#syn_it_ctl_ts = np.concatenate(syn_it_control_blocks)
-#syn_fs_ctl_ts = np.concatenate(syn_fs_control_blocks)
-#syn_d1_ctl_ts = np.concatenate(syn_d1_control_blocks)
-#syn_d2_ctl_ts = np.concatenate(syn_d2_control_blocks)
-#syn_fr_ctl_ts = np.concatenate(syn_fr_control_blocks)
 BOLD_v1_ctl_ts = np.concatenate(BOLD_v1_control_blocks)
 BOLD_v4_ctl_ts = np.concatenate(BOLD_v4_control_blocks)
 BOLD_it_ctl_ts = np.concatenate(BOLD_it_control_blocks)
@@ -250,124 +217,180 @@ BOLD_fs_ctl_ts = np.concatenate(BOLD_fs_control_blocks)
 BOLD_d1_ctl_ts = np.concatenate(BOLD_d1_control_blocks)
 BOLD_d2_ctl_ts = np.concatenate(BOLD_d2_control_blocks)
 BOLD_fr_ctl_ts = np.concatenate(BOLD_fr_control_blocks)
-BOLD_lit_ctl_ts = np.concatenate(BOLD_lit_control_blocks)
 
 # Average all timepoints together for the DMS condition:
-#syn_v1_dms_PSC = np.mean(syn_v1_dms_ts)
-#syn_v4_dms_PSC = np.mean(syn_v4_dms_ts)
-#syn_it_dms_PSC = np.mean(syn_it_dms_ts)
-#syn_fs_dms_PSC = np.mean(syn_fs_dms_ts)
-#syn_d1_dms_PSC = np.mean(syn_d1_dms_ts)
-#syn_d2_dms_PSC = np.mean(syn_d2_dms_ts)
-#syn_fr_dms_PSC = np.mean(syn_fr_dms_ts)
-BOLD_v1_dms_PSC = np.mean(BOLD_v1_dms_ts)
-BOLD_v4_dms_PSC = np.mean(BOLD_v4_dms_ts)
-BOLD_it_dms_PSC = np.mean(BOLD_it_dms_ts)
-BOLD_fs_dms_PSC = np.mean(BOLD_fs_dms_ts)
-BOLD_d1_dms_PSC = np.mean(BOLD_d1_dms_ts)
-BOLD_d2_dms_PSC = np.mean(BOLD_d2_dms_ts)
-BOLD_fr_dms_PSC = np.mean(BOLD_fr_dms_ts)
-BOLD_lit_dms_PSC = np.mean(BOLD_lit_dms_ts)
+BOLD_v1_dms_avg = np.mean(BOLD_v1_dms_ts)
+BOLD_v4_dms_avg = np.mean(BOLD_v4_dms_ts)
+BOLD_it_dms_avg = np.mean(BOLD_it_dms_ts)
+BOLD_fs_dms_avg = np.mean(BOLD_fs_dms_ts)
+BOLD_d1_dms_avg = np.mean(BOLD_d1_dms_ts)
+BOLD_d2_dms_avg = np.mean(BOLD_d2_dms_ts)
+BOLD_fr_dms_avg = np.mean(BOLD_fr_dms_ts)
 
 # Average all timepoints together for the control condition:
-#syn_v1_ctl_PSC = np.mean(syn_v1_ctl_ts)
-#syn_v4_ctl_PSC = np.mean(syn_v4_ctl_ts)
-#syn_it_ctl_PSC = np.mean(syn_it_ctl_ts)
-#syn_fs_ctl_PSC = np.mean(syn_fs_ctl_ts)
-#syn_d1_ctl_PSC = np.mean(syn_d1_ctl_ts)
-#syn_d2_ctl_PSC = np.mean(syn_d2_ctl_ts)
-#syn_fr_ctl_PSC = np.mean(syn_fr_ctl_ts)
-BOLD_v1_ctl_PSC = np.mean(BOLD_v1_ctl_ts)
-BOLD_v4_ctl_PSC = np.mean(BOLD_v4_ctl_ts)
-BOLD_it_ctl_PSC = np.mean(BOLD_it_ctl_ts)
-BOLD_fs_ctl_PSC = np.mean(BOLD_fs_ctl_ts)
-BOLD_d1_ctl_PSC = np.mean(BOLD_d1_ctl_ts)
-BOLD_d2_ctl_PSC = np.mean(BOLD_d2_ctl_ts)
-BOLD_fr_ctl_PSC = np.mean(BOLD_fr_ctl_ts)
-BOLD_lit_ctl_PSC = np.mean(BOLD_lit_ctl_ts)
+BOLD_v1_ctl_avg = np.mean(BOLD_v1_ctl_ts)
+BOLD_v4_ctl_avg = np.mean(BOLD_v4_ctl_ts)
+BOLD_it_ctl_avg = np.mean(BOLD_it_ctl_ts)
+BOLD_fs_ctl_avg = np.mean(BOLD_fs_ctl_ts)
+BOLD_d1_ctl_avg = np.mean(BOLD_d1_ctl_ts)
+BOLD_d2_ctl_avg = np.mean(BOLD_d2_ctl_ts)
+BOLD_fr_ctl_avg = np.mean(BOLD_fr_ctl_ts)
 
-# Normalize (convert to percent signal change) each DMS timeseries first
-# per subject and per module relative to the control condition
-#syn_v1_dms_PSC = (syn_v1_dms_PSC - syn_v1_ctl_PSC) / syn_v1_ctl_PSC * 100.
-#syn_v4_dms_PSC = (syn_v4_dms_PSC - syn_v4_ctl_PSC) / syn_v4_ctl_PSC * 100.
-#syn_it_dms_PSC = (syn_it_dms_PSC - syn_it_ctl_PSC) / syn_it_ctl_PSC * 100.
-#syn_fs_dms_PSC = (syn_fs_dms_PSC - syn_fs_ctl_PSC) / syn_fs_ctl_PSC * 100.
-#syn_d1_dms_PSC = (syn_d1_dms_PSC - syn_d1_ctl_PSC) / syn_d1_ctl_PSC * 100.
-#syn_d2_dms_PSC = (syn_d2_dms_PSC - syn_d2_ctl_PSC) / syn_d2_ctl_PSC * 100.
-#syn_fr_dms_PSC = (syn_fr_dms_PSC - syn_fr_ctl_PSC) / syn_fr_ctl_PSC * 100.
-BOLD_v1_dms_PSC = (BOLD_v1_dms_PSC - BOLD_v1_ctl_PSC) / BOLD_v1_ctl_PSC * 100.
-BOLD_v4_dms_PSC = (BOLD_v4_dms_PSC - BOLD_v4_ctl_PSC) / BOLD_v4_ctl_PSC * 100.
-BOLD_it_dms_PSC = (BOLD_it_dms_PSC - BOLD_it_ctl_PSC) / BOLD_it_ctl_PSC * 100.
-BOLD_fs_dms_PSC = (BOLD_fs_dms_PSC - BOLD_fs_ctl_PSC) / BOLD_fs_ctl_PSC * 100.
-BOLD_d1_dms_PSC = (BOLD_d1_dms_PSC - BOLD_d1_ctl_PSC) / BOLD_d1_ctl_PSC * 100.
-BOLD_d2_dms_PSC = (BOLD_d2_dms_PSC - BOLD_d2_ctl_PSC) / BOLD_d2_ctl_PSC * 100.
-BOLD_fr_dms_PSC = (BOLD_fr_dms_PSC - BOLD_fr_ctl_PSC) / BOLD_fr_ctl_PSC * 100.
-BOLD_lit_dms_PSC = (BOLD_lit_dms_PSC - BOLD_lit_ctl_PSC) / BOLD_lit_ctl_PSC * 100.
+# Calculate variance for the DMS condition:
+BOLD_v1_dms_var = np.var(BOLD_v1_dms_ts)
+BOLD_v4_dms_var = np.var(BOLD_v4_dms_ts)
+BOLD_it_dms_var = np.var(BOLD_it_dms_ts)
+BOLD_fs_dms_var = np.var(BOLD_fs_dms_ts)
+BOLD_d1_dms_var = np.var(BOLD_d1_dms_ts)
+BOLD_d2_dms_var = np.var(BOLD_d2_dms_ts)
+BOLD_fr_dms_var = np.var(BOLD_fr_dms_ts)
 
+# Calculate variance for the control condition:
+BOLD_v1_ctl_var = np.var(BOLD_v1_ctl_ts)
+BOLD_v4_ctl_var = np.var(BOLD_v4_ctl_ts)
+BOLD_it_ctl_var = np.var(BOLD_it_ctl_ts)
+BOLD_fs_ctl_var = np.var(BOLD_fs_ctl_ts)
+BOLD_d1_ctl_var = np.var(BOLD_d1_ctl_ts)
+BOLD_d2_ctl_var = np.var(BOLD_d2_ctl_ts)
+BOLD_fr_ctl_var = np.var(BOLD_fr_ctl_ts)
 
-# Display all PSC values:
-#print 'SYN V1 PSC: ', syn_v1_dms_PSC
-#print 'SYN V4 PSC: ', syn_v4_dms_PSC
-#print 'SYN IT PSC: ', syn_it_dms_PSC
-#print 'SYN FS PSC: ', syn_fs_dms_PSC
-#print 'SYN D1 PSC: ', syn_d1_dms_PSC
-#print 'SYN D2 PSC: ', syn_d2_dms_PSC
-#print 'SYN FR PSC: ', syn_fr_dms_PSC
+# Display all PSCs for both DMS and CTL, which represent the average of
+# the Percent Signal Change per each brain area per each module
+print 'BOLD V1 DMS Avg: ', BOLD_v1_dms_avg
+print 'BOLD V4 DMS Avg: ', BOLD_v4_dms_avg
+print 'BOLD IT DMS Avg: ', BOLD_it_dms_avg
+print 'BOLD FS DMS Avg: ', BOLD_fs_dms_avg
+print 'BOLD D1 DMS Avg: ', BOLD_d1_dms_avg
+print 'BOLD D2 DMS Avg: ', BOLD_d2_dms_avg
+print 'BOLD FR DMS Avg: ', BOLD_fr_dms_avg
+print 'BOLD V1 CTL Avg: ', BOLD_v1_ctl_avg
+print 'BOLD V4 CTL Avg: ', BOLD_v4_ctl_avg
+print 'BOLD IT CTL Avg: ', BOLD_it_ctl_avg
+print 'BOLD FS CTL Avg: ', BOLD_fs_ctl_avg
+print 'BOLD D1 CTL Avg: ', BOLD_d1_ctl_avg
+print 'BOLD D2 CTL Avg: ', BOLD_d2_ctl_avg
+print 'BOLD FR CTL Avg: ', BOLD_fr_ctl_avg
 
-print 'BOLD V1 PSC: ', BOLD_v1_dms_PSC
-print 'BOLD V4 PSC: ', BOLD_v4_dms_PSC
-print 'BOLD IT PSC: ', BOLD_it_dms_PSC
-print 'BOLD FS PSC: ', BOLD_fs_dms_PSC
-print 'BOLD D1 PSC: ', BOLD_d1_dms_PSC
-print 'BOLD D2 PSC: ', BOLD_d2_dms_PSC
-print 'BOLD FR PSC: ', BOLD_fr_dms_PSC
-print 'BOLD cIT PSC: ', BOLD_lit_dms_PSC
+# Calculate statistical significance by using a two-tailed t-test:
+# We are going to have two groups: DMS group and control (CTL) group (each sample size is 10 subjects)
+# Our research hypothesis is:
+#          * The BOLD signal in the DMS group IS larger than the BOLD signal in the CTL group.
+# The NULL hypothesis is:
+#          * The BOLD signal in the DMS group IS NOT larger than the BOLD signal in the CTL group.
+# The value of alpha (p-threshold) will be 0.05
+sample_size = BOLD_v1_dms_ts.size
+print 'sample size = ', sample_size
+number_of_groups = 2
+# STEPS:
+#     (1) subtract the mean of control group from the mean of DMS group:
+BOLD_v1_diff = BOLD_v1_dms_avg - BOLD_v1_ctl_avg
+BOLD_v4_diff = BOLD_v4_dms_avg - BOLD_v4_ctl_avg
+BOLD_it_diff = BOLD_it_dms_avg - BOLD_it_ctl_avg
+BOLD_fs_diff = BOLD_fs_dms_avg - BOLD_fs_ctl_avg
+BOLD_d1_diff = BOLD_d1_dms_avg - BOLD_d1_ctl_avg
+BOLD_d2_diff = BOLD_d2_dms_avg - BOLD_d2_ctl_avg
+BOLD_fr_diff = BOLD_fr_dms_avg - BOLD_fr_ctl_avg
+#     (2) Calculate, for both control and DMS, the variance divided by sample size minus 1:
+BOLD_v1_ctl_a= BOLD_v1_ctl_var / (sample_size-1)
+BOLD_v4_ctl_a= BOLD_v4_ctl_var / (sample_size-1)
+BOLD_it_ctl_a= BOLD_it_ctl_var / (sample_size-1)
+BOLD_fs_ctl_a= BOLD_fs_ctl_var / (sample_size-1)
+BOLD_d1_ctl_a= BOLD_d1_ctl_var / (sample_size-1)
+BOLD_d2_ctl_a= BOLD_d2_ctl_var / (sample_size-1)
+BOLD_fr_ctl_a= BOLD_fr_ctl_var / (sample_size-1)
+BOLD_v1_dms_a= BOLD_v1_dms_var / (sample_size-1)
+BOLD_v4_dms_a= BOLD_v4_dms_var / (sample_size-1)
+BOLD_it_dms_a= BOLD_it_dms_var / (sample_size-1)
+BOLD_fs_dms_a= BOLD_fs_dms_var / (sample_size-1)
+BOLD_d1_dms_a= BOLD_d1_dms_var / (sample_size-1)
+BOLD_d2_dms_a= BOLD_d2_dms_var / (sample_size-1)
+BOLD_fr_dms_a= BOLD_fr_dms_var / (sample_size-1)
+#     (3) Add results obtained for CTL and DMS in step (2) together:
+BOLD_v1_a = BOLD_v1_ctl_a + BOLD_v1_dms_a
+BOLD_v4_a = BOLD_v4_ctl_a + BOLD_v4_dms_a
+BOLD_it_a = BOLD_it_ctl_a + BOLD_it_dms_a
+BOLD_fs_a = BOLD_fs_ctl_a + BOLD_fs_dms_a
+BOLD_d1_a = BOLD_d1_ctl_a + BOLD_d1_dms_a
+BOLD_d2_a = BOLD_d2_ctl_a + BOLD_d2_dms_a
+BOLD_fr_a = BOLD_fr_ctl_a + BOLD_fr_dms_a
+#     (4) Take the square root the results in step (3):
+sqrt_BOLD_v1_a= np.sqrt(BOLD_v1_a)
+sqrt_BOLD_v4_a= np.sqrt(BOLD_v4_a)
+sqrt_BOLD_it_a= np.sqrt(BOLD_it_a)
+sqrt_BOLD_fs_a= np.sqrt(BOLD_fs_a)
+sqrt_BOLD_d1_a= np.sqrt(BOLD_d1_a)
+sqrt_BOLD_d2_a= np.sqrt(BOLD_d2_a)
+sqrt_BOLD_fr_a= np.sqrt(BOLD_fr_a)
+#     (5) Divide the results of step (1) by the results of step (4) to obtain 't':
+BOLD_v1_t= BOLD_v1_diff / sqrt_BOLD_v1_a
+BOLD_v4_t= BOLD_v4_diff / sqrt_BOLD_v4_a
+BOLD_it_t= BOLD_it_diff / sqrt_BOLD_it_a
+BOLD_fs_t= BOLD_fs_diff / sqrt_BOLD_fs_a
+BOLD_d1_t= BOLD_d1_diff / sqrt_BOLD_d1_a
+BOLD_d2_t= BOLD_d2_diff / sqrt_BOLD_d2_a
+BOLD_fr_t= BOLD_fr_diff / sqrt_BOLD_fr_a
+#     (6) Calculate the degrees of freedom (add up number of observations for each group
+#         minus number of groups):
+dof = sample_size + sample_size - number_of_groups
+print 'Degrees of freedom: ', dof
+#     (7) find the p-values for the above 't' and 'degrees of freedom':
+BOLD_v1_p_values = t.sf(BOLD_v1_t, dof)
+BOLD_v4_p_values = t.sf(BOLD_v4_t, dof)
+BOLD_it_p_values = t.sf(BOLD_it_t, dof)
+BOLD_fs_p_values = t.sf(BOLD_fs_t, dof)
+BOLD_d1_p_values = t.sf(BOLD_d1_t, dof)
+BOLD_d2_p_values = t.sf(BOLD_d2_t, dof)
+BOLD_fr_p_values = t.sf(BOLD_fr_t, dof)
+
+print 't-value for v1 BOLD signal difference: ', BOLD_v1_t
+print 't-value for v4 BOLD signal difference: ', BOLD_v4_t
+print 't-value for it BOLD signal difference: ', BOLD_it_t
+print 't-value for fs BOLD signal difference: ', BOLD_fs_t
+print 't-value for d1 BOLD signal difference: ', BOLD_d1_t
+print 't-value for d2 BOLD signal difference: ', BOLD_d2_t
+print 't-value for fr BOLD signal difference: ', BOLD_fr_t
+
 
 # define number of groups to plot
 N = 1
 
 # create a list of x locations for each group 
 index = np.arange(N)            
-width = 0.1                     # width of the bars
+width = 0.2                     # width of the bars
 
 fig, ax = plt.subplots()
 
-ax.set_ylim([0,3.5])
+#ax.set_ylim([0,3.5])
 
-# now, group the values to be plotted by brain module
-#v1_psc = (syn_v1_dms_PSC, BOLD_v1_dms_PSC)
-#v4_psc = (syn_v4_dms_PSC, BOLD_v4_dms_PSC)
-#it_psc = (syn_it_dms_PSC, BOLD_it_dms_PSC)
-#fs_psc = (syn_fs_dms_PSC, BOLD_fs_dms_PSC)
-#d1_psc = (syn_d1_dms_PSC, BOLD_d1_dms_PSC)
-#d2_psc = (syn_d2_dms_PSC, BOLD_d2_dms_PSC)
-#fr_psc = (syn_fr_dms_PSC, BOLD_fr_dms_PSC)
+# now, group the values to be plotted by brain module and by task condition
 
-rects_v1 = ax.bar(index, BOLD_v1_dms_PSC, width, color='yellow', label='V1')
+rects_v1_dms = ax.bar(index, BOLD_v1_dms_avg, width, color='yellow', label='V1')
+rects_v1_ctl = ax.bar(index + width, BOLD_v1_ctl_avg, width, color='yellow', edgecolor='black', hatch='//', label='V1')
 
-rects_v4 = ax.bar(index + width, BOLD_v4_dms_PSC, width, color='green', label='V4')
+rects_v4_dms = ax.bar(index + width*2, BOLD_v4_dms_avg, width, color='green', label='V4')
+rects_v4_ctl = ax.bar(index + width*3, BOLD_v4_ctl_avg, width, color='green', edgecolor='black', hatch='//', label='V4')
 
-rects_it = ax.bar(index + width*2, BOLD_it_dms_PSC, width, color='blue', label='IT')
+rects_it_dms = ax.bar(index + width*4, BOLD_it_dms_avg, width, color='blue', label='IT')
+rects_it_ctl = ax.bar(index + width*5, BOLD_it_ctl_avg, width, color='blue', edgecolor='black', hatch='//', label='IT')
 
-rects_fs = ax.bar(index + width*3, BOLD_fs_dms_PSC, width, color='orange', label='FS')
+rects_fs_dms = ax.bar(index + width*6, BOLD_fs_dms_avg, width, color='orange', label='FS')
+rects_fs_ctl = ax.bar(index + width*7, BOLD_fs_ctl_avg, width, color='orange', edgecolor='black', hatch='//', label='FS')
 
-rects_d1 = ax.bar(index + width*4, BOLD_d1_dms_PSC, width, color='red', label='D1')
+rects_d1_dms = ax.bar(index + width*8, BOLD_d1_dms_avg, width, color='red', label='D1')
+rects_d1_ctl = ax.bar(index + width*9, BOLD_d1_ctl_avg, width, color='red', edgecolor='black', hatch='//', label='D1')
 
-rects_d2 = ax.bar(index + width*5, BOLD_d2_dms_PSC, width, color='pink', label='D2')
+rects_d2_dms = ax.bar(index + width*10, BOLD_d2_dms_avg, width, color='pink', label='D2')
+rects_d2_ctl = ax.bar(index + width*11, BOLD_d2_ctl_avg, width, color='pink', edgecolor='black', hatch='//', label='D2')
 
-rects_fr = ax.bar(index + width*6, BOLD_fr_dms_PSC, width, color='purple', label='FR')
-
-rects_lit= ax.bar(index + width*7, BOLD_lit_dms_PSC, width, color='lightblue', label='cIT')
+rects_fr_dms = ax.bar(index + width*12, BOLD_fr_dms_avg, width, color='purple', label='FR')
+rects_fr_ctl = ax.bar(index + width*13, BOLD_fr_ctl_avg, width, color='purple', edgecolor='black', hatch='//', label='FR')
 
 #ax.set_title('PSC ACROSS SUBJECTS IN ALL BRAIN REGIONS')
 
 # get rid of x axis ticks and labels
 ax.set_xticks([])
 
-#ax.set_xlabel('SYNAPTIC PSC                                        fMRI PSC')
-#ax.xaxis.set_label_coords(0.5, -0.025)
-
-ax.set_ylabel('Percent signal change')
+ax.set_ylabel('Signal change (%)')
 
 # Shrink current axis by 10% to make space for legend
 box = ax.get_position()
@@ -375,6 +398,46 @@ ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 
 # place a legend to the right of the figure
 plt.legend(loc='center left', bbox_to_anchor=(1.02, .5))
+
+#set up figure to plot BOLD signal (normalized to PSC)
+fig=plt.figure(2)
+
+# plot V1 BOLD time-series in yellow
+ax = plt.subplot(7,1,1)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[0], linewidth=3.0, color='yellow')
+# plot V4 BOLD time-series in yellow
+ax = plt.subplot(7,1,2)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[1], linewidth=3.0, color='lime')
+# plot IT BOLD time-series in yellow
+ax = plt.subplot(7,1,3)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[2], linewidth=3.0, color='blue')
+# plot FS BOLD time-series in yellow
+ax = plt.subplot(7,1,4)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[3], linewidth=3.0, color='orange')
+# plot D1 BOLD time-series in yellow
+ax = plt.subplot(7,1,5)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[4], linewidth=3.0, color='red')
+# plot D2 BOLD time-series in yellow
+ax = plt.subplot(7,1,6)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[5], linewidth=3.0, color='pink')
+# plot FR BOLD time-series in yellow
+ax = plt.subplot(7,1,7)
+ax.set_yticks([])
+ax.set_xticks([])
+ax.plot(BOLD_ts[6], linewidth=3.0, color='darkorchid')
+
 
 # Show the plots on the screen
 plt.show()
