@@ -78,49 +78,49 @@ modules = np.arange(7)
 subjects = np.arange(10)
 
 # define output file where means, standard deviations, and variances will be stored
-fc_stats_FILE = 'fc_stats_repeat.txt'
+fc_stats_FILE = 'fc_stats_with_feedback.txt'
 
 # define the names of the input files where the correlation coefficients were stored
-func_conn_syn_dms_subj1 = 'subject_11/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj2 = 'subject_12/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj3 = 'subject_13/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj4 = 'subject_14/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj5 = 'subject_15/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj6 = 'subject_16/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj7 = 'subject_17/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj8 = 'subject_18/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj9 = 'subject_19/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_dms_subj10 = 'subject_20/output.36trials.repeat/corr_syn_IT_vs_all_dms.npy'
-func_conn_syn_ctl_subj1 = 'subject_11/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj2 = 'subject_12/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj3 = 'subject_13/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj4 = 'subject_14/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj5 = 'subject_15/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj6 = 'subject_16/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj7 = 'subject_17/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj8 = 'subject_18/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj9 = 'subject_19/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_syn_ctl_subj10 = 'subject_20/output.36trials.repeat/corr_syn_IT_vs_all_ctl.npy'
-func_conn_fmri_dms_subj1 = 'subject_11/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj2 = 'subject_12/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj3 = 'subject_13/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj4 = 'subject_14/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj5 = 'subject_15/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj6 = 'subject_16/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj7 = 'subject_17/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj8 = 'subject_18/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj9 = 'subject_19/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_dms_subj10 = 'subject_20/output.36trials.repeat/corr_fmri_IT_vs_all_dms_balloon.npy'
-func_conn_fmri_ctl_subj1 = 'subject_11/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj2 = 'subject_12/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj3 = 'subject_13/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj4 = 'subject_14/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj5 = 'subject_15/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj6 = 'subject_16/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj7 = 'subject_17/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj8 = 'subject_18/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj9 = 'subject_19/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
-func_conn_fmri_ctl_subj10 = 'subject_20/output.36trials.repeat/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_syn_dms_subj1 = 'subject_11/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj2 = 'subject_12/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj3 = 'subject_13/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj4 = 'subject_14/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj5 = 'subject_15/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj6 = 'subject_16/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj7 = 'subject_17/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj8 = 'subject_18/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj9 = 'subject_19/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_dms_subj10 = 'subject_20/output.36trials.with_feedback/corr_syn_IT_vs_all_dms.npy'
+func_conn_syn_ctl_subj1 = 'subject_11/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj2 = 'subject_12/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj3 = 'subject_13/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj4 = 'subject_14/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj5 = 'subject_15/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj6 = 'subject_16/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj7 = 'subject_17/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj8 = 'subject_18/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj9 = 'subject_19/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_syn_ctl_subj10 = 'subject_20/output.36trials.with_feedback/corr_syn_IT_vs_all_ctl.npy'
+func_conn_fmri_dms_subj1 = 'subject_11/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj2 = 'subject_12/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj3 = 'subject_13/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj4 = 'subject_14/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj5 = 'subject_15/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj6 = 'subject_16/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj7 = 'subject_17/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj8 = 'subject_18/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj9 = 'subject_19/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj10 = 'subject_20/output.36trials.with_feedback/corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_ctl_subj1 = 'subject_11/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj2 = 'subject_12/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj3 = 'subject_13/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj4 = 'subject_14/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj5 = 'subject_15/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj6 = 'subject_16/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj7 = 'subject_17/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj8 = 'subject_18/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj9 = 'subject_19/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
+func_conn_fmri_ctl_subj10 = 'subject_20/output.36trials.with_feedback/corr_fmri_IT_vs_all_ctl_balloon.npy'
 
 # open files that contain correlation coefficients
 fc_syn_dms_subj1 = np.load(func_conn_syn_dms_subj1)
@@ -298,10 +298,10 @@ fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
                                  fc_fmri_dms_mean, fc_fmri_ctl_mean]),
                       columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
                        index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
-#fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
-#                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
-#                      columns=np.array(['V1', 'V4', 'D1', 'D2', 'FS', 'FR']),
-#                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
+fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
+                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
+                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
+                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
 
 # now, plot means and std's using 'pandas framework...
 
@@ -312,9 +312,9 @@ mpl_fig = plt.figure()  # start a new figure
 
 ax = plt.gca()          # get hold of the axes
 
-bars=fc_mean.plot(ax=ax, kind='bar',
+bars=fc_mean.plot(yerr=fc_std, ax=ax, kind='bar',
                   color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'lightblue'],
-                  ylim=[-0.02,1])
+                  ylim=[-0.1, 1.1])
 
 # change the location of the legend
 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
@@ -325,8 +325,8 @@ ax.set_xticklabels( ('DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri'), rotation=0, 
 #plt.tight_layout()
 
 # optional figure caption
-mpl_fig.subplots_adjust(bottom=0.2)
-mpl_fig.text(.1, 0.03, txt)
+#mpl_fig.subplots_adjust(bottom=0.2)
+#mpl_fig.text(.1, 0.03, txt)
 
 # Show the plots on the screen
 plt.show()

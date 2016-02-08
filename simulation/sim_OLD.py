@@ -33,18 +33,19 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (sim_without_TVB.py) was created on January 28, 2016.
+#   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on January 28 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 7 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
 # **************************************************************************/
 
-# sim_without_TVB.py
+# sim.py
 #
-# Simulates a large-scale neural network using the Wilson-Cowan neuronal population model.
+# Simulates delayed match-to-sample experiment using Wilson-Cowan neuronal
+# population model.
 
 # import regular expression modules (useful for reading weight files)
 import re
@@ -54,6 +55,17 @@ import random as rdm
 
 # import math function modules
 import math
+
+try:
+    # only import TVB modules if simulation requires TVB connectome
+    # the following modules are imported from TVB library
+    from tvb.simulator.lab import *
+    import tvb.datatypes.time_series
+    from tvb.simulator.plot.tools import *
+    import tvb.simulator.plot.timeseries_interactive as ts_int
+    # end of TVB modules import
+except ImportError:
+    pass
 
 # import 'pyplot' modules to visualize outputs
 import matplotlib.pyplot as plt
@@ -98,7 +110,8 @@ class LSNM(QtGui.QWidget):
         model=''
         weights_list=''
         script=''
-
+        useTVBConnectome = False         # Determines whether to use a TVB connectome within simulation
+        
         # create a grid layout and set a spacing of 10 between widgets
         layout = QtGui.QGridLayout(self)
         layout.setSpacing(10)
@@ -135,7 +148,7 @@ class LSNM(QtGui.QWidget):
         # define the action to be taken if upload script button is clicked on
         uploadScriptButton.clicked.connect(self.browseScripts)
 
-        # create a text edit object for reading file with model description
+        # create a text edit object for reading file with experiment script
         self.scriptTextEdit = QtGui.QTextEdit()
         layout.addWidget(self.scriptTextEdit, 1, 2)
 
@@ -149,6 +162,12 @@ class LSNM(QtGui.QWidget):
         self.runTextEdit = QtGui.QTextEdit()
         layout.addWidget(self.runTextEdit, 1, 3)
 
+        # define checkbox to allow users to determine whether or not a TVB connectome will be used
+        # in simulation
+        checkBox = QtGui.QCheckBox('Use TVB Connectome', self)
+        layout.addWidget(checkBox, 2, 1)
+        checkBox.stateChanged.connect(self.connectomeOrNot)
+        
         # define progress bar to keep user informed of simulation progress status
         self.progressBar = QtGui.QProgressBar(self)
         self.progressBar.setRange(0,100)
@@ -216,7 +235,18 @@ class LSNM(QtGui.QWidget):
         with f:
             data = f.read()
             self.scriptTextEdit.setText(data)
-        
+
+    def connectomeOrNot(self, state):
+
+        global useTVBConnectome
+        # allow user to decide whether to use a TVB connectome as part of the simulation
+        if state == QtCore.Qt.Checked:
+            useTVBConnectome = True
+            print 'Using TVB Connectome...'
+        else:
+            useTVBConnectome = False
+            print 'NOT Using TVB Connectome...'
+            
     @QtCore.pyqtSlot()
     def onStart(self):
         self.myLongTask.start()
@@ -241,6 +271,15 @@ class LSNM(QtGui.QWidget):
         self.runTextEdit.moveCursor(QtGui.QTextCursor.End)
         self.runTextEdit.insertPlainText(message)
 
+class WilsonCowanPositive(models.WilsonCowan):
+    "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
+    "only allows values between 0 and 1 at integration time. In other words, it clips state"
+    "variables to the range [0,1] when a stochastic integration is used"
+    def dfun(self, state_variables, coupling, local_coupling=0.0):
+        state_variables[state_variables < 0.0] = 0.0
+        state_variables[state_variables > 1.0] = 1.0
+        return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
+            
 class TaskThread(QtCore.QThread):
 
     def __init__(self):
@@ -249,7 +288,7 @@ class TaskThread(QtCore.QThread):
     notifyProgress = QtCore.pyqtSignal(int)
     
     def run(self):
-            
+
         print 'Building network...'
 
         global noise
@@ -267,9 +306,12 @@ class TaskThread(QtCore.QThread):
         # [timestep, state_variable_E, state_variable_I, node_number, mode]
         #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
 
+        # define a flag that tells the simulator whether to use The Virtual Brain within
+        # the current simulation
+
         # define a flag that tells the network whether to send feedback connections
         # from LSNM to TVB
-        FEEDBACK = False
+        FEEDBACK = True
         
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
@@ -298,39 +340,33 @@ class TaskThread(QtCore.QThread):
         w_ie =  4.0
         
         # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
-        white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
+        if useTVBConnectome:
+            white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
         
-        # Define the transmission speed of white matter tracts (4 mm/ms)
-        white_matter.speed = numpy.array([TVB_speed])
+            # Define the transmission speed of white matter tracts (4 mm/ms)
+            white_matter.speed = numpy.array([TVB_speed])
 
-        # Define the coupling function between white matter tracts and brain regions
-        white_matter_coupling = coupling.Linear(a=TVB_global_coupling_strength)
+            # Define the coupling function between white matter tracts and brain regions
+            white_matter_coupling = coupling.Linear(a=TVB_global_coupling_strength)
 
-        #Initialize an Integrator for TVB
-        euler_int = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
-        euler_int.configure()
+            #Initialize an Integrator for TVB
+            euler_int = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
+            euler_int.configure()
 
-        # Define a monitor to be used for TVB simulation (i.e., which simulated data is
-        # going to be collected
-        what_to_watch = monitors.Raw()
+            # Define a monitor to be used for TVB simulation (i.e., which simulated data is
+            # going to be collected
+            what_to_watch = monitors.Raw()
         
-        # Initialize a TVB simulator
-        sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
-                                  coupling=white_matter_coupling,
-                                  integrator=euler_int, monitors=what_to_watch)
+            # Initialize a TVB simulator
+            sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
+                                      coupling=white_matter_coupling,
+                                      integrator=euler_int, monitors=what_to_watch)
 
-        sim.configure()
-
-        # sample TVB raw data array file to extract 1100 data points
-        # (only use if you are loading a preprocessed TVB simulation)
-        #TVB_sampling_rate = int(round(88000 / simulation_time))
-        #RawData = RawData[::TVB_sampling_rate]
+            sim.configure()
 
         # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
         # we are assuming that each simulation timestep is equivalent to 5 milliseconds
         # of real time. 
-        
-        # print RawData.shape
         
         # The TVB brain areas where our LSNM units are going to be embedded it
         # hardcoded for now, but will be included in as an option in the LSNM GUI.
@@ -416,53 +452,54 @@ class TaskThread(QtCore.QThread):
         # output files
         synaptic_interval = 10
                    
-        # print which brain areas from TVB we are using,
-        # as well as 'first degree' connections of the TVB areas listed
-        # the folowing printout is only for informational purposes
+        if useTVBConnectome:
+            # print which brain areas from TVB we are using,
+            # as well as 'first degree' connections of the TVB areas listed
+            # the folowing printout is only for informational purposes
 
-        print '\rIncoming units from TVB are: '
+            print '\rIncoming units from TVB are: '
 
-        print '\rInto ' + white_matter.region_labels[345],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
-        print 'with the following weights: ',
-        print white_matter.weights[345][np.nonzero(white_matter.weights[345])]
+            print '\rInto ' + white_matter.region_labels[345],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
+            print 'with the following weights: ',
+            print white_matter.weights[345][np.nonzero(white_matter.weights[345])]
+            
+            print '\rInto ' + white_matter.region_labels[393],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
+            print 'with the following weights: ',
+            print white_matter.weights[393][np.nonzero(white_matter.weights[393])]
         
-        print '\rInto ' + white_matter.region_labels[393],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
-        print 'with the following weights: ',
-        print white_matter.weights[393][np.nonzero(white_matter.weights[393])]
-        
-        print '\rInto ' + white_matter.region_labels[413],
-        print ': ',        
-        print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
-        print 'with the following weights: ',
-        print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
-        
-        print '\rInto ' + white_matter.region_labels[47],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[47])]
-        print 'with the following weights: ',
-        print white_matter.weights[47][np.nonzero(white_matter.weights[47])]
-
-        print '\rInto ' + white_matter.region_labels[74],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
-        print 'with the following weights: ',
-        print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
-
-        print '\rInto ' + white_matter.region_labels[41],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[41])]
-        print 'with the following weights: ',
-        print white_matter.weights[41][np.nonzero(white_matter.weights[41])]
-        
-        print '\rInto ' + white_matter.region_labels[125],
-        print ': ',
-        print white_matter.region_labels[np.nonzero(white_matter.weights[125])]
-        print 'with the following weights: ',
-        print white_matter.weights[125][np.nonzero(white_matter.weights[125])]        
+            print '\rInto ' + white_matter.region_labels[413],
+            print ': ',        
+            print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
+            print 'with the following weights: ',
+            print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
+            
+            print '\rInto ' + white_matter.region_labels[47],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[47])]
+            print 'with the following weights: ',
+            print white_matter.weights[47][np.nonzero(white_matter.weights[47])]
+            
+            print '\rInto ' + white_matter.region_labels[74],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
+            print 'with the following weights: ',
+            print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
+            
+            print '\rInto ' + white_matter.region_labels[41],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[41])]
+            print 'with the following weights: ',
+            print white_matter.weights[41][np.nonzero(white_matter.weights[41])]
+            
+            print '\rInto ' + white_matter.region_labels[125],
+            print ': ',
+            print white_matter.region_labels[np.nonzero(white_matter.weights[125])]
+            print 'with the following weights: ',
+            print white_matter.weights[125][np.nonzero(white_matter.weights[125])]        
         
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network

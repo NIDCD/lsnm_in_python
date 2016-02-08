@@ -153,106 +153,155 @@ for s in range(0, num_of_subjects):
         timecourse_mean = np.mean(BOLD_ts[s,m])
         BOLD_ts[s,m] = BOLD_ts[s,m] / timecourse_mean * 100. - 100.
 
-mean_PSC = np.zeros((num_of_subjects, num_of_modules))
+mean_PSC_dms = np.zeros((num_of_subjects, num_of_modules))
+mean_PSC_ctl = np.zeros((num_of_subjects, num_of_modules))
+scans_in_each_block = int(round(num_of_scans / (num_of_fmri_blocks / 2.), 0))
+print 'Scans in each block: ', scans_in_each_block
 # now, perform a mean of PSCs of scan 3, 4, 5 of each condition
 for s in range(0, num_of_subjects):
     for m in range(0, num_of_modules):
-        scan_counter = 0
-        for b in range(1, num_of_fmri_blocks/2 + 1):
-            mean_PSC_dms[s,m] = (BOLD_ts[s,m,n+5] + BOLD_ts[s,m,n+6] + BOLD_ts[s,m,n+7])
-            mean_PSC_ctl[s,m] = (BOLD_ts[s,m,n+13]+ BOLD_ts[s,m,n+14]+ BOLD_ts[s,m,n+15])
-            scan_counter = scan_counter + 8
+        for i in range(0, num_of_scans, scans_in_each_block):
+            mean_PSC_dms[s,m] = (BOLD_ts[s,m,i+4] + BOLD_ts[s,m,i+5] + BOLD_ts[s,m,i+6]) / 3.
+            mean_PSC_ctl[s,m] = (BOLD_ts[s,m,i+11]+ BOLD_ts[s,m,i+12]+ BOLD_ts[s,m,i+13]) / 3.
 
+# now, calculate the average PSC across subjects for each brain region and for each condition:
+BOLD_v1_dms_avg = np.mean(mean_PSC_dms[:,0]) 
+BOLD_v4_dms_avg = np.mean(mean_PSC_dms[:,1])
+BOLD_it_dms_avg = np.mean(mean_PSC_dms[:,2])
+BOLD_fs_dms_avg = np.mean(mean_PSC_dms[:,3])
+BOLD_d1_dms_avg = np.mean(mean_PSC_dms[:,4])
+BOLD_d2_dms_avg = np.mean(mean_PSC_dms[:,5])
+BOLD_fr_dms_avg = np.mean(mean_PSC_dms[:,6])
+BOLD_v1_ctl_avg = np.mean(mean_PSC_ctl[:,0])
+BOLD_v4_ctl_avg = np.mean(mean_PSC_ctl[:,1])
+BOLD_it_ctl_avg = np.mean(mean_PSC_ctl[:,2])
+BOLD_fs_ctl_avg = np.mean(mean_PSC_ctl[:,3])
+BOLD_d1_ctl_avg = np.mean(mean_PSC_ctl[:,4])
+BOLD_d2_ctl_avg = np.mean(mean_PSC_ctl[:,5])
+BOLD_fr_ctl_avg = np.mean(mean_PSC_ctl[:,6])
+
+# calculate the variance as well, across subjects, for each brain regions and for each condition:
+BOLD_v1_dms_var = np.var(mean_PSC_dms[:,0])
+BOLD_v4_dms_var = np.var(mean_PSC_dms[:,1])
+BOLD_it_dms_var = np.var(mean_PSC_dms[:,2])
+BOLD_fs_dms_var = np.var(mean_PSC_dms[:,3])
+BOLD_d1_dms_var = np.var(mean_PSC_dms[:,4])
+BOLD_d2_dms_var = np.var(mean_PSC_dms[:,5])
+BOLD_fr_dms_var = np.var(mean_PSC_dms[:,6])
+BOLD_v1_ctl_var = np.var(mean_PSC_ctl[:,0])
+BOLD_v4_ctl_var = np.var(mean_PSC_ctl[:,1])
+BOLD_it_ctl_var = np.var(mean_PSC_ctl[:,2])
+BOLD_fs_ctl_var = np.var(mean_PSC_ctl[:,3])
+BOLD_d1_ctl_var = np.var(mean_PSC_ctl[:,4])
+BOLD_d2_ctl_var = np.var(mean_PSC_ctl[:,5])
+BOLD_fr_ctl_var = np.var(mean_PSC_ctl[:,6])
         
+# calculate the standard deviation of the PSC across subjects, for each brain region and for each
+# condition
+BOLD_v1_dms_std = np.std(mean_PSC_dms[:,0])
+BOLD_v4_dms_std = np.std(mean_PSC_dms[:,1])
+BOLD_it_dms_std = np.std(mean_PSC_dms[:,2])
+BOLD_fs_dms_std = np.std(mean_PSC_dms[:,3])
+BOLD_d1_dms_std = np.std(mean_PSC_dms[:,4])
+BOLD_d2_dms_std = np.std(mean_PSC_dms[:,5])
+BOLD_fr_dms_std = np.std(mean_PSC_dms[:,6])
+BOLD_v1_ctl_std = np.std(mean_PSC_ctl[:,0])
+BOLD_v4_ctl_std = np.std(mean_PSC_ctl[:,1])
+BOLD_it_ctl_std = np.std(mean_PSC_ctl[:,2])
+BOLD_fs_ctl_std = np.std(mean_PSC_ctl[:,3])
+BOLD_d1_ctl_std = np.std(mean_PSC_ctl[:,4])
+BOLD_d2_ctl_std = np.std(mean_PSC_ctl[:,5])
+BOLD_fr_ctl_std = np.std(mean_PSC_ctl[:,6])
+
 # Concatenate the time-series of each module together, across all subjects:
 # BOLD_ts = np.reshape(BOLD_ts, (num_of_modules, num_of_subjects*num_of_scans))
 
 # now, split all time-series in blocks
-BOLD_ts_v1=np.array_split(BOLD_ts[0], total_fmri_blocks)
-BOLD_ts_v4=np.array_split(BOLD_ts[1], total_fmri_blocks)
-BOLD_ts_it=np.array_split(BOLD_ts[2], total_fmri_blocks)
-BOLD_ts_fs=np.array_split(BOLD_ts[3], total_fmri_blocks)
-BOLD_ts_d1=np.array_split(BOLD_ts[4], total_fmri_blocks)
-BOLD_ts_d2=np.array_split(BOLD_ts[5], total_fmri_blocks)
-BOLD_ts_fr=np.array_split(BOLD_ts[6], total_fmri_blocks)
+#BOLD_ts_v1=np.array_split(BOLD_ts[0], total_fmri_blocks)
+#BOLD_ts_v4=np.array_split(BOLD_ts[1], total_fmri_blocks)
+#BOLD_ts_it=np.array_split(BOLD_ts[2], total_fmri_blocks)
+#BOLD_ts_fs=np.array_split(BOLD_ts[3], total_fmri_blocks)
+#BOLD_ts_d1=np.array_split(BOLD_ts[4], total_fmri_blocks)
+#BOLD_ts_d2=np.array_split(BOLD_ts[5], total_fmri_blocks)
+#BOLD_ts_fr=np.array_split(BOLD_ts[6], total_fmri_blocks)
 
 # define an array with location of control blocks, and another array
 # with location of task (DMS) blocks, relative to
 # an array that contains all blocks (task-related blocks included)
-fmri_control_block_ids = np.arange(1, total_fmri_blocks, 2)
-fmri_dms_block_ids =     np.arange(0, total_fmri_blocks, 2)
+#fmri_control_block_ids = np.arange(1, total_fmri_blocks, 2)
+#fmri_dms_block_ids =     np.arange(0, total_fmri_blocks, 2)
 
 # now, create an array of BOLD time-series containing DMS trials only: 
-BOLD_v1_dms_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_control_block_ids, axis=0)
-BOLD_v4_dms_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_control_block_ids, axis=0)
-BOLD_it_dms_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_control_block_ids, axis=0)
-BOLD_fs_dms_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_control_block_ids, axis=0)
-BOLD_d1_dms_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_control_block_ids, axis=0)
-BOLD_d2_dms_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_control_block_ids, axis=0)
-BOLD_fr_dms_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_control_block_ids, axis=0)
+#BOLD_v1_dms_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_control_block_ids, axis=0)
+#BOLD_v4_dms_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_control_block_ids, axis=0)
+#BOLD_it_dms_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_control_block_ids, axis=0)
+#BOLD_fs_dms_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_control_block_ids, axis=0)
+#BOLD_d1_dms_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_control_block_ids, axis=0)
+#BOLD_d2_dms_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_control_block_ids, axis=0)
+#BOLD_fr_dms_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_control_block_ids, axis=0)
 
 # ... and concatenate those DMS BOLD timeseries together
-BOLD_v1_dms_ts = np.concatenate(BOLD_v1_dms_blocks)
-BOLD_v4_dms_ts = np.concatenate(BOLD_v4_dms_blocks)
-BOLD_it_dms_ts = np.concatenate(BOLD_it_dms_blocks)
-BOLD_fs_dms_ts = np.concatenate(BOLD_fs_dms_blocks)
-BOLD_d1_dms_ts = np.concatenate(BOLD_d1_dms_blocks)
-BOLD_d2_dms_ts = np.concatenate(BOLD_d2_dms_blocks)
-BOLD_fr_dms_ts = np.concatenate(BOLD_fr_dms_blocks)
+#BOLD_v1_dms_ts = np.concatenate(BOLD_v1_dms_blocks)
+#BOLD_v4_dms_ts = np.concatenate(BOLD_v4_dms_blocks)
+#BOLD_it_dms_ts = np.concatenate(BOLD_it_dms_blocks)
+#BOLD_fs_dms_ts = np.concatenate(BOLD_fs_dms_blocks)
+#BOLD_d1_dms_ts = np.concatenate(BOLD_d1_dms_blocks)
+#BOLD_d2_dms_ts = np.concatenate(BOLD_d2_dms_blocks)
+#BOLD_fr_dms_ts = np.concatenate(BOLD_fr_dms_blocks)
 
 # but also, get rid of the DMS blocks, to create arrays with only control trials
-BOLD_v1_control_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_dms_block_ids, axis=0)
-BOLD_v4_control_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_dms_block_ids, axis=0)
-BOLD_it_control_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_dms_block_ids, axis=0)
-BOLD_fs_control_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_dms_block_ids, axis=0)
-BOLD_d1_control_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_dms_block_ids, axis=0)
-BOLD_d2_control_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_dms_block_ids, axis=0)
-BOLD_fr_control_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_dms_block_ids, axis=0)
+#BOLD_v1_control_blocks = np.delete(np.asarray(BOLD_ts_v1), fmri_dms_block_ids, axis=0)
+#BOLD_v4_control_blocks = np.delete(np.asarray(BOLD_ts_v4), fmri_dms_block_ids, axis=0)
+#BOLD_it_control_blocks = np.delete(np.asarray(BOLD_ts_it), fmri_dms_block_ids, axis=0)
+#BOLD_fs_control_blocks = np.delete(np.asarray(BOLD_ts_fs), fmri_dms_block_ids, axis=0)
+#BOLD_d1_control_blocks = np.delete(np.asarray(BOLD_ts_d1), fmri_dms_block_ids, axis=0)
+#BOLD_d2_control_blocks = np.delete(np.asarray(BOLD_ts_d2), fmri_dms_block_ids, axis=0)
+#BOLD_fr_control_blocks = np.delete(np.asarray(BOLD_ts_fr), fmri_dms_block_ids, axis=0)
 
 # ... and concatenate the control blocks together
-BOLD_v1_ctl_ts = np.concatenate(BOLD_v1_control_blocks)
-BOLD_v4_ctl_ts = np.concatenate(BOLD_v4_control_blocks)
-BOLD_it_ctl_ts = np.concatenate(BOLD_it_control_blocks)
-BOLD_fs_ctl_ts = np.concatenate(BOLD_fs_control_blocks)
-BOLD_d1_ctl_ts = np.concatenate(BOLD_d1_control_blocks)
-BOLD_d2_ctl_ts = np.concatenate(BOLD_d2_control_blocks)
-BOLD_fr_ctl_ts = np.concatenate(BOLD_fr_control_blocks)
+#BOLD_v1_ctl_ts = np.concatenate(BOLD_v1_control_blocks)
+#BOLD_v4_ctl_ts = np.concatenate(BOLD_v4_control_blocks)
+#BOLD_it_ctl_ts = np.concatenate(BOLD_it_control_blocks)
+#BOLD_fs_ctl_ts = np.concatenate(BOLD_fs_control_blocks)
+#BOLD_d1_ctl_ts = np.concatenate(BOLD_d1_control_blocks)
+#BOLD_d2_ctl_ts = np.concatenate(BOLD_d2_control_blocks)
+#BOLD_fr_ctl_ts = np.concatenate(BOLD_fr_control_blocks)
 
 # Average all timepoints together for the DMS condition:
-BOLD_v1_dms_avg = np.mean(BOLD_v1_dms_ts)
-BOLD_v4_dms_avg = np.mean(BOLD_v4_dms_ts)
-BOLD_it_dms_avg = np.mean(BOLD_it_dms_ts)
-BOLD_fs_dms_avg = np.mean(BOLD_fs_dms_ts)
-BOLD_d1_dms_avg = np.mean(BOLD_d1_dms_ts)
-BOLD_d2_dms_avg = np.mean(BOLD_d2_dms_ts)
-BOLD_fr_dms_avg = np.mean(BOLD_fr_dms_ts)
+#BOLD_v1_dms_avg = np.mean(BOLD_v1_dms_ts)
+#BOLD_v4_dms_avg = np.mean(BOLD_v4_dms_ts)
+#BOLD_it_dms_avg = np.mean(BOLD_it_dms_ts)
+#BOLD_fs_dms_avg = np.mean(BOLD_fs_dms_ts)
+#BOLD_d1_dms_avg = np.mean(BOLD_d1_dms_ts)
+#BOLD_d2_dms_avg = np.mean(BOLD_d2_dms_ts)
+#BOLD_fr_dms_avg = np.mean(BOLD_fr_dms_ts)
 
 # Average all timepoints together for the control condition:
-BOLD_v1_ctl_avg = np.mean(BOLD_v1_ctl_ts)
-BOLD_v4_ctl_avg = np.mean(BOLD_v4_ctl_ts)
-BOLD_it_ctl_avg = np.mean(BOLD_it_ctl_ts)
-BOLD_fs_ctl_avg = np.mean(BOLD_fs_ctl_ts)
-BOLD_d1_ctl_avg = np.mean(BOLD_d1_ctl_ts)
-BOLD_d2_ctl_avg = np.mean(BOLD_d2_ctl_ts)
-BOLD_fr_ctl_avg = np.mean(BOLD_fr_ctl_ts)
+#BOLD_v1_ctl_avg = np.mean(BOLD_v1_ctl_ts)
+#BOLD_v4_ctl_avg = np.mean(BOLD_v4_ctl_ts)
+#BOLD_it_ctl_avg = np.mean(BOLD_it_ctl_ts)
+#BOLD_fs_ctl_avg = np.mean(BOLD_fs_ctl_ts)
+#BOLD_d1_ctl_avg = np.mean(BOLD_d1_ctl_ts)
+#BOLD_d2_ctl_avg = np.mean(BOLD_d2_ctl_ts)
+#BOLD_fr_ctl_avg = np.mean(BOLD_fr_ctl_ts)
 
 # Calculate variance for the DMS condition:
-BOLD_v1_dms_var = np.var(BOLD_v1_dms_ts)
-BOLD_v4_dms_var = np.var(BOLD_v4_dms_ts)
-BOLD_it_dms_var = np.var(BOLD_it_dms_ts)
-BOLD_fs_dms_var = np.var(BOLD_fs_dms_ts)
-BOLD_d1_dms_var = np.var(BOLD_d1_dms_ts)
-BOLD_d2_dms_var = np.var(BOLD_d2_dms_ts)
-BOLD_fr_dms_var = np.var(BOLD_fr_dms_ts)
+#BOLD_v1_dms_var = np.var(BOLD_v1_dms_ts)
+#BOLD_v4_dms_var = np.var(BOLD_v4_dms_ts)
+#BOLD_it_dms_var = np.var(BOLD_it_dms_ts)
+#BOLD_fs_dms_var = np.var(BOLD_fs_dms_ts)
+#BOLD_d1_dms_var = np.var(BOLD_d1_dms_ts)
+#BOLD_d2_dms_var = np.var(BOLD_d2_dms_ts)
+#BOLD_fr_dms_var = np.var(BOLD_fr_dms_ts)
 
-# Calculate variance for the control condition:
-BOLD_v1_ctl_var = np.var(BOLD_v1_ctl_ts)
-BOLD_v4_ctl_var = np.var(BOLD_v4_ctl_ts)
-BOLD_it_ctl_var = np.var(BOLD_it_ctl_ts)
-BOLD_fs_ctl_var = np.var(BOLD_fs_ctl_ts)
-BOLD_d1_ctl_var = np.var(BOLD_d1_ctl_ts)
-BOLD_d2_ctl_var = np.var(BOLD_d2_ctl_ts)
-BOLD_fr_ctl_var = np.var(BOLD_fr_ctl_ts)
+ # Calculate variance for the control condition:
+#BOLD_v1_ctl_var = np.var(BOLD_v1_ctl_ts)
+#BOLD_v4_ctl_var = np.var(BOLD_v4_ctl_ts)
+#BOLD_it_ctl_var = np.var(BOLD_it_ctl_ts)
+#BOLD_fs_ctl_var = np.var(BOLD_fs_ctl_ts)
+#BOLD_d1_ctl_var = np.var(BOLD_d1_ctl_ts)
+#BOLD_d2_ctl_var = np.var(BOLD_d2_ctl_ts)
+#BOLD_fr_ctl_var = np.var(BOLD_fr_ctl_ts)
 
 # Display all PSCs for both DMS and CTL, which represent the average of
 # the Percent Signal Change per each brain area per each module
@@ -278,8 +327,8 @@ print 'BOLD FR CTL Avg: ', BOLD_fr_ctl_avg
 # The NULL hypothesis is:
 #          * The BOLD signal in the DMS group IS NOT larger than the BOLD signal in the CTL group.
 # The value of alpha (p-threshold) will be 0.05
-sample_size = BOLD_v1_dms_ts.size
-print 'sample size = ', sample_size
+sample_size = num_of_subjects
+print 'sample size = ', num_of_subjects
 number_of_groups = 2
 # STEPS:
 #     (1) subtract the mean of control group from the mean of DMS group:
@@ -351,6 +400,9 @@ print 't-value for d2 BOLD signal difference: ', BOLD_d2_t
 print 't-value for fr BOLD signal difference: ', BOLD_fr_t
 
 
+# increase font size prior to plotting
+plt.rcParams.update({'font.size': 15})
+
 # define number of groups to plot
 N = 1
 
@@ -364,26 +416,40 @@ fig, ax = plt.subplots()
 
 # now, group the values to be plotted by brain module and by task condition
 
-rects_v1_dms = ax.bar(index, BOLD_v1_dms_avg, width, color='yellow', label='V1')
-rects_v1_ctl = ax.bar(index + width, BOLD_v1_ctl_avg, width, color='yellow', edgecolor='black', hatch='//', label='V1')
+rects_v1_dms = ax.bar(index, BOLD_v1_dms_avg, width, color='yellow',
+                      label='V1 during DMS', yerr=BOLD_v1_dms_std )
+rects_v1_ctl = ax.bar(index + width, BOLD_v1_ctl_avg, width, color='yellow', edgecolor='black', hatch='//',
+                      label='V1 during CTL', yerr=BOLD_v1_dms_std, )
 
-rects_v4_dms = ax.bar(index + width*2, BOLD_v4_dms_avg, width, color='green', label='V4')
-rects_v4_ctl = ax.bar(index + width*3, BOLD_v4_ctl_avg, width, color='green', edgecolor='black', hatch='//', label='V4')
+rects_v4_dms = ax.bar(index + width*2, BOLD_v4_dms_avg, width, color='green',
+                      label='V4 during DMS', yerr=BOLD_v4_dms_std)
+rects_v4_ctl = ax.bar(index + width*3, BOLD_v4_ctl_avg, width, color='green', edgecolor='black', hatch='//',
+                      label='V4 during CTL', yerr=BOLD_v4_ctl_std)
 
-rects_it_dms = ax.bar(index + width*4, BOLD_it_dms_avg, width, color='blue', label='IT')
-rects_it_ctl = ax.bar(index + width*5, BOLD_it_ctl_avg, width, color='blue', edgecolor='black', hatch='//', label='IT')
+rects_it_dms = ax.bar(index + width*4, BOLD_it_dms_avg, width, color='blue',
+                      label='IT during DMS', yerr=BOLD_it_dms_std)
+rects_it_ctl = ax.bar(index + width*5, BOLD_it_ctl_avg, width, color='blue', edgecolor='black', hatch='//',
+                      label='IT during CTL', yerr=BOLD_it_ctl_std)
 
-rects_fs_dms = ax.bar(index + width*6, BOLD_fs_dms_avg, width, color='orange', label='FS')
-rects_fs_ctl = ax.bar(index + width*7, BOLD_fs_ctl_avg, width, color='orange', edgecolor='black', hatch='//', label='FS')
+rects_fs_dms = ax.bar(index + width*6, BOLD_fs_dms_avg, width, color='orange',
+                      label='FS during DMS', yerr=BOLD_fs_dms_std)
+rects_fs_ctl = ax.bar(index + width*7, BOLD_fs_ctl_avg, width, color='orange', edgecolor='black', hatch='//',
+                      label='FS during DMS', yerr=BOLD_fs_ctl_std)
 
-rects_d1_dms = ax.bar(index + width*8, BOLD_d1_dms_avg, width, color='red', label='D1')
-rects_d1_ctl = ax.bar(index + width*9, BOLD_d1_ctl_avg, width, color='red', edgecolor='black', hatch='//', label='D1')
+rects_d1_dms = ax.bar(index + width*8, BOLD_d1_dms_avg, width, color='red',
+                      label='D1 during DMS', yerr=BOLD_d1_dms_std)
+rects_d1_ctl = ax.bar(index + width*9, BOLD_d1_ctl_avg, width, color='red', edgecolor='black', hatch='//',
+                      label='D1 during DMS', yerr=BOLD_d1_ctl_std)
 
-rects_d2_dms = ax.bar(index + width*10, BOLD_d2_dms_avg, width, color='pink', label='D2')
-rects_d2_ctl = ax.bar(index + width*11, BOLD_d2_ctl_avg, width, color='pink', edgecolor='black', hatch='//', label='D2')
+rects_d2_dms = ax.bar(index + width*10, BOLD_d2_dms_avg, width, color='pink',
+                      label='D2 during DMS', yerr=BOLD_d2_dms_std)
+rects_d2_ctl = ax.bar(index + width*11, BOLD_d2_ctl_avg, width, color='pink', edgecolor='black', hatch='//',
+                      label='D2 during CTL', yerr=BOLD_d2_ctl_std)
 
-rects_fr_dms = ax.bar(index + width*12, BOLD_fr_dms_avg, width, color='purple', label='FR')
-rects_fr_ctl = ax.bar(index + width*13, BOLD_fr_ctl_avg, width, color='purple', edgecolor='black', hatch='//', label='FR')
+rects_fr_dms = ax.bar(index + width*12, BOLD_fr_dms_avg, width, color='purple',
+                      label='FR during DMS', yerr=BOLD_fr_dms_std)
+rects_fr_ctl = ax.bar(index + width*13, BOLD_fr_ctl_avg, width, color='purple', edgecolor='black', hatch='//',
+                      label='FR during CTL', yerr=BOLD_fr_ctl_std)
 
 #ax.set_title('PSC ACROSS SUBJECTS IN ALL BRAIN REGIONS')
 
