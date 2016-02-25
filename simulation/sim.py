@@ -299,17 +299,6 @@ class TaskThread(QtCore.QThread):
         # network and writes out neural activities for each LSNM node and -relevant-
         # TVB nodes. Plots output as well.
 
-        ########## THE FOLLOWING SIMULATES TVB NETWORK'S #######################
-        # The TVB Wilson Cowan simulation has been preprocessed and it is located
-        # in an 'npy' data file. Thus, erase the commments from the following
-        # 'np.load' if you just need to load that data file onto a numpy array
-        # The data file contains an array of 5 dimensions as follows:
-        # [timestep, state_variable_E, state_variable_I, node_number, mode]
-        #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
-
-        # define a flag that tells the simulator whether to use The Virtual Brain within
-        # the current simulation
-
         # define a flag that tells the network whether to send feedback connections
         # from LSNM to TVB
         FEEDBACK = True

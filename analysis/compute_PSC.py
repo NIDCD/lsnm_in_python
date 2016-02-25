@@ -434,12 +434,12 @@ rects_it_ctl = ax.bar(index + width*5, BOLD_it_ctl_avg, width, color='blue', edg
 rects_fs_dms = ax.bar(index + width*6, BOLD_fs_dms_avg, width, color='orange',
                       label='FS during DMS', yerr=BOLD_fs_dms_std)
 rects_fs_ctl = ax.bar(index + width*7, BOLD_fs_ctl_avg, width, color='orange', edgecolor='black', hatch='//',
-                      label='FS during DMS', yerr=BOLD_fs_ctl_std)
+                      label='FS during CTL', yerr=BOLD_fs_ctl_std)
 
 rects_d1_dms = ax.bar(index + width*8, BOLD_d1_dms_avg, width, color='red',
                       label='D1 during DMS', yerr=BOLD_d1_dms_std)
 rects_d1_ctl = ax.bar(index + width*9, BOLD_d1_ctl_avg, width, color='red', edgecolor='black', hatch='//',
-                      label='D1 during DMS', yerr=BOLD_d1_ctl_std)
+                      label='D1 during CTL', yerr=BOLD_d1_ctl_std)
 
 rects_d2_dms = ax.bar(index + width*10, BOLD_d2_dms_avg, width, color='pink',
                       label='D2 during DMS', yerr=BOLD_d2_dms_std)
@@ -460,7 +460,7 @@ ax.set_ylabel('Signal change (%)')
 
 # Shrink current axis by 10% to make space for legend
 box = ax.get_position()
-ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
+ax.set_position([box.x0, box.y0, box.width * 0.85, box.height])
 
 # place a legend to the right of the figure
 plt.legend(loc='center left', bbox_to_anchor=(1.02, .5))

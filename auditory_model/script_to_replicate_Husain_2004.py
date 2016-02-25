@@ -23,11 +23,10 @@
 # we are assuming that each simulation timestep is equivalent to 5 milliseconds
 # of real time. 
 #                
-# We present stimuli to the visual LSNM network by manually inserting it into the MGN module
-# and leaving the stimuli there for 200 timesteps (1 second).
+# We present stimuli to the auditory LSNM network by manually inserting it into the LGN module
+# and leaving the stimuli there for 100 timesteps (500 ms).
 
 # define the simulation time in total number of timesteps
-# Each timestep is roughly equivalent to 5ms
 LSNM_simulation_time = 1700
 
 # Define list of parameters the script is going to need to modify the LSNM neural network
@@ -356,29 +355,30 @@ simulation_events = {
     '0' : intertrial_interval,
     
     ####### FIRST BLOCK OF 4 DMS TRIALS (MATCH, MISMATCH, MISMATCH, MATCH)
-    '100': s2_down_01,
-    '110': s2_down_02,
-    '120': s2_down_03,
-    '130': s2_down_04,
-    '140': s2_down_05,
-    '150': s2_up_01,
-    '160': s2_up_02,
-    '170': s2_up_03,
-    '180': s2_up_04,
-    '190': s2_up_05,
+
+    '100': s1_up_01,
+    '110': s1_up_02,
+    '120': s1_up_03,
+    '130': s1_up_04,
+    '140': s1_up_05,
+    '150': s1_down_01,
+    '160': s1_down_02,
+    '170': s1_down_03,
+    '180': s1_down_04,
+    '190': s1_down_05,
 
     '200': delay_period,
 
-    '400': s1_up_01,
-    '410': s1_up_02,
-    '420': s1_up_03,
-    '430': s1_up_04,
-    '440': s1_up_05,
-    '450': s1_down_01,
-    '460': s1_down_02,
-    '470': s1_down_03,
-    '480': s1_down_04,
-    '490': s1_down_05,
+    '400': s2_down_01,
+    '410': s2_down_02,
+    '420': s2_down_03,
+    '430': s2_down_04,
+    '440': s2_down_05,
+    '450': s2_up_01,
+    '460': s2_up_02,
+    '470': s2_up_03,
+    '480': s2_up_04,
+    '490': s2_up_05,
     
     '500': intertrial_interval,
 
