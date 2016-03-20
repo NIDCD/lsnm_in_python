@@ -106,12 +106,12 @@ ROI_size = len(v1_loc)
 #fr = [38, 19, 32] ALTERNATE LOCATION
 
 # Define the hypothetical Talairach locations of each LSNM auditory modules
-a1 = [48,-26,10]
-a2 = [62,-32,10]
+a1 = [51,-24,8]
+a2 = [61,-36,12]
 # Ignore the ST posterior as we are especially interested in ST anterior (for now)
 #stp = [60,-39,12]
-sta = [59,-17,4]
-apf = [56,21,5]
+sta = [59,-20,1]
+apf = [51,12,10]
 
 plot_surface(CORTEX, op=0.1)
 
@@ -126,11 +126,11 @@ region_centres = mlab.points3d(centres[:, 0],
 # Now plot the hypothetical locations of LSNM visual modules
 
 # V1 ROI in yellow
-v1_module = mlab.points3d(centres[v1_loc[1],0],
-                          centres[v1_loc[1],1],
-                          centres[v1_loc[1],2],
-                          color=(1, 1, 0),
-                          scale_factor = 6.)
+#v1_module = mlab.points3d(centres[v1_loc[1],0],
+#                          centres[v1_loc[1],1],
+#                          centres[v1_loc[1],2],
+#                          color=(1, 1, 0),
+#                          scale_factor = 6.)
 
 #v1_module = mlab.points3d(centres[v1_loc[0]:v1_loc[ROI_size-1]+1,0],
 #                          centres[v1_loc[0]:v1_loc[ROI_size-1]+1,1],
@@ -138,16 +138,16 @@ v1_module = mlab.points3d(centres[v1_loc[1],0],
 #                          color=(1, 1, 0),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the V1 ROI: '
-print centres[v1_loc[0]:v1_loc[ROI_size-1]+1,:]
-print ''
+#print 'Coordinates of the V1 ROI: '
+#print centres[v1_loc[0]:v1_loc[ROI_size-1]+1,:]
+#print ''
 
 # V4 ROI in green
-v4_module = mlab.points3d(centres[v4_loc[3],0],
-                          centres[v4_loc[3],1],
-                          centres[v4_loc[3],2],
-                          color=(0, 1, 0),
-                          scale_factor = 6.)
+#v4_module = mlab.points3d(centres[v4_loc[3],0],
+#                          centres[v4_loc[3],1],
+#                          centres[v4_loc[3],2],
+#                          color=(0, 1, 0),
+#                          scale_factor = 6.)
 
 #v4_module = mlab.points3d(centres[v4_loc[0]:v4_loc[ROI_size-1]+1,0],
 #                          centres[v4_loc[0]:v4_loc[ROI_size-1]+1,1],
@@ -155,16 +155,16 @@ v4_module = mlab.points3d(centres[v4_loc[3],0],
 #                          color=(0, 1, 0),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the V4 ROI: '
-print centres[v4_loc[0]:v4_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the V4 ROI: '
+#print centres[v4_loc[0]:v4_loc[-1]+1,:]
+#print ''
 
 # IT ROI in blue
-it_module = mlab.points3d(centres[it_loc[1],0],
-                          centres[it_loc[1],1],
-                          centres[it_loc[1],2],
-                          color=(0, 0, 1),
-                          scale_factor = 6.)
+#it_module = mlab.points3d(centres[it_loc[1],0],
+#                          centres[it_loc[1],1],
+#                          centres[it_loc[1],2],
+#                          color=(0, 0, 1),
+#                          scale_factor = 6.)
 
 #it_module = mlab.points3d(centres[it_loc[0]:it_loc[ROI_size-1]+1,0],
 #                          centres[it_loc[0]:it_loc[ROI_size-1]+1,1],
@@ -172,16 +172,16 @@ it_module = mlab.points3d(centres[it_loc[1],0],
 #                          color=(0, 0, 1),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the IT ROI: '
-print centres[it_loc[0]:it_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the IT ROI: '
+#print centres[it_loc[0]:it_loc[-1]+1,:]
+#print ''
 
 # FS ROI in orange
-fs_module = mlab.points3d(centres[fs_loc[0],0],
-                          centres[fs_loc[0],1],
-                          centres[fs_loc[0],2],
-                          color=(1, 0.5, 0),
-                          scale_factor = 6.)
+#fs_module = mlab.points3d(centres[fs_loc[0],0],
+#                          centres[fs_loc[0],1],
+#                          centres[fs_loc[0],2],
+#                          color=(1, 0.5, 0),
+#                          scale_factor = 6.)
 
 #fs_module = mlab.points3d(centres[fs_loc[0]:fs_loc[ROI_size-1]+1,0],
 #                          centres[fs_loc[0]:fs_loc[ROI_size-1]+1,1],
@@ -189,16 +189,16 @@ fs_module = mlab.points3d(centres[fs_loc[0],0],
 #                          color=(1, 0.5, 0),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the FS ROI: '
-print centres[fs_loc[0]:fs_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the FS ROI: '
+#print centres[fs_loc[0]:fs_loc[-1]+1,:]
+#print ''
 
 # D1 ROI in red
-d1_module = mlab.points3d(centres[d1_loc[1],0],
-                          centres[d1_loc[1],1],
-                          centres[d1_loc[1],2],
-                          color=(1, 0, 0),
-                          scale_factor = 6.)
+#d1_module = mlab.points3d(centres[d1_loc[1],0],
+#                          centres[d1_loc[1],1],
+#                          centres[d1_loc[1],2],
+#                          color=(1, 0, 0),
+#                          scale_factor = 6.)
 
 #d1_module = mlab.points3d(centres[d1_loc[0]:d1_loc[ROI_size-1]+1,0],
 #                          centres[d1_loc[0]:d1_loc[ROI_size-1]+1,1],
@@ -206,16 +206,16 @@ d1_module = mlab.points3d(centres[d1_loc[1],0],
 #                          color=(1, 0, 0),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the D1 ROI: '
-print centres[d1_loc[0]:d1_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the D1 ROI: '
+#print centres[d1_loc[0]:d1_loc[-1]+1,:]
+#print ''
 
 # D2 ROI in magenta
-d2_module = mlab.points3d(centres[d2_loc[2],0],
-                          centres[d2_loc[2],1],
-                          centres[d2_loc[2],2],
-                          color=(1, 0, 1),
-                          scale_factor = 6.)
+#d2_module = mlab.points3d(centres[d2_loc[2],0],
+#                          centres[d2_loc[2],1],
+#                          centres[d2_loc[2],2],
+#                          color=(1, 0, 1),
+#                          scale_factor = 6.)
 
 #d2_module = mlab.points3d(centres[d2_loc[0]:d2_loc[ROI_size-1]+1,0],
 #                          centres[d2_loc[0]:d2_loc[ROI_size-1]+1,1],
@@ -223,16 +223,16 @@ d2_module = mlab.points3d(centres[d2_loc[2],0],
 #                          color=(1, 0, 1),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the D2 ROI: '
-print centres[d2_loc[0]:d2_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the D2 ROI: '
+#print centres[d2_loc[0]:d2_loc[-1]+1,:]
+#print ''
 
 # FR ROI in purple
-fr_module = mlab.points3d(centres[fr_loc[0],0],
-                          centres[fr_loc[0],1],
-                          centres[fr_loc[0],2],
-                          color=(0.5, 0, 0.5),
-                          scale_factor = 6.)
+#fr_module = mlab.points3d(centres[fr_loc[0],0],
+#                          centres[fr_loc[0],1],
+#                          centres[fr_loc[0],2],
+#                          color=(0.5, 0, 0.5),
+#                          scale_factor = 6.)
 
 #fr_module = mlab.points3d(centres[fr_loc[0]:fr_loc[ROI_size-1]+1,0],
 #                          centres[fr_loc[0]:fr_loc[ROI_size-1]+1,1],
@@ -240,18 +240,15 @@ fr_module = mlab.points3d(centres[fr_loc[0],0],
 #                          color=(0.5, 0, 0.5),
 #                          scale_factor = 6.)
 
-print 'Coordinates of the FR ROI: '
-print centres[fr_loc[0]:fr_loc[-1]+1,:]
-print ''
+#print 'Coordinates of the FR ROI: '
+#print centres[fr_loc[0]:fr_loc[-1]+1,:]
+#print ''
 
 # Now plot the hypothetical locations of LSNM auditory modules
-#a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 10.)
-#a2_module = mlab.points3d(a2[0],a2[1],a2[2],color=(0, 1, 0),scale_factor = 10.)
-####IGNORE STP FOR NOW
-#stp_module = mlab.points3d(stp[0],stp[1],stp[2],color=(0, 1, 1),scale_factor = 10.)
-####IGNORE STP FOR NOW
-#sta_module = mlab.points3d(sta[0],sta[1],sta[2],color=(0, 0, 1),scale_factor = 10.)
-#apf_module = mlab.points3d(apf[0],apf[1],apf[2],color=(1, 0, 0),scale_factor = 10.)
+a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 10.)
+a2_module = mlab.points3d(a2[0],a2[1],a2[2],color=(0, 1, 0),scale_factor = 10.)
+sta_module = mlab.points3d(sta[0],sta[1],sta[2],color=(0, 0, 1),scale_factor = 10.)
+apf_module = mlab.points3d(apf[0],apf[1],apf[2],color=(1, 0, 0),scale_factor = 10.)
 
 # Finally, show everything on screen
 mlab.show(stop=True)

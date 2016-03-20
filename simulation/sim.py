@@ -400,14 +400,14 @@ class TaskThread(QtCore.QThread):
                              'ia2u': 470,
                              'estg': 477,
                              'istg': 477,
-                             'exfs': 44,
-                             'infs': 44,
-                             'efd1': 74,
-                             'ifd1': 74,
-                             'efd2': 47,
-                             'ifd2': 47,
-                             'exfr': 125,
-                             'infr': 125
+                             'exfs': 51,
+                             'infs': 51,
+                             'efd1': 51,
+                             'ifd1': 51,
+                             'efd2': 51,
+                             'ifd2': 51,
+                             'exfr': 51,
+                             'infr': 51
                          }
 
             # create two arrays to store synaptic activity for each and all TVB nodes,
@@ -449,48 +449,30 @@ class TaskThread(QtCore.QThread):
 
             print '\rIncoming units from TVB are: '
 
-            print '\rInto ' + white_matter.region_labels[345],
+            print '\rInto ' + white_matter.region_labels[474],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[474])]
             print 'with the following weights: ',
-            print white_matter.weights[345][np.nonzero(white_matter.weights[345])]
+            print white_matter.weights[474][np.nonzero(white_matter.weights[474])]
             
-            print '\rInto ' + white_matter.region_labels[393],
+            print '\rInto ' + white_matter.region_labels[470],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[470])]
             print 'with the following weights: ',
-            print white_matter.weights[393][np.nonzero(white_matter.weights[393])]
+            print white_matter.weights[470][np.nonzero(white_matter.weights[470])]
         
-            print '\rInto ' + white_matter.region_labels[413],
+            print '\rInto ' + white_matter.region_labels[477],
             print ': ',        
-            print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[477])]
             print 'with the following weights: ',
-            print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
+            print white_matter.weights[477][np.nonzero(white_matter.weights[477])]
             
-            print '\rInto ' + white_matter.region_labels[47],
+            print '\rInto ' + white_matter.region_labels[51],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[47])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[51])]
             print 'with the following weights: ',
-            print white_matter.weights[47][np.nonzero(white_matter.weights[47])]
+            print white_matter.weights[51][np.nonzero(white_matter.weights[51])]
             
-            print '\rInto ' + white_matter.region_labels[74],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
-            print 'with the following weights: ',
-            print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
-            
-            print '\rInto ' + white_matter.region_labels[41],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[41])]
-            print 'with the following weights: ',
-            print white_matter.weights[41][np.nonzero(white_matter.weights[41])]
-            
-            print '\rInto ' + white_matter.region_labels[125],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[125])]
-            print 'with the following weights: ',
-            print white_matter.weights[125][np.nonzero(white_matter.weights[125])]        
-        
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network
         # NOTE: This is the main data structure holding all of the LSNM network values

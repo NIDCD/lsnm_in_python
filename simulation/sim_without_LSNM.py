@@ -325,50 +325,50 @@ for raw in sim(simulation_length=simulation_length):
 # the following lines of code find the closest Hagmann's brain node to a given
 # set of Talairach coordinates
 # VISUAL MODEL TALAIRACH COORDINATES 
-d_v1 = ds.cdist([(18, -88, 8)], white_matter.centres, 'euclidean')
-closest = d_v1[0].argmin()
-print closest, white_matter.centres[closest]
+#d_v1 = ds.cdist([(18, -88, 8)], white_matter.centres, 'euclidean')
+#closest = d_v1[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_v4 = ds.cdist([(30, -72, -12)], white_matter.centres, 'euclidean')
-closest = d_v4[0].argmin()
-print closest, white_matter.centres[closest]
+#d_v4 = ds.cdist([(30, -72, -12)], white_matter.centres, 'euclidean')
+#closest = d_v4[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_it = ds.cdist([(28, -36, -8)], white_matter.centres, 'euclidean')
-closest = d_it[0].argmin()
-print closest, white_matter.centres[closest]
+#d_it = ds.cdist([(28, -36, -8)], white_matter.centres, 'euclidean')
+#closest = d_it[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_fs= ds.cdist([(47, 19, 9)], white_matter.centres, 'euclidean')
-closest = d_fs[0].argmin()
-print closest, white_matter.centres[closest]
+#d_fs= ds.cdist([(47, 19, 9)], white_matter.centres, 'euclidean')
+#closest = d_fs[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_d1= ds.cdist([(42, 26, 20)], white_matter.centres, 'euclidean')
-closest = d_d1[0].argmin()
-print closest, white_matter.centres[closest]
+#d_d1= ds.cdist([(42, 26, 20)], white_matter.centres, 'euclidean')
+#closest = d_d1[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_d2= ds.cdist([(42, 39, 2)], white_matter.centres, 'euclidean')
-closest = d_d2[0].argmin()
-print closest, white_matter.centres[closest]
+#d_d2= ds.cdist([(42, 39, 2)], white_matter.centres, 'euclidean')
+#closest = d_d2[0].argmin()
+#print closest, white_matter.centres[closest]
 
-d_r= ds.cdist([(29, 25, 40)], white_matter.centres, 'euclidean')
-closest = d_r[0].argmin()
-print closest, white_matter.centres[closest]
+#d_r= ds.cdist([(29, 25, 40)], white_matter.centres, 'euclidean')
+#closest = d_r[0].argmin()
+#print closest, white_matter.centres[closest]
 
 # AUDITORY MODEL TALAIRACH COORDINATES
-#d_a1 = ds.cdist([(48, -26, 10)], white_matter.centres, 'euclidean')
-#closest = d_a1[0].argmin()
-#print closest, white_matter.centres[closest]
+d_a1 = ds.cdist([(48, -26, 10)], white_matter.centres, 'euclidean')
+closest = d_a1[0].argmin()
+print closest, white_matter.centres[closest]
 
-#d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
-#closest = d_a2[0].argmin()
-#print closest, white_matter.centres[closest]
+d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
+closest = d_a2[0].argmin()
+print closest, white_matter.centres[closest]
 
-#d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
-#closest = d_st[0].argmin()
-#print closest, white_matter.centres[closest]
+d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
+closest = d_st[0].argmin()
+print closest, white_matter.centres[closest]
 
-#d_pf= ds.cdist([(56, 21, 5)], white_matter.centres, 'euclidean')
-#closest = d_pf[0].argmin()
-#print closest, white_matter.centres[closest]
+d_pf= ds.cdist([(54, 9, 8)], white_matter.centres, 'euclidean')
+closest = d_pf[0].argmin()
+print closest, white_matter.centres[closest]
 
 
 # convert electrical and synaptic activity of TVB nodes into numpy arrays

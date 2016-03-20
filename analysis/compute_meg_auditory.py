@@ -35,11 +35,9 @@
 #
 #   This file (compute_meg_auditory.py) was created on June 7, 2015.
 #
-#   Based on Sanz-Leon et al (2015) and Sarvas (1987) and on TVB's monitors.py
-#
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on December 14 2015  
+#   Last updated by Antonio Ulloa on March 15 2016 
 # **************************************************************************/
 
 # compute_meg_auditory.py
@@ -50,55 +48,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#the magnetic constant = 1.25663706 × 10-6 m kg s-2 A-2  (H/m)
-mu_0 = 1.25663706e-6 #mH/mm
+# Load A1 synaptic activity data files into a numpy array
+ea1u = np.loadtxt('ea1u_signed_syn.out')
+ea1d = np.loadtxt('ea1d_signed_syn.out')
 
-# define the hypothetical Talairach locations of each LSNM auditory module
-a1_loc = [48,-26,10]
-a2_loc = [62,-32,10]
-st_loc = [59,-17,4]
-pf_loc = [56,21,5]
+# Load A2 synaptic activity data files into a numpy array
+ea2u = np.loadtxt('ea2u_signed_syn.out')
+ea2c = np.loadtxt('ea2c_signed_syn.out')
+ea2d = np.loadtxt('ea2d_signed_syn.out')
 
-
-# initialize source positions
-r_0 = [a1_loc, a2_loc, it_loc, pf_loc] 
-
-#initialize vector from sources to sensor
-Q = simulator.connectivity.orientations
-
-centre = numpy.mean(r_0, axis=0)[numpy.newaxis, :]
-radius = 1.01 * max(numpy.sqrt(numpy.sum((r_0 - centre)**2, axis=1)))
-
-# Load V1 synaptic activity data files into a numpy array
-ev1h = np.loadtxt('../simulator/output/ev1h_signed_syn.out')
-ev1v = np.loadtxt('../simulator/output/ev1v__signed_syn.out')
-
-# Load V4 synaptic activity data files into a numpy array
-ev4h = np.loadtxt('../simulator/output/ev4h_signed_syn.out')
-ev4c = np.loadtxt('../simulator/output/ev4c_signed_syn.out')
-ev4v = np.loadtxt('../simulator/output/ev4v_signed_syn.out')
-
-# Load IT synaptic activity data files into a numpy array
-exss = np.loadtxt('../simulator/output/exss_signed_syn.out')
+# Load ST synaptic activity data files into a numpy array
+estg = np.loadtxt('estg_signed_syn.out')
 
 # Load PFC synaptic activity data files into a numpy array
-efd1 = np.loadtxt('../simulator/output/efd1_signed_syn.out')
-efd2 = np.loadtxt('../simulator/output/efd2_signed_syn.out')
-exfs = np.loadtxt('../simulator/output/exfs_signed_syn.out')
-exfr = np.loadtxt('../simulator/output/exfr_signed_syn.out')
+efd1 = np.loadtxt('efd1_signed_syn.out')
+efd2 = np.loadtxt('efd2_signed_syn.out')
+exfs = np.loadtxt('exfs_signed_syn.out')
+exfr = np.loadtxt('exfr_signed_syn.out')
 
 # Extract number of timesteps from one of the synaptic activity arrays
-synaptic_timesteps = ev1h.shape[0]
+synaptic_timesteps = ea1u.shape[0]
 
-# add all units within each region (V1, V4, IT, D1, D2, FS, R) together across space to calculate
+# add all units within each region together across space to calculate
 # MEG source dynamics in each brain region
-v1 = np.sum(ev1h + ev1v, axis = 1)
-v4 = np.sum(ev4h + ev4c + ev4v, axis=1)
-it = np.sum(exss, axis = 1)
-d1 = np.sum(efd1, axis = 1)
-d2 = np.sum(efd2, axis = 1)
-fs = np.sum(exfs, axis = 1)
-fr = np.sum(exfr, axis = 1)
+a1 = np.sum(ea1u + ea1d, axis = 1)
+a2 = np.sum(ea2u + ea2c + ea2d, axis=1)
+st = np.sum(estg, axis = 1)
+pf = np.sum(efd1 + efd2 + exfs + exfr, axis = 1)
 
 # Set up figure to plot MEG source dynamics
 plt.figure(1)
@@ -106,13 +82,10 @@ plt.figure(1)
 plt.suptitle('SIMULATED MEG SOURCE DYNAMICS')
 
 # Plot MEG signal
-v1_plot=plt.plot(v1, label='V1')
-v4_plot=plt.plot(v4, label='V4')
-it_plot=plt.plot(it, label='IT')
-d1_plot=plt.plot(d1, label='D1')
-d2_plot=plt.plot(d2, label='D2')
-fs_plot=plt.plot(fs, label='FS')
-fr_plot=plt.plot(fr, label='FR')
+a1_plot=plt.plot(a1, label='A1')
+a2_plot=plt.plot(a2, label='A2')
+st_plot=plt.plot(st, label='ST')
+pf_plot=plt.plot(pf, label='PFC')
 
 plt.legend()
 
