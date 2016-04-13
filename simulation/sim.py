@@ -56,6 +56,9 @@ import random as rdm
 # import math function modules
 import math
 
+# import json module for storing output data files
+import json
+
 try:
     # only import TVB modules if simulation requires TVB connectome
     # the following modules are imported from TVB library
