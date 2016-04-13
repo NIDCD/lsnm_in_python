@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 7 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 13 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -313,6 +313,10 @@ class TaskThread(QtCore.QThread):
         # declare a variable that describes number of nodes in TVB connectome
         TVB_number_of_nodes = 998
         
+        # declare a file name for the output file where the neural network structure will be
+        # stored (modules and weights among modules)
+        neural_network = 'neuralnet.json'
+
         # the following are the weights used among excitatory and inhibitory populations
         # in the TVB's implementation of the Wilson-Cowan equations. These values were
         # taken from the default values in the TVB source code in script "models.npy"
@@ -656,11 +660,16 @@ class TaskThread(QtCore.QThread):
         # open the file with the experimental script and store the script in a string
         with open(script) as s:
             experiment_script = s.read()
-            
-        # uncomment the following line and subsititute in the for loop below if you want
-        # LSNM to drive the whole simulation
-        #for t in range(LSNM_simulation_time):
 
+        # open a file where we will dump the whole data structure (model and weights) in case it needs
+        # to be used later, for inpection and/or visualization of neural network. We chose to use JSON
+        # for this, due to its interoperability with other computer languages and other operating
+        # systems. Also, remember that it is not necesary to close the files opened with 'with', as they
+        # get closed automatically at the end of the 'with' routine.
+        with open(neural_network) as nn_file:
+            json.dump(modules, nn_file)
+
+            
         # initialize timestep counter for LSNM timesteps
         t = 0
 

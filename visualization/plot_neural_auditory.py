@@ -36,7 +36,7 @@
 #   This file (plot_neural_auditory.py) was created on March 25, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on January 14, 2016  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on March 21, 2016  
 # **************************************************************************/
 
 # plot_neural_auditory.py
@@ -77,6 +77,7 @@ ax = plt.subplot(11,1,1)
 ax.plot(t, mgns)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('MGN', rotation='horizontal', horizontalalignment='right')
 
@@ -85,6 +86,7 @@ ax = plt.subplot(11,1,2)
 ax.plot(t, ea1d)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('A1d', rotation='horizontal', horizontalalignment='right')
 
@@ -92,6 +94,7 @@ ax = plt.subplot(11,1,3)
 ax.plot(t, ea1u)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('A1u', rotation='horizontal', horizontalalignment='right')
 
@@ -100,6 +103,7 @@ ax = plt.subplot(11,1,4)
 ax.plot(t, ea2d)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('A2d', rotation='horizontal', horizontalalignment='right')
 
@@ -107,6 +111,7 @@ ax = plt.subplot(11,1,5)
 ax.plot(t, ea2u)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('A2u', rotation='horizontal', horizontalalignment='right')
 
@@ -114,6 +119,7 @@ ax = plt.subplot(11,1,6)
 ax.plot(t, ea2c)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('A2c', rotation='horizontal', horizontalalignment='right')
 
@@ -122,6 +128,7 @@ ax = plt.subplot(11,1,7)
 ax.plot(t, estg)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('STG', rotation='horizontal', horizontalalignment='right')
 
@@ -130,6 +137,7 @@ ax = plt.subplot(11,1,8)
 ax.plot(t, exfs)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
 
@@ -137,6 +145,7 @@ ax = plt.subplot(11,1,9)
 ax.plot(t, efd1)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
 
@@ -144,6 +153,7 @@ ax = plt.subplot(11,1,10)
 ax.plot(t, efd2)
 ax.set_xticks([])
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 
@@ -151,6 +161,7 @@ plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 ax = plt.subplot(11,1,11)
 ax.plot(t, exfr)
 ax.set_yticks([])
+ax.set_ylim(0,1)
 ax.set_xlim(0,timesteps)
 plt.ylabel('R', rotation='horizontal', horizontalalignment='right')
 plt.xlabel('Timesteps (i.e., Data points)')

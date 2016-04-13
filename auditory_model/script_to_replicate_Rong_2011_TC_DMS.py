@@ -7,7 +7,7 @@
 #
 # We have a total of 12 trials, and they are all DMS trials
 #
-# The number of timesteps in each trial is 800 timesteps = 4 seconds
+# The number of timesteps in each trial is 800 timesteps = 2.8 seconds
 #
 # For baseline setting purposes, we have included a 200 timestep "do-nothing" step, only at the beginning
 # of the experiment
@@ -18,12 +18,12 @@
 #
 # The attention parameter in all trials is constant at 0.3
 #
-# To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
-# we are assuming that each simulation timestep is equivalent to 5 milliseconds
+# To maintain consistency with Husain et al (2004),
+# we are assuming that each simulation timestep is equivalent to 3.5 milliseconds
 # of real time. 
 #                
 # We present stimuli to the auditory LSNM network by manually inserting it into the MGN module
-# and leaving the stimuli there for 100 timesteps (500 ms).
+# and leaving the stimuli there for 100 timesteps (350 ms).
 
 # define the simulation time in total number of timesteps
 LSNM_simulation_time = 9800
@@ -31,7 +31,7 @@ LSNM_simulation_time = 9800
 # Define list of parameters the script is going to need to modify the LSNM neural network
 # They are organized in the following order:
 # [lo_att_level, hi_att_level, lo_inp_level, hi_inp_level, att_step, ri1, ri2]
-script_params = [0.05, 0.3, 0.0, 1.0, 0.0, [], []]
+script_params = [0.01, 0.3, 0.0, 1.0, 0.0, [], []]
 
 def s1_up_01(modules, script_params):
     

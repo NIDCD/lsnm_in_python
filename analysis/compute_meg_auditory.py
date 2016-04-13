@@ -48,6 +48,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# define the name of the output file where the MEG source activity timeseries will be stored
+MEG_source_file = 'meg_source_activity.npy'
+
 # Load A1 synaptic activity data files into a numpy array
 ea1u = np.loadtxt('ea1u_signed_syn.out')
 ea1d = np.loadtxt('ea1d_signed_syn.out')
@@ -75,6 +78,14 @@ a1 = np.sum(ea1u + ea1d, axis = 1)
 a2 = np.sum(ea2u + ea2c + ea2d, axis=1)
 st = np.sum(estg, axis = 1)
 pf = np.sum(efd1 + efd2 + exfs + exfr, axis = 1)
+
+# create a numpy array of MEG source activity timeseries
+meg_source = np.array([a1, a2, st, pf])
+
+print 'Size of each MEG source activity time-series: ', a1.size
+
+# now, save all MEG source activity timeseries to a single file 
+np.save(MEG_source_file, meg_source)
 
 # Set up figure to plot MEG source dynamics
 plt.figure(1)

@@ -68,6 +68,9 @@ import matplotlib.pyplot as pl
 neuronal_FILE = 'tvb_neuronal.npy'
 synaptic_FILE = 'tvb_synaptic.npy'
 
+# declare how many closest nodes to a given brain region will be part of that region's ROI
+number_of_closest = 5
+
 class WilsonCowanPositive(models.WilsonCowan):
     "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
     "only allows positive values at integration time. In other words, it clamps state"
@@ -355,19 +358,20 @@ for raw in sim(simulation_length=simulation_length):
 
 # AUDITORY MODEL TALAIRACH COORDINATES
 d_a1 = ds.cdist([(48, -26, 10)], white_matter.centres, 'euclidean')
-closest = d_a1[0].argmin()
+closest = d_a1[0].argsort()[:number_of_closest]
 print closest, white_matter.centres[closest]
 
 d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
-closest = d_a2[0].argmin()
+#closest = d_a2[0].argmin()
+closest = d_a2[0].argsort()[:number_of_closest]
 print closest, white_matter.centres[closest]
 
 d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
-closest = d_st[0].argmin()
+closest = d_st[0].argsort()[:number_of_closest]
 print closest, white_matter.centres[closest]
 
 d_pf= ds.cdist([(54, 9, 8)], white_matter.centres, 'euclidean')
-closest = d_pf[0].argmin()
+closest = d_pf[0].argsort()[:number_of_closest]
 print closest, white_matter.centres[closest]
 
 
