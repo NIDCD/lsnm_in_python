@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 13 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 16 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -58,6 +58,9 @@ import math
 
 # import json module for storing output data files
 import json
+
+# import time module (needed for recording start and end simulation times in log file
+import time as time_module
 
 try:
     # only import TVB modules if simulation requires TVB connectome
@@ -107,14 +110,24 @@ class LSNM(QtGui.QWidget):
 
     def initUI(self):
 
-        # the following three global variables are names of text files that contain
-        # model definition, list of network weights, and experimental script to be
-        # simulated
-        model=''
-        weights_list=''
-        script=''
         global useTVBConnectome
         useTVBConnectome = False         # Determines whether to use a TVB connectome within simulation
+
+        global createNewSubject
+        createNewSubject = False         # Determines whether or not to vary connection weights given
+                                         # to create a new subject for the current simulation
+
+        global model                     # contains name of file describing module and parameters
+        model = ""
+        
+        global weights_list              # contains name of file with list of connection weights
+        weights_list = ""
+        
+        global script                    # contains name of file with simulation script
+        script = ""
+        
+        global neural_net                # contains name of file with neural network
+        neural_net = ""
         
         # create a grid layout and set a spacing of 10 between widgets
         layout = QtGui.QGridLayout(self)
@@ -127,62 +140,78 @@ class LSNM(QtGui.QWidget):
         exitAction.triggered.connect(self.close)
 
         # create a push button object for opening file with model description
-        uploadModelButton = QtGui.QPushButton('STEP ONE: Upload your model: ' + model, self)
+        uploadModelButton = QtGui.QPushButton('Model description file: ' + model, self)
         layout.addWidget(uploadModelButton, 0, 0)
         # define the action to be taken if upload model button is clicked on
         uploadModelButton.clicked.connect(self.browseModels)
 
-        # create a text edit object for reading file with model description
-        self.modelTextEdit = QtGui.QTextEdit()
-        layout.addWidget(self.modelTextEdit, 1, 0)
-
         # create a push button for uploading file containing list of network weights
-        uploadWeightsButton = QtGui.QPushButton('STEP TWO: Upload your weights: ' + weights_list, self)
-        layout.addWidget(uploadWeightsButton, 0, 1)
+        uploadWeightsButton = QtGui.QPushButton('Weights list file: ' + weights_list, self)
+        layout.addWidget(uploadWeightsButton, 1, 0)
         # define the action to be taken if upload weights button is clicked on
         uploadWeightsButton.clicked.connect(self.browseWeights)
         
-        # create a text edit object for reading file with model description
-        self.weightsTextEdit = QtGui.QTextEdit()
-        layout.addWidget(self.weightsTextEdit, 1, 1)
-
         # create a button for uploading file containing experimental script to be simulated
-        uploadScriptButton = QtGui.QPushButton('STEP THREE: Upload your script: ' + script, self)
-        layout.addWidget(uploadScriptButton, 0, 2)
+        uploadScriptButton = QtGui.QPushButton('Simulation script file: ' + script, self)
+        layout.addWidget(uploadScriptButton, 2, 0)
         # define the action to be taken if upload script button is clicked on
         uploadScriptButton.clicked.connect(self.browseScripts)
 
-        # create a text edit object for reading file with experiment script
-        self.scriptTextEdit = QtGui.QTextEdit()
-        layout.addWidget(self.scriptTextEdit, 1, 2)
-
-        # create a push button object labeled 'Run'
-        runButton = QtGui.QPushButton('STEP FOUR: Run simulation', self)
-        layout.addWidget(runButton, 0, 3)
+        # create a push button object labeled 'Neural Net'
+        neuralNetButton = QtGui.QPushButton('File containing neural net', self)
+        layout.addWidget(neuralNetButton, 3, 0)
         # define the action to be taken if Run button is clicked on
-        runButton.clicked.connect(self.onStart)
-    
-        # define output display to keep user updated with simulation progress status
-        self.runTextEdit = QtGui.QTextEdit()
-        layout.addWidget(self.runTextEdit, 1, 3)
+        neuralNetButton.clicked.connect(self.browseNeuralNets)
 
         # define checkbox to allow users to determine whether or not a TVB connectome will be used
         # in simulation
-        checkBox = QtGui.QCheckBox('Use TVB Connectome', self)
-        layout.addWidget(checkBox, 2, 1)
-        checkBox.stateChanged.connect(self.connectomeOrNot)
-        
-        # define progress bar to keep user informed of simulation progress status
-        self.progressBar = QtGui.QProgressBar(self)
-        self.progressBar.setRange(0,100)
-        layout.addWidget(self.progressBar, 2, 3)
-                        
+        connectomeBox = QtGui.QCheckBox('Use TVB Connectome', self)
+        layout.addWidget(connectomeBox, 4, 0)
+        connectomeBox.stateChanged.connect(self.connectomeOrNot)
+
+        # create a push button object labeled 'Run'
+        runButton = QtGui.QPushButton('Run simulation', self)
+        layout.addWidget(runButton, 5, 0)
+        # define the action to be taken if Run button is clicked on
+        runButton.clicked.connect(self.onStart)
+    
         # create a push button object labeled 'Exit'
         exitButton = QtGui.QPushButton('Quit LSNM', self)
-        layout.addWidget(exitButton, 2, 0)
+        layout.addWidget(exitButton, 6, 0)
         # define the action to be taken if Exit button is clicked on
         exitButton.clicked.connect(QtCore.QCoreApplication.instance().quit)
 
+        # create a text edit object for reading file with model description
+        self.modelTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.modelTextEdit, 0, 1)
+
+        # create a text edit object for reading file with model description
+        self.weightsTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.weightsTextEdit, 1, 1)
+
+        # create a text edit object for reading file with experiment script
+        self.scriptTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.scriptTextEdit, 2, 1)
+
+        # create a text edit object for reading file with both model and weights (neural net)
+        self.neuralNetTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.neuralNetTextEdit, 3, 1)
+
+        # define checkbox to allow users to determine whether or not to vary weights randomly from
+        # weights given to create a new simulated subject
+        newSubjectBox= QtGui.QCheckBox('Vary weights to create new subject', self)
+        layout.addWidget(newSubjectBox, 4, 1)
+        newSubjectBox.stateChanged.connect(self.createNewSubject)
+        
+        # define output display to keep users updated with simulation progress status messages
+        self.runTextEdit = QtGui.QTextEdit()
+        layout.addWidget(self.runTextEdit, 5, 1)
+
+        # define progress bar to keep user informed of simulation progress status
+        self.progressBar = QtGui.QProgressBar(self)
+        self.progressBar.setRange(0,100)
+        layout.addWidget(self.progressBar, 6, 1)
+                        
         # define the main thread as the main simulation code
         self.myLongTask = TaskThread()
         self.myLongTask.notifyProgress.connect(self.onProgress)
@@ -196,6 +225,7 @@ class LSNM(QtGui.QWidget):
         # set window's title
         self.setWindowTitle('Large-Scale Neural Modeling (LSNM)')
         
+        
     def browseModels(self):
 
         global model
@@ -203,13 +233,8 @@ class LSNM(QtGui.QWidget):
         # of the network
         model = QtGui.QFileDialog.getOpenFileName(self, 'Select *.txt file that contains model', '.')
 
-        # open the file containing model description
-        f = open(model, 'r')
-
-        # display the contents of file containing model description
-        with f:
-            data = f.read()
-            self.modelTextEdit.setText(data)
+        # display the name of file containing model description
+        self.modelTextEdit.setText(model)
         
     def browseWeights(self):
 
@@ -217,13 +242,8 @@ class LSNM(QtGui.QWidget):
         # allow the user to browse files to find desired input file with a list of network weights
         weights_list = QtGui.QFileDialog.getOpenFileName(self, 'Select *.txt file that contains weights list', '.')
 
-        # open file containing list of weights
-        f = open(weights_list, 'r')
-
-        # display contents of file containing list of weights
-        with f:
-            data = f.read()
-            self.weightsTextEdit.setText(data)
+        # display name of file containing list of weights
+        self.weightsTextEdit.setText(weights_list)
         
     def browseScripts(self):
 
@@ -232,24 +252,41 @@ class LSNM(QtGui.QWidget):
         # to be simulated
         script = QtGui.QFileDialog.getOpenFileName(self, 'Select *.txt file that contains script', '.')
 
-        # open file containing experimental script
-        f = open(script, 'r')
-
         # display contents of file containing experimental script
-        with f:
-            data = f.read()
-            self.scriptTextEdit.setText(data)
+        self.scriptTextEdit.setText(script)
 
+    def browseNeuralNets(self):
+
+        global neural_net
+        # allow user to browse files to find desired input file containing neural net (model and weights
+        # combined)
+        neural_net = QtGui.QFileDialog.getOpenFileName(self, 'Select *.txt file that contains neural net', '.')
+
+        # display contents of file containing neural net (model and weights combined
+        self.neuralNetTextEdit.setText(neural_net)
+
+        
     def connectomeOrNot(self, state):
 
         global useTVBConnectome
         # allow user to decide whether to use a TVB connectome as part of the simulation
         if state == QtCore.Qt.Checked:
             useTVBConnectome = True
-            print 'Using TVB Connectome...'
+            print '\rUsing TVB Connectome...'
         else:
             useTVBConnectome = False
-            print 'NOT Using TVB Connectome...'
+            print '\rNOT Using TVB Connectome...'
+
+    def createNewSubject(self, state2):
+
+        global generateSubject
+        # allow user to decide whether or not to vary weights given to generate new subject
+        if state2 == QtCore.Qt.Checked:
+            generateSubject = True
+            print '\rGenerating new subject by randomly varying connection weights given...'
+        else:
+            generateSubject = False
+            print '\rWe are NOT generating a new subject...'
             
     @QtCore.pyqtSlot()
     def onStart(self):
@@ -293,7 +330,9 @@ class TaskThread(QtCore.QThread):
     
     def run(self):
 
-        print 'Building network...'
+        start_time = time_module.asctime(time_module.localtime(time_module.time()))
+        print '\rStart Time: ', start_time 
+        print '\rBuilding network...'
 
         global noise
 
@@ -305,6 +344,11 @@ class TaskThread(QtCore.QThread):
         # define a flag that tells the network whether to send feedback connections
         # from LSNM to TVB
         FEEDBACK = True
+
+        # define a number that the simulator with use to generate new subjects. If this
+        # option is checked at simulation time, the simulator with multiply the connection
+        # weights given by a random amount of between the number given and 1.0
+        subject_variation = 0.98
         
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
@@ -319,6 +363,9 @@ class TaskThread(QtCore.QThread):
         # declare a file name for the output file where the neural network structure will be
         # stored (modules and weights among modules)
         neural_network = 'neuralnet.json'
+
+        # declare a file name for the output file that contains simulation log
+        log_file = 'log.txt'
 
         # the following are the weights used among excitatory and inhibitory populations
         # in the TVB's implementation of the Wilson-Cowan equations. These values were
@@ -485,161 +532,184 @@ class TaskThread(QtCore.QThread):
         # NOTE: This is the main data structure holding all of the LSNM network values
         # at each timestep, including neural activity, connections weights, neural
         # population model parameters, synaptic activity, module dimensions, among others.
-        modules = []
 
-        # open the input file containing module declarations (i.e., the 'model'), then
-        # load the file into a python list of lists and close file safely
-        f = open(model, 'r')
-        try: 
-            modules = [line.split() for line in f]
-        finally:
-            f.close()
+        # if no model and weights list were specified, upload the whole network (modules and weights)
+        # from neural network file. Otherwise, upload modules from model file and weights from weights
+        # files given by the weights list file and build a neural network from scratch
+        if model == "" and weights_list == "":
+
+            nn_file = open(neural_net, 'r')
+            print '\rReading neural network from file...'
+            try:
+                modules = json.load(nn_file)
+            finally:
+                nn_file.close()
+
+        else:
+
+            modules = []
+
+            # open the input file containing module declarations (i.e., the 'model'), then
+            # load the file into a python list of lists and close file safely
+            f = open(model, 'r')
+            try: 
+                modules = [line.split() for line in f]
+            finally:
+                f.close()
     
-        # convert ALL module dimensions to integers since we will need those numbers
-        # later
-        for module in modules:
-            module[1] = int(module[1])
-            module[2] = int(module[2])
+            # convert ALL module dimensions to integers since we will need those numbers
+            # later
+            for module in modules:
+                module[1] = int(module[1])
+                module[2] = int(module[2])
     
-        # convert ALL parameters in the modules to float since we will need to use those
-        # to solve Wilson-Cowan equations
-        for module in modules:
-            module[4] = float(module[4])
-            module[5] = float(module[5])
-            module[6] = float(module[6])
-            module[7] = float(module[7])
-            module[8] = float(module[8])
-            module[9] = float(module[9])
+            # convert ALL parameters in the modules to float since we will need to use those
+            # to solve Wilson-Cowan equations
+            for module in modules:
+                module[4] = float(module[4])
+                module[5] = float(module[5])
+                module[6] = float(module[6])
+                module[7] = float(module[7])
+                module[8] = float(module[8])
+                module[9] = float(module[9])
 
-        # add a list of units to each module, using the module dimensions specified
-        # in the input file (x_dim * y_dim) and initialize all units in each module to 'initial_value'
-        # It also adds three extra elements per each unit to store (1) sum of all incoming activity,
-        # (2) sum of inbititory, and (3) sum
-        # of excitatory activity, at the current time step. It also add an empty list, '[]', to store
-        # list of outgoing weights
-        for module in modules:
-            # remove initial value from the list
-            initial_value = module.pop()
-            x_dim = module[1]
-            y_dim = module[2]
+            # add a list of units to each module, using the module dimensions specified
+            # in the input file (x_dim * y_dim) and initialize all units in each module to 'initial_value'
+            # It also adds three extra elements per each unit to store (1) sum of all incoming activity,
+            # (2) sum of inbititory, and (3) sum
+            # of excitatory activity, at the current time step. It also add an empty list, '[]', to store
+            # list of outgoing weights
+            for module in modules:
+                # remove initial value from the list
+                initial_value = module.pop()
+                x_dim = module[1]
+                y_dim = module[2]
     
-            # create a matrix for each unit in the module, to contain unit value,
-            # total sum of inputs, sum of excitatory inputs, sum of inhibitory inputs,
-            # and connection weights
-            unit_matrix = [[[initial_value, 0.0, 0.0, 0.0, []] for x in range(y_dim)] for y in range(x_dim)]
+                # create a matrix for each unit in the module, to contain unit value,
+                # total sum of inputs, sum of excitatory inputs, sum of inhibitory inputs,
+                # and connection weights
+                unit_matrix = [[[initial_value, 0.0, 0.0, 0.0, []] for x in range(y_dim)] for y in range(x_dim)]
 
-            # now append that matrix to the current module
-            module.append(unit_matrix)
+                # now append that matrix to the current module
+                module.append(unit_matrix)
 
-        # now turn the list modules into a Python dictionary so we can access each module using the
-        # module name as key (this makes index 0 dissapear and shifts all other list indexes by 1)
-        # Therefore, the key to the dictionary 'modules' is now the name of the LSNM module
-        # The indexes of each module list are as follows:
-        # 0: module's X dimension (number of columns)
-        # 1: module's Y dimension (number of rows)
-        # 2: activation rule (neural population equation) or 'clamp' (constant value)
-        # 3: Wilson-Cowan parameter 'threshold'
-        # 4: Wilson-Cowan parameter 'Delta'
-        # 5: Wilson-Cowan parameter 'delta'
-        # 6: Wilson-Cowan parameter 'K'
-        # 7: Wilson-Cowan parameter 'N'
-        # 8: A python list of lists of X x Y elements containing the following elements:
-        #     0: neural activity of current unit
-        #     1: Sum of all inputs to current unit
-        #     2: Sum of excitatory inputs to current unit
-        #     3: Sum of inhibitory inputs to current unit
-        #     4: a Python list of lists containing all outgoing connections arising from current unit, There are as
-        #        many elements as outgoing connection weights and each element contains the following:
-        #         0: destination module (where is the connection going to)
-        #         1: X coordinate of location of destination unit
-        #         2: Y coordinate of location of destination unit
-        #         3: Connection weight
-        modules = {m[0]: m[1:] for m in modules}
+            # now turn the list modules into a Python dictionary so we can access each module using the
+            # module name as key (this makes index 0 dissapear and shifts all other list indexes by 1)
+            # Therefore, the key to the dictionary 'modules' is now the name of the LSNM module
+            # The indexes of each module list are as follows:
+            # 0: module's X dimension (number of columns)
+            # 1: module's Y dimension (number of rows)
+            # 2: activation rule (neural population equation) or 'clamp' (constant value)
+            # 3: Wilson-Cowan parameter 'threshold'
+            # 4: Wilson-Cowan parameter 'Delta'
+            # 5: Wilson-Cowan parameter 'delta'
+            # 6: Wilson-Cowan parameter 'K'
+            # 7: Wilson-Cowan parameter 'N'
+            # 8: A python list of lists of X x Y elements containing the following elements:
+            #     0: neural activity of current unit
+            #     1: Sum of all inputs to current unit
+            #     2: Sum of excitatory inputs to current unit
+            #     3: Sum of inhibitory inputs to current unit
+            #     4: a Python list of lists containing all outgoing connections arising from current unit, There are as
+            #        many elements as outgoing connection weights and each element contains the following:
+            #         0: destination module (where is the connection going to)
+            #         1: X coordinate of location of destination unit
+            #         2: Y coordinate of location of destination unit
+            #         3: Connection weight
+            modules = {m[0]: m[1:] for m in modules}
 
-        # read file that contains list of weight files, store the list of files in a python list,
-        # and close the file safely
-        f = open(weights_list, 'r')
-        try:  
-            weight_files = [line.strip() for line in f]
-        finally:
-            f.close()
+            # read file that contains list of weight files, store the list of files in a python list,
+            # and close the file safely
+            f = open(weights_list, 'r')
+            try:  
+                weight_files = [line.strip() for line in f]
+            finally:
+                f.close()
 
-        # build a dictionary of replacements for parsing the weight files
-        replacements = {'Connect': '',
-                        'From:': '',
-                        '(':'[',
-                        ')':']',
-                        '{':'[',
-                        '}':']',
-                        '|':''}
+            # build a dictionary of replacements for parsing the weight files
+            replacements = {'Connect': '',
+                            'From:': '',
+                            '(':'[',
+                            ')':']',
+                           '{':'[',
+                            '}':']',
+                            '|':''}
 
-        # the following variable counts the total number of synapses in the network (for
-        # informational purposes
-        synapse_count = 0
+            # the following variable counts the total number of synapses in the network (for
+            # informational purposes
+            synapse_count = 0
     
-        # open each weight file in the list of weight files, one by one, and transfer weights
-        # from those files to each unit in the module list
-        # Note: file f is closed automatically at the end of 'with' since block 'with' is a
-        # context manager for file I/O
-        for file in weight_files:
-            with open(file) as f:
+            # open each weight file in the list of weight files, one by one, and transfer weights
+            # from those files to each unit in the module list
+            # Note: file f is closed automatically at the end of 'with' since block 'with' is a
+            # context manager for file I/O
+            for file in weight_files:
+                with open(file) as f:
 
-                # read the whole file and store it in a string
-                whole_thing = f.read()
+                    # read the whole file and store it in a string
+                    whole_thing = f.read()
         
-                # find which module is connected to which module
-                module_connection = re.search(r'Connect\((.+?),(.+?)\)', whole_thing)
+                    # find which module is connected to which module
+                    module_connection = re.search(r'Connect\((.+?),(.+?)\)', whole_thing)
 
-                # get rid of white spaces from origin and destination modules
-                origin_module = module_connection.group(1).strip()
-                destination_module = module_connection.group(2).strip()
+                    # get rid of white spaces from origin and destination modules
+                    origin_module = module_connection.group(1).strip()
+                    destination_module = module_connection.group(2).strip()
 
-                # gets rid of C-style comments at the beginning of weight files
-                whole_thing = re.sub(re.compile('%.*?\n'), '', whole_thing)
+                    # gets rid of C-style comments at the beginning of weight files
+                    whole_thing = re.sub(re.compile('%.*?\n'), '', whole_thing)
 
-                # removes all white spaces (space, tab, newline, etc) from weight files
-                whole_thing = ''.join(whole_thing.split())
+                    # removes all white spaces (space, tab, newline, etc) from weight files
+                    whole_thing = ''.join(whole_thing.split())
         
-                # replaces Malle-style language with python lists characters
-                for i, j in replacements.iteritems():
-                    whole_thing = whole_thing.replace(i, j)
+                    # replaces Malle-style language with python lists characters
+                    for i, j in replacements.iteritems():
+                        whole_thing = whole_thing.replace(i, j)
 
-                # now add commas between pairs of brackets
-                whole_thing = whole_thing.replace('][', '],[')
+                    # now add commas between pairs of brackets
+                    whole_thing = whole_thing.replace('][', '],[')
 
-                # now insert commas between right brackets and numbers (temporary hack!)
-                whole_thing = whole_thing.replace(']0', '],0')
-                whole_thing = whole_thing.replace(']1', '],1')
-                whole_thing = whole_thing.replace(']-', '],-')
+                    # now insert commas between right brackets and numbers (temporary hack!)
+                    whole_thing = whole_thing.replace(']0', '],0')
+                    whole_thing = whole_thing.replace(']1', '],1')
+                    whole_thing = whole_thing.replace(']-', '],-')
 
-                # add extra string delimiters to origin_module and destination_module so
-                # that they can be recognized as python "strings" when the list or lists
-                # is formed
-                whole_thing = whole_thing.replace(origin_module+','+destination_module,
+                    # add extra string delimiters to origin_module and destination_module so
+                    # that they can be recognized as python "strings" when the list or lists
+                    # is formed
+                    whole_thing = whole_thing.replace(origin_module+','+destination_module,
                                                   "'"+origin_module+"','"+destination_module+"'", 1)
 
-                # now convert the whole thing into a python list of lists, using Python's
-                # own interpreter 
-                whole_thing = eval(whole_thing)
+                    # now convert the whole thing into a python list of lists, using Python's
+                    # own interpreter 
+                    whole_thing = eval(whole_thing)
 
-                # remove [origin_module, destination_module] from list of connections
-                whole_thing = whole_thing[1]
+                    # remove [origin_module, destination_module] from list of connections
+                    whole_thing = whole_thing[1]
         
-                # now groups items in the form: [(origin_unit), [[[destination_unit], weight],
-                # ..., [[destination_unit_2], weight_2]])]
-                whole_thing = zip(whole_thing, whole_thing[1:])[::2]
+                    # now groups items in the form: [(origin_unit), [[[destination_unit], weight],
+                    # ..., [[destination_unit_2], weight_2]])]
+                    whole_thing = zip(whole_thing, whole_thing[1:])[::2]
                 
-                # insert [destination_module, x_dest, y_dest, weight] in the corresponding origin
-                # unit location of the modules list while adjusting (x_dest, y_dest) coordinates
-                # to a zero-based format (as used in Python)
-                for connection in whole_thing:
-                    for destination in connection[1]:
-                        modules[origin_module][8][connection[0][0]-1][connection[0][1]-1][4].append (
-                            [destination_module,        # insert name of destination module
-                            destination[0][0]-1,         # insert x coordinate of destination unit
-                            destination[0][1]-1,         # insert y coordinate of destination unit
-                            destination[1]])           # insert connection weight
-                        synapse_count += 1
+                    # insert [destination_module, x_dest, y_dest, weight] in the corresponding origin
+                    # unit location of the modules list while adjusting (x_dest, y_dest) coordinates
+                    # to a zero-based format (as used in Python)
+                    for connection in whole_thing:
+                        for destination in connection[1]:
+
+                            # now we decide whether the weights will be multiplied by a random amount
+                            # varying between that amount and 1.0 in order to generate a new subject
+                            if createNewSubject == True:
+                                connectionWeight = destination[1] * random.uniform(subject_variation, 1)
+                            else:
+                                connectionWeight = destination[1]
+
+                            modules[origin_module][8][connection[0][0]-1][connection[0][1]-1][4].append (
+                                [destination_module,        # insert name of destination module
+                                 destination[0][0]-1,         # insert x coordinate of destination unit
+                                 destination[0][1]-1,         # insert y coordinate of destination unit
+                                 connectionWeight])           # insert connection weight 
+                            synapse_count += 1
 
         # the following files store values over time of all units (electrical activity,
         # synaptic activity, to output data files in text format
@@ -667,11 +737,13 @@ class TaskThread(QtCore.QThread):
         # open a file where we will dump the whole data structure (model and weights) in case it needs
         # to be used later, for inpection and/or visualization of neural network. We chose to use JSON
         # for this, due to its interoperability with other computer languages and other operating
-        # systems. Also, remember that it is not necesary to close the files opened with 'with', as they
-        # get closed automatically at the end of the 'with' routine.
-        with open(neural_network) as nn_file:
+        # systems. 
+        nn_file = open(neural_network, 'w')
+        print '\rSaving neural network to file...'
+        try:
             json.dump(modules, nn_file)
-
+        finally:
+            nn_file.close()
             
         # initialize timestep counter for LSNM timesteps
         t = 0
@@ -686,7 +758,7 @@ class TaskThread(QtCore.QThread):
         sim_percentage = 100.0/LSNM_simulation_time
 
         # run the simulation for the number of timesteps given
-        print '\r Running simulation...'        
+        print '\rRunning simulation...'        
 
         if useTVBConnectome:
             # the following 'for loop' is the main loop of the TVB simulation with the parameters
@@ -1125,8 +1197,17 @@ class TaskThread(QtCore.QThread):
             numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
             numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
             
-        print '\r Simulation Finished.'
-        print '\r Output data files saved.'
+        print '\rSimulation Finished.'
+        print '\rOutput data files saved.'
+        end_time = time_module.asctime(time_module.localtime(time_module.time()))
+        print '\rEnd Time: ', end_time
+
+        # Finally (finally), save simulation data to a log file
+        # ...more data to be added later, as needed
+        with open(log_file, 'w') as f:
+            f.write('Simulation Start Time: ' + start_time)
+            f.write('\nSimulation End Time: ' + end_time)
+        
 
         
 def main():

@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on February 7 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 13 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -55,6 +55,12 @@ import random as rdm
 
 # import math function modules
 import math
+
+# import json module for storing output data files
+import json
+
+# import time module (needed for recording start and end simulation times in log file
+import time as time_module
 
 try:
     # only import TVB modules if simulation requires TVB connectome
@@ -110,7 +116,13 @@ class LSNM(QtGui.QWidget):
         model=''
         weights_list=''
         script=''
+
+        global useTVBConnectome
         useTVBConnectome = False         # Determines whether to use a TVB connectome within simulation
+
+        global createNewSubject
+        createNewSubject = False         # Determines whether or not to vary connection weights given
+                                         # to create a new subject for the current simulation
         
         # create a grid layout and set a spacing of 10 between widgets
         layout = QtGui.QGridLayout(self)
@@ -164,9 +176,15 @@ class LSNM(QtGui.QWidget):
 
         # define checkbox to allow users to determine whether or not a TVB connectome will be used
         # in simulation
-        checkBox = QtGui.QCheckBox('Use TVB Connectome', self)
-        layout.addWidget(checkBox, 2, 1)
-        checkBox.stateChanged.connect(self.connectomeOrNot)
+        connectomeBox = QtGui.QCheckBox('Use TVB Connectome', self)
+        layout.addWidget(connectomeBox, 2, 1)
+        connectomeBox.stateChanged.connect(self.connectomeOrNot)
+
+        # define checkbox to allow users to determine whether or not to vary weights randomly from
+        # weights given to create a new simulated subject
+        newSubjectBox= QtGui.QCheckBox('Vary weights to create new subject', self)
+        layout.addWidget(newSubjectBox, 2, 2)
+        newSubjectBox.stateChanged.connect(self.createNewSubject)
         
         # define progress bar to keep user informed of simulation progress status
         self.progressBar = QtGui.QProgressBar(self)
@@ -191,6 +209,7 @@ class LSNM(QtGui.QWidget):
 
         # set window's title
         self.setWindowTitle('Large-Scale Neural Modeling (LSNM)')
+        
         
     def browseModels(self):
 
@@ -242,10 +261,21 @@ class LSNM(QtGui.QWidget):
         # allow user to decide whether to use a TVB connectome as part of the simulation
         if state == QtCore.Qt.Checked:
             useTVBConnectome = True
-            print 'Using TVB Connectome...'
+            print '\rUsing TVB Connectome...'
         else:
             useTVBConnectome = False
-            print 'NOT Using TVB Connectome...'
+            print '\rNOT Using TVB Connectome...'
+
+    def createNewSubject(self, state2):
+
+        global generateSubject
+        # allow user to decide whether or not to vary weights given to generate new subject
+        if state2 == QtCore.Qt.Checked:
+            generateSubject = True
+            print '\rGenerating new subject by randomly varying connection weights given...'
+        else:
+            generateSubject = False
+            print '\rWe are NOT generating a new subject...'
             
     @QtCore.pyqtSlot()
     def onStart(self):
@@ -289,7 +319,9 @@ class TaskThread(QtCore.QThread):
     
     def run(self):
 
-        print 'Building network...'
+        start_time = time_module.asctime(time_module.localtime(time_module.time()))
+        print '\rStart Time: ', start_time 
+        print '\rBuilding network...'
 
         global noise
 
@@ -298,20 +330,14 @@ class TaskThread(QtCore.QThread):
         # network and writes out neural activities for each LSNM node and -relevant-
         # TVB nodes. Plots output as well.
 
-        ########## THE FOLLOWING SIMULATES TVB NETWORK'S #######################
-        # The TVB Wilson Cowan simulation has been preprocessed and it is located
-        # in an 'npy' data file. Thus, erase the commments from the following
-        # 'np.load' if you just need to load that data file onto a numpy array
-        # The data file contains an array of 5 dimensions as follows:
-        # [timestep, state_variable_E, state_variable_I, node_number, mode]
-        #RawData = np.load("wilson_cowan_brain_998_nodes.npy")
-
-        # define a flag that tells the simulator whether to use The Virtual Brain within
-        # the current simulation
-
         # define a flag that tells the network whether to send feedback connections
         # from LSNM to TVB
         FEEDBACK = True
+
+        # define a number that the simulator with use to generate new subjects. If this
+        # option is checked at simulation time, the simulator with multiply the connection
+        # weights given by a random amount of between the number given and 1.0
+        subject_variation = 0.98
         
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
@@ -323,6 +349,13 @@ class TaskThread(QtCore.QThread):
         # declare a variable that describes number of nodes in TVB connectome
         TVB_number_of_nodes = 998
         
+        # declare a file name for the output file where the neural network structure will be
+        # stored (modules and weights among modules)
+        neural_network = 'neuralnet.json'
+
+        # declare a file name for the output file that contains simulation log
+        log_file = 'log.txt'
+
         # the following are the weights used among excitatory and inhibitory populations
         # in the TVB's implementation of the Wilson-Cowan equations. These values were
         # taken from the default values in the TVB source code in script "models.npy"
@@ -340,7 +373,7 @@ class TaskThread(QtCore.QThread):
         w_ie =  4.0
         
         # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
-        if useTVBConnectome:
+        if useTVBConnectome == True:
             white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
         
             # Define the transmission speed of white matter tracts (4 mm/ms)
@@ -364,79 +397,79 @@ class TaskThread(QtCore.QThread):
 
             sim.configure()
 
-        # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
-        # we are assuming that each simulation timestep is equivalent to 5 milliseconds
-        # of real time. 
+            # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
+            # we are assuming that each simulation timestep is equivalent to 5 milliseconds
+            # of real time. 
         
-        # The TVB brain areas where our LSNM units are going to be embedded it
-        # hardcoded for now, but will be included in as an option in the LSNM GUI.
+            # The TVB brain areas where our LSNM units are going to be embedded it
+            # hardcoded for now, but will be included in as an option in the LSNM GUI.
         
-        # create a python dictionary of LSNM modules and the location of the corresponding
-        # TVB node in which the TVB node is to be embedded. In other words, the closest TVB node
-        # is  used as a 'host' node to embed a given LSNM module
-        #lsnm_tvb_link = {'ev1v': 345,
-        #                 'iv1v': 345,
-        #                 'ev1h': 345,
-        #                 'iv1h': 345,
-        #                 'ev4v': 393,
-        #                 'iv4v': 393,
-        #                 'ev4c': 393,
-        #                 'iv4c': 393,
-        #                 'ev4h': 393,
-        #                 'iv4h': 393,
-        #                 'exss': 413,
-        #                 'inss': 413,
-        #                 'exfs': 47,
-        #                 'infs': 47,
-        #                 'efd1': 74,
-        #                 'ifd1': 74,
-        #                 'efd2': 41,
-        #                 'ifd2': 41,
-        #                 'exfr': 125,
-        #                 'infr': 125
-        #                 }
+            # create a python dictionary of LSNM modules and the location of the corresponding
+            # TVB node in which the TVB node is to be embedded. In other words, the closest TVB node
+            # is  used as a 'host' node to embed a given LSNM module
+            #lsnm_tvb_link = {'ev1v': 345,
+            #                 'iv1v': 345,
+            #                 'ev1h': 345,
+            #                 'iv1h': 345,
+            #                 'ev4v': 393,
+            #                 'iv4v': 393,
+            #                 'ev4c': 393,
+            #                 'iv4c': 393,
+            #                 'ev4h': 393,
+            #                 'iv4h': 393,
+            #                 'exss': 413,
+            #                 'inss': 413,
+            #                 'exfs': 47,
+            #                 'infs': 47,
+            #                 'efd1': 74,
+            #                 'ifd1': 74,
+            #                 'efd2': 41,
+            #                 'ifd2': 41,
+            #                 'exfr': 125,
+            #                 'infr': 125
+            #                 }
         
-        # the following are the TVB -> LSNM auditory connections
-        # uncomment if simulating auditory processing
-        lsnm_tvb_link = {'ea1d': 474,
-                         'ia1d': 474,
-                         'ea1u': 474,
-                         'ia1u': 474,
-                         'ea2d': 470,
-                         'ia2d': 470,
-                         'ea2c': 470,
-                         'ia2c': 470,
-                         'ea2u': 470,
-                         'ia2u': 470,
-                         'estg': 477,
-                         'istg': 477,
-                         'exfs': 44,
-                         'infs': 44,
-                         'efd1': 74,
-                         'ifd1': 74,
-                         'efd2': 47,
-                         'ifd2': 47,
-                         'exfr': 125,
-                         'infr': 125
-        }
+            # the following are the TVB -> LSNM auditory connections
+            # uncomment if simulating auditory processing
+            lsnm_tvb_link = {'ea1d': 474,
+                             'ia1d': 474,
+                             'ea1u': 474,
+                             'ia1u': 474,
+                             'ea2d': 470,
+                             'ia2d': 470,
+                             'ea2c': 470,
+                             'ia2c': 470,
+                             'ea2u': 470,
+                             'ia2u': 470,
+                             'estg': 477,
+                             'istg': 477,
+                             'exfs': 51,
+                             'infs': 51,
+                             'efd1': 51,
+                             'ifd1': 51,
+                             'efd2': 51,
+                             'ifd2': 51,
+                             'exfr': 51,
+                             'infr': 51
+                         }
 
-        # create two arrays to store synaptic activity for each and all TVB nodes,
-        # one for absolute values of synaptic activities (for fMRI computation):
-        tvb_abs_syna = []
-        # ... and the other one for signed values of synaptic activity (for MEG computation):
-        tvb_signed_syna = []
-        # also, create an array to store electrical activity for all TVB nodes
-        tvb_elec = []
+            # create two arrays to store synaptic activity for each and all TVB nodes,
+            # one for absolute values of synaptic activities (for fMRI computation):
+            tvb_abs_syna = []
+            # ... and the other one for signed values of synaptic activity (for MEG computation):
+            tvb_signed_syna = []
+            # also, create an array to store electrical activity for all TVB nodes
+            tvb_elec = []
 
-        # create and initialize array to store synaptic activity for all TVB nodes, excitatory
-        # and inhibitory parts.
-        # The synaptic activity for each node is zero at first, then it accumulates values
-        # (integration) during a given number of timesteps. Every number of timesteps
-        # (given by 'synaptic_interval'), the array below is re-initialized to zero.
-        # One array is for accumulating the absolute value of synaptic activity (for BOLD computation):
-        current_tvb_abs_syn =    [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
-        # ... and another array for accumulating the signed values of synaptic activity (for MEG computation):
-        current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+            # create and initialize array to store synaptic activity for all TVB nodes, excitatory
+            # and inhibitory parts.
+            # The synaptic activity for each node is zero at first, then it accumulates values
+            # (integration) during a given number of timesteps. Every number of timesteps
+            # (given by 'synaptic_interval'), the array below is re-initialized to zero.
+            # One array is for accumulating the absolute value of synaptic activity (for BOLD computation):
+            current_tvb_abs_syn =    [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+            # ... and another array for accumulating the signed values of synaptic activity (for MEG computation):
+            current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
         
         # number of units in each LSNM sub-module
         n = 81
@@ -452,55 +485,37 @@ class TaskThread(QtCore.QThread):
         # output files
         synaptic_interval = 10
                    
-        if useTVBConnectome:
+        if useTVBConnectome == True:
             # print which brain areas from TVB we are using,
             # as well as 'first degree' connections of the TVB areas listed
             # the folowing printout is only for informational purposes
 
             print '\rIncoming units from TVB are: '
 
-            print '\rInto ' + white_matter.region_labels[345],
+            print '\rInto ' + white_matter.region_labels[474],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[345])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[474])]
             print 'with the following weights: ',
-            print white_matter.weights[345][np.nonzero(white_matter.weights[345])]
+            print white_matter.weights[474][np.nonzero(white_matter.weights[474])]
             
-            print '\rInto ' + white_matter.region_labels[393],
+            print '\rInto ' + white_matter.region_labels[470],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[393])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[470])]
             print 'with the following weights: ',
-            print white_matter.weights[393][np.nonzero(white_matter.weights[393])]
+            print white_matter.weights[470][np.nonzero(white_matter.weights[470])]
         
-            print '\rInto ' + white_matter.region_labels[413],
+            print '\rInto ' + white_matter.region_labels[477],
             print ': ',        
-            print white_matter.region_labels[np.nonzero(white_matter.weights[413])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[477])]
             print 'with the following weights: ',
-            print white_matter.weights[413][np.nonzero(white_matter.weights[413])]
+            print white_matter.weights[477][np.nonzero(white_matter.weights[477])]
             
-            print '\rInto ' + white_matter.region_labels[47],
+            print '\rInto ' + white_matter.region_labels[51],
             print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[47])]
+            print white_matter.region_labels[np.nonzero(white_matter.weights[51])]
             print 'with the following weights: ',
-            print white_matter.weights[47][np.nonzero(white_matter.weights[47])]
+            print white_matter.weights[51][np.nonzero(white_matter.weights[51])]
             
-            print '\rInto ' + white_matter.region_labels[74],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[74])]
-            print 'with the following weights: ',
-            print white_matter.weights[74][np.nonzero(white_matter.weights[74])]
-            
-            print '\rInto ' + white_matter.region_labels[41],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[41])]
-            print 'with the following weights: ',
-            print white_matter.weights[41][np.nonzero(white_matter.weights[41])]
-            
-            print '\rInto ' + white_matter.region_labels[125],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[125])]
-            print 'with the following weights: ',
-            print white_matter.weights[125][np.nonzero(white_matter.weights[125])]        
-        
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network
         # NOTE: This is the main data structure holding all of the LSNM network values
@@ -655,11 +670,19 @@ class TaskThread(QtCore.QThread):
                 # to a zero-based format (as used in Python)
                 for connection in whole_thing:
                     for destination in connection[1]:
+
+                        # now we decide whether the weights will be multiplied by a random amount
+                        # varying between that amount and 1.0 in order to generate a new subject
+                        if createNewSubject == True:
+                            connectionWeight = destination[1] * random.uniform(subject_variation, 1)
+                        else:
+                            connectionWeight = destination[1]
+
                         modules[origin_module][8][connection[0][0]-1][connection[0][1]-1][4].append (
                             [destination_module,        # insert name of destination module
-                            destination[0][0]-1,         # insert x coordinate of destination unit
-                            destination[0][1]-1,         # insert y coordinate of destination unit
-                            destination[1]])           # insert connection weight
+                             destination[0][0]-1,         # insert x coordinate of destination unit
+                             destination[0][1]-1,         # insert y coordinate of destination unit
+                             connectionWeight])           # insert connection weight 
                         synapse_count += 1
 
         # the following files store values over time of all units (electrical activity,
@@ -684,11 +707,18 @@ class TaskThread(QtCore.QThread):
         # open the file with the experimental script and store the script in a string
         with open(script) as s:
             experiment_script = s.read()
-            
-        # uncomment the following line and subsititute in the for loop below if you want
-        # LSNM to drive the whole simulation
-        #for t in range(LSNM_simulation_time):
 
+        # open a file where we will dump the whole data structure (model and weights) in case it needs
+        # to be used later, for inpection and/or visualization of neural network. We chose to use JSON
+        # for this, due to its interoperability with other computer languages and other operating
+        # systems. 
+        nn_file = open(neural_network, 'w')
+        print '\rSaving neural network to file...'
+        try:
+            json.dump(modules, nn_file)
+        finally:
+            nn_file.close()
+            
         # initialize timestep counter for LSNM timesteps
         t = 0
 
@@ -702,285 +732,426 @@ class TaskThread(QtCore.QThread):
         sim_percentage = 100.0/LSNM_simulation_time
 
         # run the simulation for the number of timesteps given
-        print '\r Running simulation...'        
+        print '\rRunning simulation...'        
 
-        # the following 'for loop' is the main loop of the TVB simulation with the parameters
-        # defined above. Note that the LSNM simulator is literally embedded into the TVB
-        # simulation and both run concurrently, timestep by timestep.
-        for raw in sim(simulation_length=TVB_simulation_length):
+        if useTVBConnectome:
+            # the following 'for loop' is the main loop of the TVB simulation with the parameters
+            # defined above. Note that the LSNM simulator is literally embedded into the TVB
+            # simulation and both run concurrently, timestep by timestep.
+            for raw in sim(simulation_length=TVB_simulation_length):
             
-            # convert current TVB connectome electrical activity to a numpy array 
-            RawData = numpy.array(raw[0][1])
+                # convert current TVB connectome electrical activity to a numpy array 
+                RawData = numpy.array(raw[0][1])
             
-            # let the user know the percentage of simulation that has elapsed
-            self.notifyProgress.emit(int(round(t*sim_percentage,0)))
+                # let the user know the percentage of simulation that has elapsed
+                self.notifyProgress.emit(int(round(t*sim_percentage,0)))
 
-            # check script to see if there are any event to be presented to the LSNM
-            # network at current timestep t
-            current_event=simulation_events.get(str(t))
+                # check script to see if there are any event to be presented to the LSNM
+                # network at current timestep t
+                current_event=simulation_events.get(str(t))
 
-            # then, introduce the event (if any was found)!
-            # Note that 'modules' is defined within 'sim.py', whereas 'script_params' is
-            # defined within the simulation script uploaded at runtime
-            if current_event is not None:
-                current_event(modules, script_params)
+                # then, introduce the event (if any was found)!
+                # Note that 'modules' is defined within 'sim.py', whereas 'script_params' is
+                # defined within the simulation script uploaded at runtime
+                if current_event is not None:
+                    current_event(modules, script_params)
 
-            # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
-            # at destination nodes using destination units and connecting weights provided
-            for m in modules.keys():
-                for x in range(modules[m][0]):
-                    for y in range(modules[m][1]):
+                # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
+                # at destination nodes using destination units and connecting weights provided
+                for m in modules.keys():
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
                 
-                        # we are going to do the following only for those units in the network that
-                        # have weights that project to other units elsewhere
+                            # we are going to do the following only for those units in the network that
+                            # have weights that project to other units elsewhere
 
-                        # extract value of origin unit (unit projecting weights elsewhere)
-                        origin_unit = modules[m][8][x][y][0]
+                            # extract value of origin unit (unit projecting weights elsewhere)
+                            origin_unit = modules[m][8][x][y][0]
                 
-                        for w in modules[m][8][x][y][4]:
+                            for w in modules[m][8][x][y][4]:
                         
-                            # First, find outgoing weights for all destination units and (except
-                            # for those that do not
-                            # have outgoing weights, in which case do nothing) compute weight * value
-                            # at destination units
-                            dest_module = w[0]
-                            x_dest = w[1]
-                            y_dest = w[2]
-                            weight = w[3]
-                            value_x_weight = origin_unit * weight 
+                                # First, find outgoing weights for all destination units and (except
+                                # for those that do not
+                                # have outgoing weights, in which case do nothing) compute weight * value
+                                # at destination units
+                                dest_module = w[0]
+                                x_dest = w[1]
+                                y_dest = w[2]
+                                weight = w[3]
+                                value_x_weight = origin_unit * weight 
                         
-                            # Now, accumulate (i.e., 'integrate') & store those values at the
-                            # destination units data structure,
-                            # to be used later during neural activity computation.
-                            # Note: Keep track of inhibitory and excitatory input summation
-                            # separately, as shown below:
-                            if value_x_weight > 0:
-                                modules[dest_module][8][x_dest][y_dest][2] += value_x_weight
-                            else:
-                                modules[dest_module][8][x_dest][y_dest][3] += value_x_weight
+                                # Now, accumulate (i.e., 'integrate') & store those values at the
+                                # destination units data structure,
+                                # to be used later during neural activity computation.
+                                # Note: Keep track of inhibitory and excitatory input summation
+                                # separately, as shown below:
+                                if value_x_weight > 0:
+                                    modules[dest_module][8][x_dest][y_dest][2] += value_x_weight
+                                else:
+                                    modules[dest_module][8][x_dest][y_dest][3] += value_x_weight
 
-                            # ... but also keep track of the total input summation, as shown
-                            # below. The reason for this is that we need the input summation
-                            # to each neuronal population unit AT EACH TIME STEP, as well as
-                            # the excitatory and inhibitory input summations accumulated OVER
-                            # A NUMBER OF TIMESTEPS (that number is usually 10). We call such
-                            # accumulation of inputs
-                            # over a number of timesteps the 'integrated synaptic activity'
-                            # and it is used to compute fMRI and MEG.
-                            modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
+                                # ... but also keep track of the total input summation, as shown
+                                # below. The reason for this is that we need the input summation
+                                # to each neuronal population unit AT EACH TIME STEP, as well as
+                                # the excitatory and inhibitory input summations accumulated OVER
+                                # A NUMBER OF TIMESTEPS (that number is usually 10). We call such
+                                # accumulation of inputs
+                                # over a number of timesteps the 'integrated synaptic activity'
+                                # and it is used to compute fMRI and MEG.
+                                modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
 
                             
-            # the following calculates (and integrates) synaptic activity at each TVB node
-            # at the current timestep
-            for tvb_node in range(TVB_number_of_nodes):
+                # the following calculates (and integrates) synaptic activity at each TVB node
+                # at the current timestep
+                for tvb_node in range(TVB_number_of_nodes):
 
-                # rectifies or 'clamps' current tvb values to edges [0,1]
-                current_tvb_neu=np.clip(raw[0][1], 0, 1)
+                    # rectifies or 'clamps' current tvb values to edges [0,1]
+                    current_tvb_neu=np.clip(raw[0][1], 0, 1)
                 
-                # extract TVB node numbers that are conected to TVB node above
-                tvb_conn = np.nonzero(white_matter.weights[tvb_node])
-                # extract the numpy array from it
-                tvb_conn = tvb_conn[0]
-
-                # build a numpy array of weights from TVB connections to the current TVB node
-                wm = white_matter.weights[tvb_node][tvb_conn]
-
-                # build a numpy array of origin TVB nodes connected to current TVB node
-                tvb_origin_node = raw[0][1][0][tvb_conn]
-
-                # clips node value to edges of interval [0, 1]
-                tvb_origin_node = np.clip(tvb_origin_node, 0, 1)
-                
-                # do the following for each white matter connection to current TVB node:
-                # multiply all incoming connection weights times the value of the corresponding
-                # node that is sending that connection to the current TVB node
-                for cxn in range(tvb_conn.size):
-
-                    # update synaptic activity in excitatory population, by multiplying each
-                    # incoming connection weight times the value of the node sending such
-                    # connection
-                    current_tvb_abs_syn[0][tvb_node]    += wm[cxn] * tvb_origin_node[cxn][0]
-                    current_tvb_signed_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
-
-                # now, add the influence of the local (within the same node) connectivity
-                # onto the synaptic activity of the current node, excitatory population, USING ABSOLUTE
-                # VALUES OF SYNAPTIC ACTIVITIES (for BOLD computation).
-                current_tvb_abs_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
-
-                # ... but also do a sum of synaptic activities using the sign of the synaptic activity (for MEG
-                # computation:
-                current_tvb_signed_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] - w_ie * current_tvb_neu[1][tvb_node]
-
-                # now, update synaptic activity in inhibitory population
-                # Please note that we are assuming that there are no incoming connections
-                # to inhibitory nodes from other nodes (in the Virtual Brain nodes).
-                # Therefore, only the local (within the same node) connections are
-                # considered (store both aboslute synaptic and signed synaptic):
-                current_tvb_abs_syn[1][tvb_node]    += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
-                current_tvb_signed_syn[1][tvb_node] += w_ei * current_tvb_neu[0][tvb_node] - w_ii * current_tvb_neu[1][tvb_node] 
-    
-                
-            # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
-            # Brain, and adds the product of each TVB -> LSNM unit value times their respective
-            # connection weight (provided by white matter tract weights) to the sum of excitatory
-            # activities of each embedded LSNM unit. THIS IS THE STEP
-            # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION GOES IN BOTH DIRECTIONS,
-            # I.E., TVB -> LSNM and LSNM -> TVB. There is a constant called "FEEDBACK" that has to be
-            # set to TRUE at the beginning of this file for the connections TVB->LSNM to occur.
-            # Please note that whereas the previous 'for loop' goes through the network updating
-            # unit sum of activities at destination units, the 'for loop' below goes through the
-            # network updating the sum of activities of the CURRENT unit
-
-            # we are going to do the following only for those modules/units in the LSNM
-            # network that have connections from TVB nodes
-            for m in lsnm_tvb_link.keys():
-
-                if modules.has_key(m):
-
-                    # extract TVB node number where module is embedded
-                    tvb_node = lsnm_tvb_link[m]
-
                     # extract TVB node numbers that are conected to TVB node above
                     tvb_conn = np.nonzero(white_matter.weights[tvb_node])
                     # extract the numpy array from it
                     tvb_conn = tvb_conn[0]
 
-                    # build a numpy array of weights from TVB connections to TVB homologous nodes
+                    # build a numpy array of weights from TVB connections to the current TVB node
                     wm = white_matter.weights[tvb_node][tvb_conn]
+
+                    # build a numpy array of origin TVB nodes connected to current TVB node
+                    tvb_origin_node = raw[0][1][0][tvb_conn]
+
+                    # clips node value to edges of interval [0, 1]
+                    tvb_origin_node = np.clip(tvb_origin_node, 0, 1)
+                
+                    # do the following for each white matter connection to current TVB node:
+                    # multiply all incoming connection weights times the value of the corresponding
+                    # node that is sending that connection to the current TVB node
+                    for cxn in range(tvb_conn.size):
+
+                        # update synaptic activity in excitatory population, by multiplying each
+                        # incoming connection weight times the value of the node sending such
+                        # connection
+                        current_tvb_abs_syn[0][tvb_node]    += wm[cxn] * tvb_origin_node[cxn][0]
+                        current_tvb_signed_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
+
+                    # now, add the influence of the local (within the same node) connectivity
+                    # onto the synaptic activity of the current node, excitatory population, USING ABSOLUTE
+                    # VALUES OF SYNAPTIC ACTIVITIES (for BOLD computation).
+                    current_tvb_abs_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
+
+                    # ... but also do a sum of synaptic activities using the sign of the synaptic activity (for MEG
+                    # computation:
+                    current_tvb_signed_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] - w_ie * current_tvb_neu[1][tvb_node]
+
+                    # now, update synaptic activity in inhibitory population
+                    # Please note that we are assuming that there are no incoming connections
+                    # to inhibitory nodes from other nodes (in the Virtual Brain nodes).
+                    # Therefore, only the local (within the same node) connections are
+                    # considered (store both aboslute synaptic and signed synaptic):
+                    current_tvb_abs_syn[1][tvb_node]    += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+                    current_tvb_signed_syn[1][tvb_node] += w_ei * current_tvb_neu[0][tvb_node] - w_ii * current_tvb_neu[1][tvb_node] 
+    
+                
+                # the following 'for loop' goes through each LSNM module that is 'embedded' into The Virtual
+                # Brain, and adds the product of each TVB -> LSNM unit value times their respective
+                # connection weight (provided by white matter tract weights) to the sum of excitatory
+                # activities of each embedded LSNM unit. THIS IS THE STEP
+                # WHERE THE INTERACTION BETWEEN LSNM AND TVB HAPPENS. THAT INTERACTION GOES IN BOTH DIRECTIONS,
+                # I.E., TVB -> LSNM and LSNM -> TVB. There is a constant called "FEEDBACK" that has to be
+                # set to TRUE at the beginning of this file for the connections TVB->LSNM to occur.
+                # Please note that whereas the previous 'for loop' goes through the network updating
+                # unit sum of activities at destination units, the 'for loop' below goes through the
+                # network updating the sum of activities of the CURRENT unit
+
+                # we are going to do the following only for those modules/units in the LSNM
+                # network that have connections from TVB nodes
+                for m in lsnm_tvb_link.keys():
+
+                    if modules.has_key(m):
+
+                        # extract TVB node number where module is embedded
+                        tvb_node = lsnm_tvb_link[m]
+
+                        # extract TVB node numbers that are conected to TVB node above
+                        tvb_conn = np.nonzero(white_matter.weights[tvb_node])
+                        # extract the numpy array from it
+                        tvb_conn = tvb_conn[0]
+
+                        # build a numpy array of weights from TVB connections to TVB homologous nodes
+                        wm = white_matter.weights[tvb_node][tvb_conn]
                     
-                    # now go through all the units of current LSNM modules...
+                        # now go through all the units of current LSNM modules...
+                        for x in range(modules[m][0]):
+                            for y in range(modules[m][1]):
+
+                                # do the following for each white matter connection to current LSNM unit
+                                for i in range(tvb_conn.size):
+                                
+                                    # extract the value of TVB node from preprocessed raw time series
+                                    # uncomment if you want to use preprocessed TVB timeseries
+                                    #value =  RawData[t, 0, tvb_conn[i]]
+
+                                    # extract value of TVB node
+                                    value = RawData[0, tvb_conn[i]]
+                                    value = value[0]
+                                    # clips TVB node value to edges of interval [0, 1]
+                                    value = max(value, 0)
+                                    value = min(value, 1)
+                                
+                                    # calculate an incoming weight by applying a gain into the LSNM unit.
+                                    # the gain applied is a random number with a gaussian distribution
+                                    # centered around the value of lsnm_tvb_gain
+                                    weight = wm[i] * rdm.gauss(lsnm_tvb_gain,lsnm_tvb_gain/4)
+                                    value_x_weight = value * weight
+                        
+                                    # ... and add the incoming value_x_weight to the summed synaptic
+                                    # activity of the current unit
+                                    if value_x_weight > 0:
+                                        modules[m][8][x][y][2] += value_x_weight
+                                    else:
+                                        modules[m][8][x][y][3] += value_x_weight
+                                    # ... but store the total of inputs separately as well
+                                    modules[m][8][x][y][1] += value_x_weight
+
+                                    # And modify the connectome node that is providing the current
+                                    # connecting weight i (but only if the 'feedback' flag is TRUE)
+                                    if FEEDBACK:
+                                        raw[0][1][0][tvb_conn[i]][0] += modules[m][8][x][y][0] * wm[i] * TVB_global_coupling_strength
+                                
+                # the following variable will keep track of total number of units in the network
+                unit_count = 0
+
+
+                # write the neural and synaptic activity to output files of each unit at a given
+                # timestep interval, given by the variable <synaptic interval>.
+                # The reason we write to the output files before we do any computations is that we
+                # want to keep track of the initial values of each unit in all modules
+                for m in modules.keys():
                     for x in range(modules[m][0]):
                         for y in range(modules[m][1]):
-
-                            # do the following for each white matter connection to current LSNM unit
-                            for i in range(tvb_conn.size):
-                                
-                                # extract the value of TVB node from preprocessed raw time series
-                                # uncomment if you want to use preprocessed TVB timeseries
-                                #value =  RawData[t, 0, tvb_conn[i]]
-
-                                # extract value of TVB node
-                                value = RawData[0, tvb_conn[i]]
-                                value = value[0]
-                                # clips TVB node value to edges of interval [0, 1]
-                                value = max(value, 0)
-                                value = min(value, 1)
-                                
-                                # calculate an incoming weight by applying a gain into the LSNM unit.
-                                # the gain applied is a random number with a gaussian distribution
-                                # centered around the value of lsnm_tvb_gain
-                                weight = wm[i] * rdm.gauss(lsnm_tvb_gain,lsnm_tvb_gain/4)
-                                value_x_weight = value * weight
                         
-                                # ... and add the incoming value_x_weight to the summed synaptic
-                                # activity of the current unit
-                                if value_x_weight > 0:
-                                    modules[m][8][x][y][2] += value_x_weight
-                                else:
-                                    modules[m][8][x][y][3] += value_x_weight
-                                # ... but store the total of inputs separately as well
-                                modules[m][8][x][y][1] += value_x_weight
-
-                                # And modify the connectome node that is providing the current
-                                # connecting weight i (but only if the 'feedback' flag is TRUE)
-                                if FEEDBACK:
-                                    raw[0][1][0][tvb_conn[i]][0] += modules[m][8][x][y][0] * wm[i] * TVB_global_coupling_strength
-                                
-            # the following variable will keep track of total number of units in the network
-            unit_count = 0
-
-
-            # write the neural and synaptic activity to output files of each unit at a given
-            # timestep interval, given by the variable <synaptic interval>.
-            # The reason we write to the output files before we do any computations is that we
-            # want to keep track of the initial values of each unit in all modules
-            for m in modules.keys():
-                for x in range(modules[m][0]):
-                    for y in range(modules[m][1]):
-                        
-                        # Write out neural and integrated synaptic activity, and reset
-                        # integrated synaptic activity, but ONLY IF a given number of timesteps
-                        # has elapsed (integration interval)
-                        if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
-                            # write out neural activity first...
-                            fs_dict_neuronal[m].write(repr(modules[m][8][x][y][0]) + ' ')
-                            # now calculate and write out absolute sum of synaptic activity (for fMRI)...
-                            abs_syn = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
-                            fs_dict_abs_syn[m].write(repr(abs_syn) + ' ')
-                            # ... and calculate and write out signed sum of synaptic activity (for MEG):
-                            signed_syn = modules[m][8][x][y][2] + modules[m][8][x][y][3]
-                            fs_dict_signed_syn[m].write(repr(signed_syn) + ' ')
-                            # ...finally, reset synaptic activity (but not neural activity).
-                            modules[m][8][x][y][2] = 0.0
-                            modules[m][8][x][y][3] = 0.0                            
+                            # Write out neural and integrated synaptic activity, and reset
+                            # integrated synaptic activity, but ONLY IF a given number of timesteps
+                            # has elapsed (integration interval)
+                            if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                                # write out neural activity first...
+                                fs_dict_neuronal[m].write(repr(modules[m][8][x][y][0]) + ' ')
+                                # now calculate and write out absolute sum of synaptic activity (for fMRI)...
+                                abs_syn = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
+                                fs_dict_abs_syn[m].write(repr(abs_syn) + ' ')
+                                # ... and calculate and write out signed sum of synaptic activity (for MEG):
+                                signed_syn = modules[m][8][x][y][2] + modules[m][8][x][y][3]
+                                fs_dict_signed_syn[m].write(repr(signed_syn) + ' ')
+                                # ...finally, reset synaptic activity (but not neural activity).
+                                modules[m][8][x][y][2] = 0.0
+                                modules[m][8][x][y][3] = 0.0                            
 
                         
-                # finally, insert a newline character so we can start next set of units on a
-                # new line
-                fs_dict_neuronal[m].write('\n')
-                fs_dict_abs_syn[m].write('\n')
-                fs_dict_signed_syn[m].write('\n')
+                    # finally, insert a newline character so we can start next set of units on a
+                    # new line
+                    fs_dict_neuronal[m].write('\n')
+                    fs_dict_abs_syn[m].write('\n')
+                    fs_dict_signed_syn[m].write('\n')
 
-            # also write neural and synaptic activity of all TVB nodes to output files at
-            # the current
-            # time step, but ONLY IF a given number of timesteps has elapsed (integration
-            # interval)
-            if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
-                # append the current TVB node electrical activity to array
-                tvb_elec.append(current_tvb_neu)
-                # append current synaptic activity array to synaptic activity timeseries
-                tvb_abs_syna.append(current_tvb_abs_syn)
-                tvb_signed_syna.append(current_tvb_signed_syn)
-                # reset TVB synaptic activity, but not TVB neuroelectrical activity
-                current_tvb_abs_syn    = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
-                current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+                # also write neural and synaptic activity of all TVB nodes to output files at
+                # the current
+                # time step, but ONLY IF a given number of timesteps has elapsed (integration
+                # interval)
+                if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                    # append the current TVB node electrical activity to array
+                    tvb_elec.append(current_tvb_neu)
+                    # append current synaptic activity array to synaptic activity timeseries
+                    tvb_abs_syna.append(current_tvb_abs_syn)
+                    tvb_signed_syna.append(current_tvb_signed_syn)
+                    # reset TVB synaptic activity, but not TVB neuroelectrical activity
+                    current_tvb_abs_syn    = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+                    current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
 
             
-            # the following 'for loop' computes the neural activity at each unit in the network,
-            # depending on their 'activation rule'
-            for m in modules.keys():
-                for x in range(modules[m][0]):
-                    for y in range(modules[m][1]):
-                        # if the current module is an LSNM unit, use in-house wilson-cowan
-                        # algorithm below (based on original Tagamets and Horwitz, 1995)
-                        if modules[m][2] == 'wilson_cowan':
+                # the following 'for loop' computes the neural activity at each unit in the network,
+                # depending on their 'activation rule'
+                for m in modules.keys():
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
+                            # if the current module is an LSNM unit, use in-house wilson-cowan
+                            # algorithm below (based on original Tagamets and Horwitz, 1995)
+                            if modules[m][2] == 'wilson_cowan':
                         
-                            # extract Wilson-Cowan parameters from the list
-                            threshold = modules[m][3]
-                            noise = modules[m][7]
-                            K = modules[m][6]
-                            decay = modules[m][5]
-                            Delta = modules[m][4] 
+                                # extract Wilson-Cowan parameters from the list
+                                threshold = modules[m][3]
+                                noise = modules[m][7]
+                                K = modules[m][6]
+                                decay = modules[m][5]
+                                Delta = modules[m][4] 
 
-                            # compute input to current unit
-                            in_value = modules[m][8][x][y][1]
+                                # compute input to current unit
+                                in_value = modules[m][8][x][y][1]
 
-                            # now subtract the threshold parameter from that sum
-                            in_value = in_value - threshold
+                                # now subtract the threshold parameter from that sum
+                                in_value = in_value - threshold
 
-                            # now compute a random value between -0.5 and 0.5
-                            r_value = random.uniform(0,1) - 0.5
+                                # now compute a random value between -0.5 and 0.5
+                                r_value = random.uniform(0,1) - 0.5
 
-                            # multiply it by the noise parameter and add it to input value
-                            in_value = in_value + r_value * noise
+                                # multiply it by the noise parameter and add it to input value
+                                in_value = in_value + r_value * noise
 
-                            # now multiply by parameter K and apply sigmoid function e
-                            sigmoid = 1.0 / (1.0 + math.exp(-K * in_value))
+                                # now multiply by parameter K and apply sigmoid function e
+                                sigmoid = 1.0 / (1.0 + math.exp(-K * in_value))
                         
-                            # now multiply sigmoid by delta parameter, subtract decay parameter,
-                            # ... and add all to current value of unit (x, y) in module m
-                            modules[m][8][x][y][0] += Delta * sigmoid - decay * modules[m][8][x][y][0]
+                                # now multiply sigmoid by delta parameter, subtract decay parameter,
+                                # ... and add all to current value of unit (x, y) in module m
+                                modules[m][8][x][y][0] += Delta * sigmoid - decay * modules[m][8][x][y][0]
 
-                            # now reset the sum of excitatory and inhibitory weigths at each unit,
-                            # since we only need it for the current timestep (new sums of excitatory and
-                            # inhibitory unit activations will be computed at the next time step)
-                            modules[m][8][x][y][1] = 0.0
+                                # now reset the sum of excitatory and inhibitory weigths at each unit,
+                                # since we only need it for the current timestep (new sums of excitatory and
+                                # inhibitory unit activations will be computed at the next time step)
+                                modules[m][8][x][y][1] = 0.0
                             
-                        unit_count += 1
+                            unit_count += 1
                         
-            # increase the number of timesteps
-            t = t + 1
+                # increase the number of timesteps
+                t = t + 1
+
+        elif useTVBConnectome == False :   # ... if not using TVB connectome...
+
+            for t in range(LSNM_simulation_time):
+
+                # let the user know the percentage of simulation that has elapsed
+                self.notifyProgress.emit(int(round(t*sim_percentage,0)))
+
+                # check script to see if there are any event to be presented to the LSNM
+                # network at current timestep t
+                current_event=simulation_events.get(str(t))
+
+                # then, introduce the event (if any was found)!
+                # Note that 'modules' is defined within 'sim.py', whereas 'script_params' is
+                # defined within the simulation script uploaded at runtime
+                if current_event is not None:
+                    current_event(modules, script_params)
+
+                # The following 'for loop' computes sum of excitatory and sum of inhibitory activities
+                # at destination nodes using destination units and connecting weights provided
+                for m in modules.keys():
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
+                
+                            # we are going to do the following only for those units in the network that
+                            # have weights that project to other units elsewhere
+
+                            # extract value of origin unit (unit projecting weights elsewhere)
+                            origin_unit = modules[m][8][x][y][0]
+                
+                            for w in modules[m][8][x][y][4]:
                         
+                                # First, find outgoing weights for all destination units and (except
+                                # for those that do not
+                                # have outgoing weights, in which case do nothing) compute weight * value
+                                # at destination units
+                                dest_module = w[0]
+                                x_dest = w[1]
+                                y_dest = w[2]
+                                weight = w[3]
+                                value_x_weight = origin_unit * weight 
+                        
+                                # Now, accumulate (i.e., 'integrate') & store those values at the
+                                # destination units data structure,
+                                # to be used later during neural activity computation.
+                                # Note: Keep track of inhibitory and excitatory input summation
+                                # separately, as shown below:
+                                if value_x_weight > 0:
+                                    modules[dest_module][8][x_dest][y_dest][2] += value_x_weight
+                                else:
+                                    modules[dest_module][8][x_dest][y_dest][3] += value_x_weight
+
+                                # ... but also keep track of the total input summation, as shown
+                                # below. The reason for this is that we need the input summation
+                                # to each neuronal population unit AT EACH TIME STEP, as well as
+                                # the excitatory and inhibitory input summations accumulated OVER
+                                # A NUMBER OF TIMESTEPS (that number is usually 10). We call such
+                                # accumulation of inputs
+                                # over a number of timesteps the 'integrated synaptic activity'
+                                # and it is used to compute fMRI and MEG.
+                                modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
+
+                            
+                # the following variable will keep track of total number of units in the network
+                unit_count = 0
+
+
+                # write the neural and synaptic activity to output files of each unit at a given
+                # timestep interval, given by the variable <synaptic interval>.
+                # The reason we write to the output files before we do any computations is that we
+                # want to keep track of the initial values of each unit in all modules
+                for m in modules.keys():
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
+                        
+                            # Write out neural and integrated synaptic activity, and reset
+                            # integrated synaptic activity, but ONLY IF a given number of timesteps
+                            # has elapsed (integration interval)
+                            if ((LSNM_simulation_time + t) % synaptic_interval) == 0:
+                                # write out neural activity first...
+                                fs_dict_neuronal[m].write(repr(modules[m][8][x][y][0]) + ' ')
+                                # now calculate and write out absolute sum of synaptic activity (for fMRI)...
+                                abs_syn = modules[m][8][x][y][2] + abs(modules[m][8][x][y][3])
+                                fs_dict_abs_syn[m].write(repr(abs_syn) + ' ')
+                                # ... and calculate and write out signed sum of synaptic activity (for MEG):
+                                signed_syn = modules[m][8][x][y][2] + modules[m][8][x][y][3]
+                                fs_dict_signed_syn[m].write(repr(signed_syn) + ' ')
+                                # ...finally, reset synaptic activity (but not neural activity).
+                                modules[m][8][x][y][2] = 0.0
+                                modules[m][8][x][y][3] = 0.0                            
+
+                        
+                    # finally, insert a newline character so we can start next set of units on a
+                    # new line
+                    fs_dict_neuronal[m].write('\n')
+                    fs_dict_abs_syn[m].write('\n')
+                    fs_dict_signed_syn[m].write('\n')
+
+                # the following 'for loop' computes the neural activity at each unit in the network,
+                # depending on their 'activation rule'
+                for m in modules.keys():
+                    for x in range(modules[m][0]):
+                        for y in range(modules[m][1]):
+                            # if the current module is an LSNM unit, use in-house wilson-cowan
+                            # algorithm below (based on original Tagamets and Horwitz, 1995)
+                            if modules[m][2] == 'wilson_cowan':
+                        
+                                # extract Wilson-Cowan parameters from the list
+                                threshold = modules[m][3]
+                                noise = modules[m][7]
+                                K = modules[m][6]
+                                decay = modules[m][5]
+                                Delta = modules[m][4] 
+
+                                # compute input to current unit
+                                in_value = modules[m][8][x][y][1]
+
+                                # now subtract the threshold parameter from that sum
+                                in_value = in_value - threshold
+
+                                # now compute a random value between -0.5 and 0.5
+                                r_value = random.uniform(0,1) - 0.5
+
+                                # multiply it by the noise parameter and add it to input value
+                                in_value = in_value + r_value * noise
+
+                                # now multiply by parameter K and apply sigmoid function e
+                                sigmoid = 1.0 / (1.0 + math.exp(-K * in_value))
+                        
+                                # now multiply sigmoid by delta parameter, subtract decay parameter,
+                                # ... and add all to current value of unit (x, y) in module m
+                                modules[m][8][x][y][0] += Delta * sigmoid - decay * modules[m][8][x][y][0]
+
+                                # now reset the sum of excitatory and inhibitory weigths at each unit,
+                                # since we only need it for the current timestep (new sums of excitatory and
+                                # inhibitory unit activations will be computed at the next time step)
+                                modules[m][8][x][y][1] = 0.0
+                            
+                            unit_count += 1
+                                    
+                
         # be safe and close output files properly
         for f in fs_neuronal:
             f.close()
@@ -989,18 +1160,28 @@ class TaskThread(QtCore.QThread):
         for f in fs_signed_syn:
             f.close()
         
-        # convert electrical and synaptic activity of TVB nodes into numpy arrays
-        TVB_elec        = numpy.array(tvb_elec)
-        TVB_abs_syna    = numpy.array(tvb_abs_syna)
-        TVB_signed_syna = numpy.array(tvb_signed_syna) 
+        if useTVBConnectome == True:
+            # convert electrical and synaptic activity of TVB nodes into numpy arrays
+            TVB_elec        = numpy.array(tvb_elec)
+            TVB_abs_syna    = numpy.array(tvb_abs_syna)
+            TVB_signed_syna = numpy.array(tvb_signed_syna) 
 
-        # now, save the TVB electrical and synaptic activities to separate files
-        numpy.save("tvb_neuronal.npy", TVB_elec)
-        numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
-        numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
+            # now, save the TVB electrical and synaptic activities to separate files
+            numpy.save("tvb_neuronal.npy", TVB_elec)
+            numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
+            numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
             
-        print '\r Simulation Finished.'
-        print '\r Output data files saved.'
+        print '\rSimulation Finished.'
+        print '\rOutput data files saved.'
+        end_time = time_module.asctime(time_module.localtime(time_module.time()))
+        print '\rEnd Time: ', end_time
+
+        # Finally (finally), save simulation data to a log file
+        # ...more data to be added later, as needed
+        with open(log_file, 'w') as f:
+            f.write('Simulation Start Time: ' + start_time)
+            f.write('\nSimulation End Time: ' + end_time)
+        
 
         
 def main():
