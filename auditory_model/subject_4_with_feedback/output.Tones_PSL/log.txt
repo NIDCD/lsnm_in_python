@@ -1,0 +1,9 @@
+* Simulation Start Time: Mon Apr 18 22:02:01 2016
+* Simulation End Time: Tue Apr 19 00:16:38 2016
+* Simulation duration (timesteps): 9800
+* Model description used: 
+* Weights list used: 
+* Neural net used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/auditory_model/subject_4_with_feedback/neuralnet.json
+* Simulation script used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/auditory_model/script_to_replicate_Rong_2011_Tones_PSL.py
+* Were weights changed to generate a new subject? NO
+* Was TVB Connectome used in the simulation? YES

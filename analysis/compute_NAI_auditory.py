@@ -53,8 +53,22 @@ synaptic_length=960
 # total number of trials in simulated experiment
 number_of_trials = 12
 
+# define the names of the input files where the MEG timeseries are contained, for four conditions:
+# TC-PSL, Tones-PSL, TC-DMS and Tones-DMS
+#MEG_TC_PSL_subj = np.array(['subject_4_with_feedback/output.TC_PSL/meg_source_activity.npy',
+#                             'subject_original_with_feedback/output.TC_PSL/meg_source_activity.npy'])
+#MEG_Tones_PSL_subj = np.array(['subject_4_with_feedback/output.Tones_PSL/meg_source_activity.npy',
+#                             'subject_original_with_feedback/output.Tones_PSL/meg_source_activity.npy'])
+#MEG_TC_DMS_subj = np.array(['subject_4_with_feedback/output.TC_DMS/meg_source_activity.npy',
+#                             'subject_original_with_feedback/output.TC_DMS/meg_source_activity.npy'])
+#MEG_Tones_DMS_subj = np.array(['subject_4_with_feedback/output.Tones_DMS/meg_source_activity.npy',
+#                                'subject_original_with_feedback/output.Tones_DMS/meg_source_activity.npy'])
+
 # name of the input file where MEG source activity is stored
 MEG_source_file = 'meg_source_activity.npy'
+
+# name of the ouput file where the NAI timecourses will be stored
+NAI_file = 'NAI_timecourse.npy'
 
 # Load MEG source activity data files
 MEG_source_activity = np.load(MEG_source_file)
@@ -120,10 +134,15 @@ MI = ((AER_S1 - AER_S2) / (AER_S1 + AER_S2)) * 100.
 
 print 'Modulation Index:', MI
 
+NAI_timecourse = aud_MEG_source_activity
+
+# now, save all NAI timecourses to a single file 
+np.save(NAI_file, NAI_timecourse)
+
 # Set up figure to plot MEG source dynamics averaged across trials
 fig = plt.figure(1)
 
-plt.suptitle('MEG SOURCE DYNAMICS AVERAGED ACROSS TRIALS')
+plt.suptitle('NEURAL ACTIVITY INDEX TIME COURSE AVERAGED ACROSS TRIALS')
 
 # Plot MEG signal
 aud_plot_S1 = plt.plot(aud_MEG_source_activity[0], label='S1')

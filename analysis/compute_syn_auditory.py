@@ -116,15 +116,15 @@ infr = np.loadtxt('infr_abs_syn.out')
 
 # add all units WITHIN each region together across space to calculate
 # synaptic activity in EACH brain region
-a1_syn = np.sum(ea1u + ea1d + ia1u + ia1d, axis = 1) + np.sum(tvb_ea1+tvb_ia1, axis=1)
-a2_syn = np.sum(ea2u + ea2c + ea2d + ia2u + ia2c + ia2d, axis = 1) + np.sum(tvb_ea2+tvb_ia2, axis=1)
-st_syn = np.sum(estg + istg, axis = 1) + np.sum(tvb_est+tvb_ist, axis=1)
+a1_syn = np.sum(ea1u + ea1d + ia1u + ia1d, axis = 1) #+ np.sum(tvb_ea1+tvb_ia1, axis=1)
+a2_syn = np.sum(ea2u + ea2c + ea2d + ia2u + ia2c + ia2d, axis = 1) #+ np.sum(tvb_ea2+tvb_ia2, axis=1)
+st_syn = np.sum(estg + istg, axis = 1) #+ np.sum(tvb_est+tvb_ist, axis=1)
 d1_syn = np.sum(efd1 + ifd1, axis = 1)
 d2_syn = np.sum(efd2 + ifd2, axis = 1)
 fs_syn = np.sum(exfs + infs, axis = 1)
 fr_syn = np.sum(exfr + infr, axis = 1)
 
-pf_syn = d1_syn + d2_syn + fs_syn + fr_syn + np.sum(tvb_epf+tvb_ipf, axis=1)
+pf_syn = d1_syn + d2_syn + fs_syn + fr_syn #+ np.sum(tvb_epf+tvb_ipf, axis=1)
 
 # get rid of the first time point ('zero point') bc it could skew correlations later
 #v1_syn[0] = v1_syn[1]
@@ -135,16 +135,6 @@ pf_syn = d1_syn + d2_syn + fs_syn + fr_syn + np.sum(tvb_epf+tvb_ipf, axis=1)
 #fs_syn[0] = fs_syn[1]
 #fr_syn[0] = fr_syn[1]
 #lit_syn[0] = lit_syn[1]
-
-# ...and normalize the synaptic activities of each module (convert to percentage signal change)
-#v1_syn = v1_syn / np.mean(v1_syn) * 100. - 100.
-#v4_syn = v4_syn / np.mean(v4_syn) * 100. - 100.
-#it_syn = it_syn / np.mean(it_syn) * 100. - 100.
-#d1_syn = d1_syn / np.mean(d1_syn) * 100. - 100.
-#d2_syn = d2_syn / np.mean(d2_syn) * 100. - 100.
-#fs_syn = fs_syn / np.mean(fs_syn) * 100. - 100.
-#fr_syn = fr_syn / np.mean(fr_syn) * 100. - 100.
-#lit_syn= lit_syn/ np.mean(lit_syn)* 100. - 100.
 
 # create a numpy array of timeseries
 synaptic = np.array([a1_syn, a2_syn, st_syn, pf_syn])

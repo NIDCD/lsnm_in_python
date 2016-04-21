@@ -113,8 +113,8 @@ class LSNM(QtGui.QWidget):
         global useTVBConnectome
         useTVBConnectome = False         # Determines whether to use a TVB connectome within simulation
 
-        global createNewSubject
-        createNewSubject = False         # Determines whether or not to vary connection weights given
+        global generateSubject
+        generateSubject = False         # Determines whether or not to vary connection weights given
                                          # to create a new subject for the current simulation
 
         global model                     # contains name of file describing module and parameters
@@ -277,11 +277,11 @@ class LSNM(QtGui.QWidget):
             useTVBConnectome = False
             print '\rNOT Using TVB Connectome...'
 
-    def createNewSubject(self, state2):
+    def createNewSubject(self, state):
 
         global generateSubject
         # allow user to decide whether or not to vary weights given to generate new subject
-        if state2 == QtCore.Qt.Checked:
+        if state == QtCore.Qt.Checked:
             generateSubject = True
             print '\rGenerating new subject by randomly varying connection weights given...'
         else:
@@ -699,7 +699,7 @@ class TaskThread(QtCore.QThread):
 
                             # now we decide whether the weights will be multiplied by a random amount
                             # varying between that amount and 1.0 in order to generate a new subject
-                            if createNewSubject == True:
+                            if generateSubject == True:
                                 connectionWeight = destination[1] * random.uniform(subject_variation, 1)
                             else:
                                 connectionWeight = destination[1]
@@ -1197,16 +1197,33 @@ class TaskThread(QtCore.QThread):
             numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
             numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
             
-        print '\rSimulation Finished.'
-        print '\rOutput data files saved.'
         end_time = time_module.asctime(time_module.localtime(time_module.time()))
-        print '\rEnd Time: ', end_time
-
+        
         # Finally (finally), save simulation data to a log file
         # ...more data to be added later, as needed
         with open(log_file, 'w') as f:
-            f.write('Simulation Start Time: ' + start_time)
-            f.write('\nSimulation End Time: ' + end_time)
+            f.write('* Simulation Start Time: ' + start_time)
+            f.write('\n* Simulation End Time: ' + end_time)
+            f.write('\n* Simulation duration (timesteps): ' + str(LSNM_simulation_time))
+            f.write('\n* Model description used: ' + model)
+            f.write('\n* Weights list used: ' + weights_list)
+            f.write('\n* Neural net used: ' + neural_net)
+            f.write('\n* Simulation script used: ' + script)            
+            f.write('\n* Were weights changed to generate a new subject? ')
+            if generateSubject == True:
+                f.write('YES, weights multiplied by [' + str(subject_variation) + ', 1]')
+            else:
+                f.write('NO')
+            f.write('\n* Was TVB Connectome used in the simulation? ')
+            if useTVBConnectome == True:
+                f.write('YES')
+            else:
+                f.write('NO')
+
+        print '\rSimulation Finished.'
+        print '\rOutput data files saved.'
+        print '\rEnd Time: ', end_time
+
         
 
         

@@ -83,7 +83,7 @@ num_of_fmri_blocks = 1             # how many blocks of trials in the experiment
 num_of_syn_blocks = 1              # we have more synaptic blocks than fmri blocks
                                     # because we get rid of blocks in BOLD timeseries
 
-num_of_subjects = 1
+num_of_subjects = 4
 
 scans_removed = 0             # number of scans removed from BOLD computation
 synaptic_steps_removed = 0    # number of synaptic steps removed from synaptic
@@ -102,10 +102,25 @@ synaptic_timesteps = experiment_length - synaptic_steps_removed
 
 # define the names of the input files where the BOLD timeseries are contained, for four conditions:
 # TC-PSL, Tones-PSL, TC-DMS and Tones-DMS
-BOLD_TC_PSL_subj = np.array(['subject_original_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy'])
-BOLD_Tones_PSL_subj = np.array(['subject_original_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy'])
-BOLD_TC_DMS_subj = np.array(['subject_original_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy'])
-BOLD_Tones_DMS_subj = np.array(['subject_original_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy'])
+BOLD_TC_PSL_subj = np.array(['subject_original_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+                             'subject_4_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+                             'subject_5_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+                             'subject_6_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy'])
+
+BOLD_Tones_PSL_subj = np.array(['subject_original_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+                             'subject_4_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+                             'subject_5_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+                             'subject_6_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy'])
+
+BOLD_TC_DMS_subj = np.array(['subject_original_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+                             'subject_4_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+                             'subject_5_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+                             'subject_6_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy'])
+
+BOLD_Tones_DMS_subj = np.array(['subject_original_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+                                'subject_4_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+                                'subject_5_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+                                'subject_6_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy'])
 
 # set matplot lib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
@@ -155,10 +170,11 @@ for idx in range(0, num_of_subjects):
 print BOLD_TC_PSL.shape
 
 # Perform time-course normalization by converting each timeseries to percent signal change
-# for each subject and for each module (DMS relative to the mean of the PSL condition).
+# for each subject and for each module (TC and Tones DMS relative to the mean of the Tones PSL
+# condition, as per Husain et al (2004), pp 1711, "Simulating PET and fMRI".
 for s in range(0, num_of_subjects):
     for m in range(0, num_of_modules):
-        timecourse_mean = np.mean(BOLD_TC_PSL[s,m])
+        timecourse_mean = np.mean(BOLD_Tones_DMS[s,m])
         BOLD_TC_DMS[s,m] = BOLD_TC_DMS[s,m] / timecourse_mean * 100. - 100.
 
 for s in range(0, num_of_subjects):
@@ -167,14 +183,14 @@ for s in range(0, num_of_subjects):
         BOLD_Tones_DMS[s,m] = BOLD_Tones_DMS[s,m] / timecourse_mean * 100. - 100.
 
 # now calculate PSC of TC-DMS with respect ot Tones-DMS
-BOLD_DMS = BOLD_TC_DMS - BOLD_Tones_DMS
+BOLD_DMS = BOLD_TC_DMS #- BOLD_Tones_DMS
         
 mean_PSC_dms = np.zeros((num_of_subjects, num_of_modules))
 
-# now, perform a mean of PSCs of chosen scans
+# now, perform a mean of PSCs
 for s in range(0, num_of_subjects):
     for m in range(0, num_of_modules):
-        mean_PSC_dms[s,m] = np.mean(BOLD_DMS[s,m,8:17])
+        mean_PSC_dms[s,m] = np.mean(BOLD_DMS[s,m][5:10])
 
 # now, calculate the average PSC across subjects for each brain region and for each condition:
 BOLD_a1_dms_avg = np.mean(mean_PSC_dms[:,0]) 
@@ -303,7 +319,7 @@ width = 0.2                     # width of the bars
 
 fig, ax = plt.subplots()
 
-#ax.set_ylim([0,3.5])
+#ax.set_ylim([0,16])
 
 # now, group the values to be plotted by brain module and by task condition
 
