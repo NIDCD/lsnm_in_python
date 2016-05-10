@@ -349,6 +349,9 @@ class TaskThread(QtCore.QThread):
         # option is checked at simulation time, the simulator with multiply the connection
         # weights given by a random amount of between the number given and 1.0
         subject_variation = 0.98
+
+        # define how many milliseconds there are in each simulation timestep
+        timesteps_to_time_constant = 5.0
         
         # define white matter transmission speed in mm/ms for TVB simulation
         TVB_speed = 4.0
@@ -488,6 +491,9 @@ class TaskThread(QtCore.QThread):
         # declare a gain for the link from TVB to LSNM (around which normally distributed
         # random numbers will be generated). I obtained this number of diving the TVB gain used
         # within the connectome nodes by 81 (# of units in each LSNM module).
+        # Please note that each module can have a different number of 9x9 or 1x81 matrices, and
+        # so that needs to be taken into account as well by multiplying the number of units in
+        # a matrix times the number of modules contained in an embedded brain region.
         lsnm_tvb_gain = TVB_global_coupling_strength / n
         
         # declare an integration interval for the 'integrated' synaptic activity,
@@ -752,7 +758,7 @@ class TaskThread(QtCore.QThread):
         exec(experiment_script)
         
         # define length of TVB simulation in ms
-        TVB_simulation_length = LSNM_simulation_time * 5
+        TVB_simulation_length = LSNM_simulation_time * timesteps_to_time_constant
 
         # initialize number of timesteps for simulation
         sim_percentage = 100.0/LSNM_simulation_time

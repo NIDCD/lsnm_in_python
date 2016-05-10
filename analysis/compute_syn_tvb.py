@@ -86,7 +86,7 @@ v1_loc = range(344, 350)     # Hagmann's brain nodes included within V1 ROI
 # Use 6 nodes within rFUS
 v4_loc = range(390, 396)     # Hagmann's brain nodes included within V4 ROI       
 
-# Use 6 nodes within rPARH
+# Use 6 nodes within rIT
 it_loc = range(423, 429)     # Hagmann's brain nodes included within IT ROI
 
 # Use 6 nodes within rRMF

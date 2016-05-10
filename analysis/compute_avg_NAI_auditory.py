@@ -47,19 +47,55 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-num_of_subjects = 2
+num_of_subjects = 10
 NAI_ts_length = 30
 
 # define the names of the input files where the NAI timecourses are contained, for four conditions:
 # TC-PSL, Tones-PSL, TC-DMS and Tones-DMS
-NAI_TC_PSL_subj = np.array(['subject_4_with_feedback/output.TC_PSL/NAI_timecourse.npy',
-                             'subject_original_with_feedback/output.TC_PSL/NAI_timecourse.npy'])
-NAI_Tones_PSL_subj = np.array(['subject_4_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
-                             'subject_original_with_feedback/output.Tones_PSL/NAI_timecourse.npy'])
-NAI_TC_DMS_subj = np.array(['subject_4_with_feedback/output.TC_DMS/NAI_timecourse.npy',
-                             'subject_original_with_feedback/output.TC_DMS/NAI_timecourse.npy'])
-NAI_Tones_DMS_subj = np.array(['subject_4_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
-                                'subject_original_with_feedback/output.Tones_DMS/NAI_timecourse.npy'])
+NAI_TC_PSL_subj = np.array(['subject_original_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_2_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_3_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_4_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_5_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_6_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_7_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_8_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_9_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                            'subject_10_with_feedback/output.TC_PSL/NAI_timecourse.npy',
+                        ])
+NAI_Tones_PSL_subj = np.array(['subject_original_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_2_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_3_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_4_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_5_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_6_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_7_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_8_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_9_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                               'subject_10_with_feedback/output.Tones_PSL/NAI_timecourse.npy',
+                           ])
+NAI_TC_DMS_subj = np.array(['subject_original_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_2_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_3_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_4_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_5_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_6_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_7_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_8_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_9_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                            'subject_10_with_feedback/output.TC_DMS/NAI_timecourse.npy',
+                        ])
+NAI_Tones_DMS_subj = np.array(['subject_original_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_2_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_3_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_4_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_5_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_6_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_7_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_8_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_9_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                               'subject_10_with_feedback/output.Tones_DMS/NAI_timecourse.npy',
+                           ])
 
 
 
@@ -81,8 +117,6 @@ for idx in range(0, num_of_subjects):
     NAI_Tones_PSL_avg = np.mean(NAI_Tones_PSL, axis=0)
     NAI_TC_DMS_avg = np.mean(NAI_TC_DMS, axis=0)
     NAI_Tones_DMS_avg = np.mean(NAI_Tones_DMS, axis=0)
-
-
 
 # plot the average NAI's
 

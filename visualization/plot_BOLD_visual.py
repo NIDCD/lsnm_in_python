@@ -79,7 +79,7 @@ modules = np.arange(num_of_modules)
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-BOLD_subj = 'lsnm_bold_balloon.npy'
+BOLD_subj = 'tvb_bold_balloon.npy'
             
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_BOLD = np.load(BOLD_subj)
@@ -93,7 +93,7 @@ BOLD_timescale = np.arange(time_removed, total_time, Tr)
 print BOLD_timescale
 
 # increase font size prior to plotting
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 25})
 
 # optional caption for figure
 #txt = '''Figure 1. Simulated fMRI BOLD signal using the Balloon hemodynamic
@@ -119,12 +119,12 @@ ax.set_xlim(0,200)
 ax.plot(BOLD_timescale, lsnm_BOLD[0], linewidth=3.0, color='yellow')
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('V1/V2', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -136,12 +136,12 @@ ax.set_xticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('V4', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -153,12 +153,12 @@ ax.set_xticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('IT', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -170,12 +170,12 @@ ax.set_xticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -187,12 +187,12 @@ ax.set_xticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -204,12 +204,12 @@ ax.set_xticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 
@@ -220,12 +220,12 @@ ax.set_yticks([])
 ax.set_xlim(0,200)
 
 # display gray bands in figure area to show where control blocks are located
-ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
-ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
-ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
-ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
-ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
-ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(50.5, 67.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(83.5, 100.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(116.5, 133.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(149.5, 166.0, facecolor='gray', alpha=0.6)
+#ax.axvspan(182.5, 199.0, facecolor='gray', alpha=0.6)
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
 plt.gca().set_axis_bgcolor('black')
 

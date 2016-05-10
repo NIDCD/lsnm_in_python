@@ -77,14 +77,14 @@ number_of_trials = 36
 syn = np.load(SYN_file)
 
 # extract synaptic activities for each ROI
-v1_syn = syn[0]
-v4_syn = syn[1]
-it_syn = syn[2]
-fs_syn = syn[3]
-d1_syn = syn[4]
-d2_syn = syn[5]
-fr_syn = syn[6]
-lit_syn= syn[7]
+v1_syn = syn[0, 1:]
+v4_syn = syn[1, 1:]
+it_syn = syn[2, 1:]
+fs_syn = syn[3, 1:]
+d1_syn = syn[4, 1:]
+d2_syn = syn[5, 1:]
+fr_syn = syn[6, 1:]
+lit_syn= syn[7, 1:]
 
 # now, convert DMS and control timeseries into pandas timeseries, so we can analyze it
 IT_dms_ts = pd.Series(it_syn)

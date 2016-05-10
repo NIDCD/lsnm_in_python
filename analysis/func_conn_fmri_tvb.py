@@ -94,14 +94,14 @@ func_conn_dms_file = 'corr_fmri_IT_vs_all_balloon_tvb.npy'
 BOLD = np.load(BOLD_file)
 
 # extract each ROI's BOLD time-series from array
-v1_BOLD = BOLD[0]
-v4_BOLD = BOLD[1]
-it_BOLD = BOLD[2]
-fs_BOLD = BOLD[3]
-d1_BOLD = BOLD[4]
-d2_BOLD = BOLD[5]
-fr_BOLD = BOLD[6]
-lit_BOLD= BOLD[7]
+v1_BOLD = BOLD[0, 8:]
+v4_BOLD = BOLD[1, 8:]
+it_BOLD = BOLD[2, 8:]
+fs_BOLD = BOLD[3, 8:]
+d1_BOLD = BOLD[4, 8:]
+d2_BOLD = BOLD[5, 8:]
+fr_BOLD = BOLD[6, 8:]
+lit_BOLD= BOLD[7, 8:]
 
 # now, convert DMS and control timeseries into pandas timeseries, so we can analyze it
 V1_dms_ts = pd.Series(v1_BOLD)

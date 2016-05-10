@@ -37,7 +37,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 11, 2016  
+#   Last updated by Antonio Ulloa on April 26, 2016  
 # **************************************************************************/
 
 # compute_PSC_auditory.py
@@ -83,7 +83,7 @@ num_of_fmri_blocks = 1             # how many blocks of trials in the experiment
 num_of_syn_blocks = 1              # we have more synaptic blocks than fmri blocks
                                     # because we get rid of blocks in BOLD timeseries
 
-num_of_subjects = 4
+num_of_subjects = 1
 
 scans_removed = 0             # number of scans removed from BOLD computation
 synaptic_steps_removed = 0    # number of synaptic steps removed from synaptic
@@ -102,25 +102,49 @@ synaptic_timesteps = experiment_length - synaptic_steps_removed
 
 # define the names of the input files where the BOLD timeseries are contained, for four conditions:
 # TC-PSL, Tones-PSL, TC-DMS and Tones-DMS
-BOLD_TC_PSL_subj = np.array(['subject_original_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
-                             'subject_4_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
-                             'subject_5_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
-                             'subject_6_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy'])
+BOLD_TC_PSL_subj = np.array(['subject_original/output.TC_PSL/lsnm_bold_balloon.npy'])
+#                             'subject_2_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_3_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_4_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_5_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_6_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_7_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_8_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_9_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy',
+#                             'subject_10_with_feedback/output.TC_PSL/lsnm_bold_balloon.npy'])
 
-BOLD_Tones_PSL_subj = np.array(['subject_original_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
-                             'subject_4_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
-                             'subject_5_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
-                             'subject_6_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy'])
+BOLD_Tones_PSL_subj = np.array(['subject_original_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy'])
+#                             'subject_2_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_3_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_4_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_5_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_6_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_7_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_8_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_9_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy',
+#                             'subject_10_with_feedback/output.Tones_PSL/lsnm_bold_balloon.npy'])
 
-BOLD_TC_DMS_subj = np.array(['subject_original_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
-                             'subject_4_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
-                             'subject_5_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
-                             'subject_6_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy'])
+BOLD_TC_DMS_subj = np.array(['subject_original_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy'])
+#                             'subject_2_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_3_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_4_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_5_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_6_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_7_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_8_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_9_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy',
+#                             'subject_10_with_feedback/output.TC_DMS/lsnm_bold_balloon.npy'])
 
-BOLD_Tones_DMS_subj = np.array(['subject_original_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
-                                'subject_4_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
-                                'subject_5_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
-                                'subject_6_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy'])
+BOLD_Tones_DMS_subj = np.array(['subject_original_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy'])
+#                                'subject_2_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_3_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_4_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_5_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_6_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_7_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_8_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_9_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy',
+#                                'subject_10_with_feedback/output.Tones_DMS/lsnm_bold_balloon.npy'])
 
 # set matplot lib parameters to produce visually appealing plots
 mpl.style.use('ggplot')
@@ -177,10 +201,10 @@ for s in range(0, num_of_subjects):
         timecourse_mean = np.mean(BOLD_Tones_DMS[s,m])
         BOLD_TC_DMS[s,m] = BOLD_TC_DMS[s,m] / timecourse_mean * 100. - 100.
 
-for s in range(0, num_of_subjects):
-    for m in range(0, num_of_modules):
-        timecourse_mean = np.mean(BOLD_Tones_PSL[s,m])
-        BOLD_Tones_DMS[s,m] = BOLD_Tones_DMS[s,m] / timecourse_mean * 100. - 100.
+#for s in range(0, num_of_subjects):
+#    for m in range(0, num_of_modules):
+#        timecourse_mean = np.mean(BOLD_Tones_PSL[s,m])
+#        BOLD_Tones_DMS[s,m] = BOLD_Tones_DMS[s,m] / timecourse_mean * 100. - 100.
 
 # now calculate PSC of TC-DMS with respect ot Tones-DMS
 BOLD_DMS = BOLD_TC_DMS #- BOLD_Tones_DMS
@@ -199,10 +223,10 @@ BOLD_st_dms_avg = np.mean(mean_PSC_dms[:,2])
 BOLD_pf_dms_avg = np.mean(mean_PSC_dms[:,3])
 
 # calculate the variance as well, across subjects, for each brain regions and for each condition:
-#BOLD_v1_dms_var = np.var(mean_PSC_dms[:,0])
-#BOLD_v4_dms_var = np.var(mean_PSC_dms[:,1])
-#BOLD_it_dms_var = np.var(mean_PSC_dms[:,2])
-#BOLD_pf_dms_var = np.var(mean_PSC_dms[:,3])
+BOLD_a1_dms_var = np.var(mean_PSC_dms[:,0])
+BOLD_a2_dms_var = np.var(mean_PSC_dms[:,1])
+BOLD_st_dms_var = np.var(mean_PSC_dms[:,2])
+BOLD_pf_dms_var = np.var(mean_PSC_dms[:,3])
 #BOLD_v1_ctl_var = np.var(mean_PSC_ctl[:,0])
 #BOLD_v4_ctl_var = np.var(mean_PSC_ctl[:,1])
 #BOLD_it_ctl_var = np.var(mean_PSC_ctl[:,2])
@@ -210,10 +234,10 @@ BOLD_pf_dms_avg = np.mean(mean_PSC_dms[:,3])
         
 # calculate the standard deviation of the PSC across subjects, for each brain region and for each
 # condition
-#BOLD_v1_dms_std = np.std(mean_PSC_dms[:,0])
-#BOLD_v4_dms_std = np.std(mean_PSC_dms[:,1])
-#BOLD_it_dms_std = np.std(mean_PSC_dms[:,2])
-#BOLD_pf_dms_std = np.std(mean_PSC_dms[:,3])
+BOLD_a1_dms_std = np.std(mean_PSC_dms[:,0])
+BOLD_a2_dms_std = np.std(mean_PSC_dms[:,1])
+BOLD_st_dms_std = np.std(mean_PSC_dms[:,2])
+BOLD_pf_dms_std = np.std(mean_PSC_dms[:,3])
 #BOLD_v1_ctl_std = np.std(mean_PSC_ctl[:,0])
 #BOLD_v4_ctl_std = np.std(mean_PSC_ctl[:,1])
 #BOLD_it_ctl_std = np.std(mean_PSC_ctl[:,2])
@@ -319,27 +343,27 @@ width = 0.2                     # width of the bars
 
 fig, ax = plt.subplots()
 
-#ax.set_ylim([0,16])
+ax.set_ylim([0,100])
 
 # now, group the values to be plotted by brain module and by task condition
 
 rects_a1_dms = ax.bar(index, BOLD_a1_dms_avg, width, color='yellow',
-                      label='A1')
+                      label='A1', yerr=BOLD_a1_dms_std)
 #rects_v1_ctl = ax.bar(index + width, BOLD_v1_ctl_avg, width, color='yellow', edgecolor='black', hatch='//',
 #                      label='V1 during CTL', yerr=BOLD_v1_dms_std, )
 
 rects_a2_dms = ax.bar(index + width*2, BOLD_a2_dms_avg, width, color='green',
-                      label='A2')
+                      label='A2', yerr=BOLD_a2_dms_std)
 #rects_v4_ctl = ax.bar(index + width*3, BOLD_v4_ctl_avg, width, color='green', edgecolor='black', hatch='//',
 #                      label='V4 during CTL', yerr=BOLD_v4_ctl_std)
 
 rects_st_dms = ax.bar(index + width*4, BOLD_st_dms_avg, width, color='blue',
-                      label='ST')
+                      label='ST', yerr=BOLD_st_dms_std)
 #rects_it_ctl = ax.bar(index + width*5, BOLD_it_ctl_avg, width, color='blue', edgecolor='black', hatch='//',
 #                      label='IT during CTL', yerr=BOLD_it_ctl_std)
 
 rects_pf_dms = ax.bar(index + width*6, BOLD_pf_dms_avg, width, color='red',
-                      label='PFC')
+                      label='PFC', yerr=BOLD_st_dms_std)
 #rects_pf_ctl = ax.bar(index + width*7, BOLD_fs_ctl_avg, width, color='orange', edgecolor='black', hatch='//',
 #                      label='FS during CTL', yerr=BOLD_fs_ctl_std)
 
@@ -348,7 +372,7 @@ rects_pf_dms = ax.bar(index + width*6, BOLD_pf_dms_avg, width, color='red',
 # get rid of x axis ticks and labels
 ax.set_xticks([])
 
-ax.set_ylabel('Signal change (%)')
+ax.set_ylabel('Percent Signal Change (%)')
 
 # Shrink current axis by 10% to make space for legend
 box = ax.get_position()

@@ -75,9 +75,9 @@ from scipy.integrate import odeint
 
 # define the name of the input files where the synaptic activities are stored
 # we have four files: TC-PSL, Tones-PSL, TC-DMS, Tones-DMS
-SYN_file_4 = 'output.TC_PSL/synaptic_in_ROI.npy'
+SYN_file_2 = 'output.TC_PSL/synaptic_in_ROI.npy'
 SYN_file_3 = 'output.Tones_PSL/synaptic_in_ROI.npy'
-SYN_file_2 = 'output.TC_DMS/synaptic_in_ROI.npy'
+SYN_file_4 = 'output.TC_DMS/synaptic_in_ROI.npy'
 SYN_file_1 = 'output.Tones_DMS/synaptic_in_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored

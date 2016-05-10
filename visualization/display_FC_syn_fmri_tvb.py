@@ -68,7 +68,7 @@ modules = np.arange(7)
 
 # define the names of the input files where the correlation coefficients were stored
 func_conn_syn_dms_subj1 = 'corr_syn_IT_vs_all_tvb.npy'
-func_conn_fmri_dms_subj1 = 'corr_fmri_IT_vs_all_dms_balloon.npy'
+func_conn_fmri_dms_subj1 = 'corr_fmri_IT_vs_all_balloon_tvb.npy'
 
 # open files that contain correlation coefficients
 fc_syn_dms = np.load(func_conn_syn_dms_subj1)
@@ -99,7 +99,7 @@ ax = plt.gca()          # get hold of the axes
 
 bars=fc_mean.plot(ax=ax, kind='bar',
                   color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'lightblue'],
-                  ylim=[-0.02,1])
+                  ylim=[-0.3,1])
 
 # change the location of the legend
 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
