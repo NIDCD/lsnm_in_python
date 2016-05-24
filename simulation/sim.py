@@ -345,7 +345,7 @@ class TaskThread(QtCore.QThread):
         # from LSNM to TVB
         FEEDBACK = True
 
-        # define a number that the simulator with use to generate new subjects. If this
+        # define a number that the simulator will use to generate new subjects. If this
         # option is checked at simulation time, the simulator with multiply the connection
         # weights given by a random amount of between the number given and 1.0
         subject_variation = 0.98

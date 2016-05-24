@@ -43,6 +43,8 @@
 # display_connectivity_among_given_nodes.py
 #
 # Displays Hagmann's brain's 998-nodes plus the connections among given nodes
+# and it also prints out what the connection weights are among those given
+# connectome nodes
 #
 # Note: this is just for visualization purposes, and it is only showing a
 # "minimal network" among a set of nodes. 

@@ -1,0 +1,9 @@
+* Simulation Start Time: Tue May 24 15:22:07 2016
+* Simulation End Time: Tue May 24 15:24:45 2016
+* Simulation duration (timesteps): 6600
+* Model description used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model/model.txt
+* Weights list used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model/subject_netgettest/weightslist.txt
+* Neural net used: 
+* Simulation script used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model/script_to_replicate_Horwitz_2005_Fig_3.py
+* Were weights changed to generate a new subject? NO
+* Was TVB Connectome used in the simulation? NO

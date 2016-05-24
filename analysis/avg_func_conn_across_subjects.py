@@ -53,7 +53,7 @@
 # For the calculations, It uses
 # previously calculated correlation coefficients between IT and all other areas in both,
 # synaptic activity time-series and fMRI bold time-series.
-# It also performs a two-tailed t-test for the comparison between the mean of each condition
+# It also performs a one-tailed paired t-test for the comparison between the mean of each condition
 # (DMS vs CTL), and displays the t values.
 
 import numpy as np
@@ -68,8 +68,12 @@ import pandas as pd
 
 from scipy.stats import t
 
+from scipy import stats
+
+import math as m
+
 # set matplot lib parameters to produce visually appealing plots
-mpl.style.use('ggplot')
+#mpl.style.use('ggplot')
 
 # construct array of indices of modules contained in an LSNM model, minus 1
 modules = np.arange(7)
@@ -219,7 +223,7 @@ fc_syn_ctl_mean = np.mean(fc_syn_ctl, axis=0)
 fc_fmri_dms_mean = np.mean(fc_fmri_dms, axis=0)
 fc_fmri_ctl_mean = np.mean(fc_fmri_ctl, axis=0)
 
-# calculate the standard deviation of correlation coefficients across subjects
+# calculate the standard error of the mean of correlation coefficients across subjects
 fc_syn_dms_std = np.std(fc_syn_dms, axis=0)
 fc_syn_ctl_std = np.std(fc_syn_ctl, axis=0)
 fc_fmri_dms_std = np.std(fc_fmri_dms, axis=0)
@@ -232,20 +236,20 @@ fc_fmri_dms_var= np.var(fc_fmri_dms, axis=0)
 fc_fmri_ctl_var= np.var(fc_fmri_ctl, axis=0)
 
 # now, convert back to from Z to R correlation coefficients, prior to plotting
-fc_syn_dms_mean  = np.tanh(fc_syn_dms_mean)
-fc_syn_ctl_mean  = np.tanh(fc_syn_ctl_mean)
-fc_fmri_dms_mean = np.tanh(fc_fmri_dms_mean)
-fc_fmri_ctl_mean = np.tanh(fc_fmri_ctl_mean)
+#fc_syn_dms_mean  = np.tanh(fc_syn_dms_mean)
+#fc_syn_ctl_mean  = np.tanh(fc_syn_ctl_mean)
+#fc_fmri_dms_mean = np.tanh(fc_fmri_dms_mean)
+#fc_fmri_ctl_mean = np.tanh(fc_fmri_ctl_mean)
 
-fc_syn_dms_std  = np.tanh(fc_syn_dms_std)
-fc_syn_ctl_std  = np.tanh(fc_syn_ctl_std)
-fc_fmri_dms_std = np.tanh(fc_fmri_dms_std)
-fc_fmri_ctl_std = np.tanh(fc_fmri_ctl_std)
+#fc_syn_dms_std  = np.tanh(fc_syn_dms_std)
+#fc_syn_ctl_std  = np.tanh(fc_syn_ctl_std)
+#fc_fmri_dms_std = np.tanh(fc_fmri_dms_std)
+#fc_fmri_ctl_std = np.tanh(fc_fmri_ctl_std)
 
-fc_syn_dms_var  = np.tanh(fc_syn_dms_var)
-fc_syn_ctl_var  = np.tanh(fc_syn_ctl_var)
-fc_fmri_dms_var = np.tanh(fc_fmri_dms_var)
-fc_fmri_ctl_var = np.tanh(fc_fmri_ctl_var)
+#fc_syn_dms_var  = np.tanh(fc_syn_dms_var)
+#fc_syn_ctl_var  = np.tanh(fc_syn_ctl_var)
+#fc_fmri_dms_var = np.tanh(fc_fmri_dms_var)
+#fc_fmri_ctl_var = np.tanh(fc_fmri_ctl_var)
 
 # ... and save above values to output file
 np.savetxt(fc_stats_FILE, [np.append(fc_syn_dms_mean, [fc_syn_ctl_mean,
@@ -257,51 +261,58 @@ np.savetxt(fc_stats_FILE, [np.append(fc_syn_dms_mean, [fc_syn_ctl_mean,
            fmt='%.4f',
            header='Synaptic and BOLD correlation stats (DMS and CTL) grouped by module')
 
-# Calculate the statistical significance by using a two-tailed t-test:
-# We are going to have two groups: DMS group and control group (each sample size is 10 subjects)
-# Our research hypothesis is:
-#          * The correlations in the DMS group are larger than the correlations in the CTL group.
-# The NULL hypothesis is:
-#          * Correlations in the DMS group are not larger than Correlations in the CTL group.
-# The value of alpha (p-threshold) will be 0.05
+# Calculate the statistical significance by using a one-tailed paired t-test:
+# We are going to have one group of 10 subjects, doing both DMS and control task
 # STEPS:
-#     (1) subtract the mean of control group from the mean of DMS group:
-fc_syn_mean_diff = fc_syn_ctl_mean - fc_syn_dms_mean
-fc_fmri_mean_diff= fc_fmri_ctl_mean- fc_fmri_dms_mean
-#     (2) Calculate, for both control and DMS, the variance divided by sample size minus 1:
-fc_syn_ctl_a = fc_syn_ctl_var / 9.0
-fc_syn_dms_a = fc_syn_dms_var / 9.0
-fc_fmri_ctl_a= fc_fmri_ctl_var / 9.0
-fc_fmri_dms_a= fc_fmri_dms_var / 9.0
-#     (3) Add results obtained for CTL and DMS in step (2) together:
-fc_syn_a = fc_syn_ctl_a + fc_syn_dms_a
-fc_fmri_a= fc_fmri_ctl_a+ fc_fmri_dms_a
-#     (4) Take the square root the results in step (3):
-sqrt_fc_syn_a = np.sqrt(fc_syn_a)
-sqrt_fc_fmri_a= np.sqrt(fc_fmri_a)
-#     (5) Divide the results of step (1) by the results of step (4) to obtain 't':
-fc_syn_t = fc_syn_mean_diff  / sqrt_fc_syn_a
-fc_fmri_t= fc_fmri_mean_diff / sqrt_fc_fmri_a
-#     (6) Calculate the degrees of freedom (add up number of observations for each group
-#         minus number of groups):
-dof = 10 + 10 - 2
-#     (7) find the p-values for the above 't' and 'degrees of freedom':
-fc_syn_p_values  = t.sf(fc_syn_t, dof)
-fc_fmri_p_values = t.sf(fc_fmri_t, dof)
+#     (1) Set up hypotheses:
+# The NULL hypothesis is:
+#          * The mean difference between paired observations (DMS and CTL) is zero
+# Our alternative hypothesis is:
+#          * The mean difference between paired observations (DMS and CTL) is not zero
+#     (2) Set a significance level:
+alpha = 0.05
+#     (3) What is the critical value and the rejection region?
+n = 10 - 1                   # sample size minus 1
+rejection_region = 1.833       # as found on t-test table for t and dof given,
+                               # values of t above rejection_region will be rejected
+#     (4) compute the value of the test statistic                               
+# calculate differences between the pairs of data:
+d_syn  = fc_syn_dms - fc_syn_ctl
+d_fmri = fc_fmri_dms- fc_fmri_ctl
+# calculate the mean of those differences
+d_syn_mean = np.mean(d_syn, axis=0)
+d_fmri_mean= np.mean(d_fmri, axis=0)
+# calculate the standard deviation of those differences
+d_syn_std = np.std(d_syn, axis=0)
+d_fmri_std = np.std(d_fmri, axis=0)
+# calculate square root of sample size
+sqrt_n = m.sqrt(n)
+# calculate standard error of the mean differences
+d_syn_sem = d_syn_std/sqrt_n 
+d_fmri_sem= d_fmri_std/sqrt_n
+# calculate the t statistic:
+t_star_syn = d_syn_mean / d_syn_sem
+t_star_fmri= d_fmri_mean/ d_fmri_sem
 
-print 't-values for synaptic activity correlations: ', fc_syn_t
-print 't-values for fmri time-series correlations: ', fc_fmri_t
+print 't-values for synaptic activity correlations: ', t_star_syn
+print 't-values for fmri time-series correlations: ', t_star_fmri
+
+print 'ISA  Mean Differences (IT-V1, IT-V4, IT-FS, IT-D1, IT-D2, IT-FR): ', d_syn_mean  
+print 'fMRI Mean Differences (IT-V1, IT-V4, IT-FS, IT-D1, IT-D2, IT-FR): ', d_fmri_mean
+
+print 'Dimensions of mean differences array', d_syn_mean.shape
+print 'Dimensions of std of differences array', d_syn_std.shape
 
 # convert to Pandas dataframe, using the transpose to convert to a format where the names
 # of the modules are the labels for each time-series
-fc_mean = pd.DataFrame(np.array([fc_syn_dms_mean, fc_syn_ctl_mean,
-                                 fc_fmri_dms_mean, fc_fmri_ctl_mean]),
+d_mean = pd.DataFrame(np.array([d_syn_mean,
+                                 d_fmri_mean]),
                       columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
-                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
-fc_std  = pd.DataFrame(np.array([fc_syn_dms_std, fc_syn_ctl_std,
-                                 fc_fmri_dms_std, fc_fmri_ctl_std]),
+                       index=np.array(['ISA', 'fMRI']))
+d_std  = pd.DataFrame(np.array([d_syn_sem,
+                                 d_fmri_sem]),
                       columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
-                       index=np.array(['DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri']))
+                       index=np.array(['ISA', 'fMRI']))
 
 # now, plot means and std's using 'pandas framework...
 
@@ -312,15 +323,26 @@ mpl_fig = plt.figure()  # start a new figure
 
 ax = plt.gca()          # get hold of the axes
 
-bars=fc_mean.plot(yerr=fc_std, ax=ax, kind='bar',
+bars=d_mean.plot(yerr=d_std, ax=ax, kind='bar',
                   color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'lightblue'],
-                  ylim=[-0.1, 1.1])
+                  ylim=[-0.5, 0.4])
 
 # change the location of the legend
-ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-           ncol=7, mode="expand", borderaxespad=0.,prop={'size':30})
+#ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+#           ncol=7, mode="expand", borderaxespad=0.,prop={'size':30})
 
-ax.set_xticklabels( ('DMS-syn', 'CTL-syn', 'DMS-fmri', 'CTL-fmri'), rotation=0, ha='center')
+ax.set_xticklabels( ('ISA', 'fMRI'), rotation=0, ha='center')
+
+ax.set_ylabel('Functional connectivity differences')
+
+ax.grid(b=False)
+ax.yaxis.grid(True)
+
+#line_fig = plt.figure()
+
+#ax = plt.gca()
+
+#lines=
 
 #plt.tight_layout()
 
