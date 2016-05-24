@@ -102,10 +102,6 @@ for s in errors:
     s = float(s[1:]) 
     scale.append(s*2)
 
-print "WEIGHTS: ", weights
-print 'BASE: ', base
-print 'SCALE: ', scale
-    
 print '[Inset, OutSet, ix, iy, ox, oy, fx, fy, seed, pctzero] = ', InSet, OutSet, ix, iy, ox, oy, fx, fy, seed, pctzero
 
 # convert numeric strings to int prior to making operations with them
