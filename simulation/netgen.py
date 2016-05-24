@@ -36,7 +36,7 @@
 #   This file (netgen.py) was created on May 20 2016.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 21 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 24 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -46,6 +46,16 @@
 #
 # Reads description of connecton weights among two simulated brain regions
 # and generates all the connecton weights between those regions.
+# The input, a weight file with extension "w", is given as argument when script
+# is executed.
+# The ouput is a file of the same name as the input file but with extension
+# "ws".
+# Only one weight file is processed at a time. If need to process all weight
+# files in a directory, you might want to use the following bash script on a
+# Unix or Linux terminal:
+# for file in *.ws ;
+#     do python netgen.py $file ;
+# done
 
 import sys
 
@@ -101,8 +111,6 @@ for b in weights:
 for s in errors:
     s = float(s[1:]) 
     scale.append(s*2)
-
-print '[Inset, OutSet, ix, iy, ox, oy, fx, fy, seed, pctzero] = ', InSet, OutSet, ix, iy, ox, oy, fx, fy, seed, pctzero
 
 # convert numeric strings to int prior to making operations with them
 ix = int(ix)
