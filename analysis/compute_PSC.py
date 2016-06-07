@@ -101,22 +101,22 @@ total_fmri_blocks = num_of_fmri_blocks * num_of_subjects
 synaptic_timesteps = experiment_length - synaptic_steps_removed
 
 # define the names of the input files where the BOLD timeseries are contained
-BOLD_ts_subj=np.array(['subject_11/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_12/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_13/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_14/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_15/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_16/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_17/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_18/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_19/output.36trials.with_feedback/lsnm_bold_balloon.npy',
-                       'subject_20/output.36trials.with_feedback/lsnm_bold_balloon.npy'])
+BOLD_ts_subj=np.array(['subject_11/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_12/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_13/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_14/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_15/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_16/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_17/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_18/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_19/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+                       'subject_20/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy'])
 
 # set matplot lib parameters to produce visually appealing plots
 #mpl.style.use('ggplot')
 
 # define output file where means, standard deviations, and variances will be stored
-PSC_stats_FILE = 'psc_stats.txt'
+PSC_stats_FILE = 'psc_stats_TVB_ROI.txt'
 
 # define neural synaptic time interval in seconds. The simulation data is collected
 # one data point at synaptic intervals (10 simulation timesteps). Every simulation

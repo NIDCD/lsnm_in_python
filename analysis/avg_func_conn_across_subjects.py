@@ -305,13 +305,23 @@ print 'Dimensions of std of differences array', d_syn_std.shape
 
 # convert to Pandas dataframe, using the transpose to convert to a format where the names
 # of the modules are the labels for each time-series
-d_mean = pd.DataFrame(np.array([d_syn_mean,
-                                 d_fmri_mean]),
-                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
+d_mean = pd.DataFrame(np.array([d_syn_mean[:-1],
+                                 d_fmri_mean[:-1]]),
+                      columns=np.array(['V1',
+                                        'V4',
+                                        'FS',
+                                        'D1',
+                                        'D2',
+                                        'FR']), #, 'cIT']),
                        index=np.array(['ISA', 'fMRI']))
-d_std  = pd.DataFrame(np.array([d_syn_sem,
-                                 d_fmri_sem]),
-                      columns=np.array(['V1', 'V4', 'FS', 'D1', 'D2', 'FR', 'cIT']),
+d_std  = pd.DataFrame(np.array([d_syn_sem[:-1],
+                                 d_fmri_sem[:-1]]),
+                      columns=np.array(['V1',
+                                        'V4',
+                                        'FS',
+                                        'D1',
+                                        'D2',
+                                        'FR']), #, 'cIT']),
                        index=np.array(['ISA', 'fMRI']))
 
 # now, plot means and std's using 'pandas framework...
@@ -324,7 +334,7 @@ mpl_fig = plt.figure()  # start a new figure
 ax = plt.gca()          # get hold of the axes
 
 bars=d_mean.plot(yerr=d_std, ax=ax, kind='bar',
-                  color=['yellow', 'green', 'orange', 'red', 'pink', 'purple', 'lightblue'],
+                  color=['yellow', 'green', 'orange', 'red', 'pink', 'purple'], #, 'lightblue'],
                   ylim=[-0.5, 0.4])
 
 # change the location of the legend

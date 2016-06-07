@@ -87,26 +87,26 @@ avg_BOLD_file = 'avg_BOLD_across_subjs.npy'
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-syn_subj = ['subject_11/output.36trials/synaptic_in_ROI.npy',
-            'subject_12/output.36trials/synaptic_in_ROI.npy',
-            'subject_13/output.36trials/synaptic_in_ROI.npy',
-            'subject_14/output.36trials/synaptic_in_ROI.npy',
-            'subject_15/output.36trials/synaptic_in_ROI.npy',
-            'subject_16/output.36trials/synaptic_in_ROI.npy',
-            'subject_17/output.36trials/synaptic_in_ROI.npy',
-            'subject_18/output.36trials/synaptic_in_ROI.npy',
-            'subject_19/output.36trials/synaptic_in_ROI.npy',
-            'subject_20/output.36trials/synaptic_in_ROI.npy']
-BOLD_subj = ['subject_11/output.36trials/lsnm_bold_balloon.npy',
-             'subject_12/output.36trials/lsnm_bold_balloon.npy',
-             'subject_13/output.36trials/lsnm_bold_balloon.npy',
-             'subject_14/output.36trials/lsnm_bold_balloon.npy',
-             'subject_15/output.36trials/lsnm_bold_balloon.npy',
-             'subject_16/output.36trials/lsnm_bold_balloon.npy',
-             'subject_17/output.36trials/lsnm_bold_balloon.npy',
-             'subject_18/output.36trials/lsnm_bold_balloon.npy',
-             'subject_19/output.36trials/lsnm_bold_balloon.npy',
-             'subject_20/output.36trials/lsnm_bold_balloon.npy']
+syn_subj = ['subject_11/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_12/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_13/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_14/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_15/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_16/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_17/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_18/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_19/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy',
+            'subject_20/output.36trials.with_feedback/synaptic_in_TVB_ROI.npy']
+BOLD_subj = ['subject_11/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_12/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_13/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_14/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_15/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_16/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_17/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_18/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_19/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy',
+             'subject_20/output.36trials.with_feedback/bold_balloon_TVB_ROI.npy']
 
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_syn = np.zeros((num_of_subjects, num_of_modules, experiment_length))

@@ -36,13 +36,14 @@
 #   This file (display_Hagmanns_brain_connectivity.py) was created on July 18, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 18, 2015
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on June 5, 2016
 #   Based on: display_sensor_locations.py by Paula Sanz-Leon (TVB team)
 # **************************************************************************/
 
 # display_Hagmanns_brain_connectivity.py
 #
-# Displays Hagmann's brain's 998-nodes plus the connections among those nodes
+# Displays Hagmann's brain's 998-nodes plus LSNM nodes, along with the connections
+# between Hagmann's nodes and LSNM nodes.
 
 from tvb.simulator.lab import *
 from tvb.simulator.plot.tools import mlab
@@ -85,35 +86,44 @@ fr = [29, 25, 40]
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
 centres = white_matter.centres
 
+# Load one of the cortex 3d surface from TVB data files
+CORTEX = surfaces.Cortex.from_file("cortex_80k/surface_80k.zip")
+
+plot_surface(CORTEX, op=0.08)
+
+# Threshold that will tell the visualization script whether to plot a given connection
+# weight or ignore it
+weight_threshold = 0.5
+
 # Plot the 998 nodes of Hagmann's brain
-region_centres = mlab.points3d(centres[:, 0], 
-                               centres[:, 1], 
-                               centres[:, 2],
-                               color=(0.5, 0.5, 0.5),
-                               scale_factor = 1.)
+#region_centres = mlab.points3d(centres[:, 0], 
+#                               centres[:, 1], 
+#                               centres[:, 2],
+#                               color=(0.5, 0.5, 0.5),
+#                               scale_factor = 1.)
 
 # Now plot the hypothetical locations of LSNM visual modules
 
 # V1 node is yellow
-v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 5.)
+v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 10.)
 
 # V4 node is green
-v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 5.)
+v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 10.)
 
 # IT node is blue
-it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 5.)
+it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 10.)
 
 # FS node is orange
-fs_module = mlab.points3d(fs[0],fs[1],fs[2],color=(1, 0.5, 0),scale_factor = 5.)
+fs_module = mlab.points3d(fs[0],fs[1],fs[2],color=(1, 0.5, 0),scale_factor = 10.)
 
 # D1 node is red
-d1_module = mlab.points3d(d1[0],d1[1],d1[2],color=(1, 0, 0),scale_factor = 5.)
+d1_module = mlab.points3d(d1[0],d1[1],d1[2],color=(1, 0, 0),scale_factor = 10.)
 
 # D2 node is magenta (or is it pink?)
-d2_module = mlab.points3d(d2[0],d2[1],d2[2],color=(1, 0, 1),scale_factor = 5.)
+d2_module = mlab.points3d(d2[0],d2[1],d2[2],color=(1, 0, 1),scale_factor = 10.)
 
 # FR node is purple
-fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 5.)
+fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 10.)
 
 # ..., or plot the hypothetical locations of auditory LSNM modules
 #a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 8.)
@@ -121,16 +131,25 @@ fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 5
 #st_module = mlab.points3d(st[0],st[1],st[2],color=(0, 0, 1),scale_factor = 8.)
 #apf_module = mlab.points3d(apf[0],apf[1],apf[2],color=(1, 0, 0),scale_factor = 8.)
 
+print ' '
 
 # ... now Plot the connections among the nodes
 for tvb_node in nodes_to_be_examined:
 
-    # extract TVB node numbers that are connected to TVB node above
-    tvb_conn = np.nonzero(white_matter.weights[tvb_node])
+    print 'Node ', tvb_node, ' is connected to nodes: [', 
+    
+    # extract TVB node numbers that are connected to TVB node above by a value larger than
+    # a given threshold
+    #tvb_conn = (white_matter.weights[tvb_node] > weight_threshold).nonzero()
+    # get the connection that has the strongest weight
+    tvb_conn = np.argmax(white_matter.weights[tvb_node])
     # extract the numpy array from it
-    tvb_conn = tvb_conn[0]
+    #tvb_conn = tvb_conn[0]
+    tvb_conn = [tvb_conn]
     
     for connected_node in tvb_conn:
+
+        print connected_node, '(', white_matter.weights[tvb_node, connected_node], '),', 
 
         cxn = numpy.array([centres[connected_node],
                            centres[tvb_node]])
@@ -139,11 +158,13 @@ for tvb_node in nodes_to_be_examined:
 
         connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2],
                                   color = (0, 0, 0),
-                                  tube_radius=0.1)
+                                  tube_radius=0.5)
         
         connected = mlab.points3d(connected[0], connected[1], connected[2],
-                                color=(0.5, 0.5, 0.5),
-                                scale_factor = 1.)
+                                color=(0.75, 0.75, 0.75),
+                                scale_factor = 8.)
+
+    print ']'
 
 # Finally, show everything on screen
 mlab.show(stop=True)

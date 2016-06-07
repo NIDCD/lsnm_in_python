@@ -79,7 +79,7 @@ modules = np.arange(num_of_modules)
 
 # define the name of the input files where the BOLD and synaptic timeseries are
 # stored:
-BOLD_subj = 'tvb_bold_balloon.npy'
+BOLD_subj = 'lsnm_bold_balloon.npy'
             
 # open files that contain synaptic and fMRI BOLD timeseries
 lsnm_BOLD = np.load(BOLD_subj)

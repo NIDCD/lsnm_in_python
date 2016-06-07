@@ -76,10 +76,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_ROI.npy'
+SYN_file  = 'synaptic_in_TVB_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'tvb_bold_balloon.npy'
+BOLD_file = 'bold_balloon_TVB_ROI.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -154,8 +154,8 @@ def balloon_function(y, t, syn):
 Ti = 0.005 * 10
 
 # Total time of scanning experiment in seconds (timesteps X 5)
-#T = 198
-T = 110
+T = 198
+#T = 110
 
 # Time for one complete trial in milliseconds
 Ttrial = 5.5
@@ -319,10 +319,12 @@ lit_BOLD= np.array(V_0 * (k1 * (1. - q_lit)+ k2 * (1. - q_lit/v_lit) + k3 * (1. 
 # Thus, we need to multiply the datapoint times 50 ms...
 # ... and divide by 1000 to convert to seconds
 #t = np.linspace(0, 659*50./1000., num=660)
-t = np.linspace(0, synaptic_timesteps * 50.0 / 1000., num=synaptic_timesteps)
+t = np.linspace(0, synaptic_timesteps+1 * 50.0 / 1000., num=synaptic_timesteps+1)
 
 # downsample the BOLD signal arrays to produce scan rate of 2 per second
-scanning_timescale = np.arange(0, synaptic_timesteps, synaptic_timesteps / (T/Tr))
+scanning_timescale = np.linspace(0, synaptic_timesteps, num=T/Tr)
+scanning_timescale = np.round(scanning_timescale)
+scanning_timescale = scanning_timescale.astype(int)
 mr_time = t[scanning_timescale]
 v1_BOLD = v1_BOLD[scanning_timescale]
 v4_BOLD = v4_BOLD[scanning_timescale]
@@ -374,9 +376,9 @@ plt.figure()
 plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
 
 # Plot synaptic activities
-plt.plot(t, v1_syn, linewidth=3.0, color='yellow')
-plt.plot(t, it_syn, linewidth=3.0, color='blue')
-plt.plot(t, d1_syn, linewidth=3.0, color='red')
+plt.plot(t, syn[0], linewidth=3.0, color='yellow')
+plt.plot(t, syn[1], linewidth=3.0, color='blue')
+plt.plot(t, syn[2], linewidth=3.0, color='red')
 plt.gca().set_axis_bgcolor('black')
 
 # Set up separate figures to plot fMRI BOLD signal
