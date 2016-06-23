@@ -110,8 +110,17 @@ class LSNM(QtGui.QWidget):
 
     def initUI(self):
 
+        global learning
+        learning = False                 # Determines whether hebbian learning will be applied
+
+        global learning_file             # name of the file that contains name of modules that will undergo
+        learning_file =""                # hebbian learning
+
         global useTVBConnectome
         useTVBConnectome = False         # Determines whether to use a TVB connectome within simulation
+
+        global embedding_file            # locations of embedded LSNM nodes within TVB connectome
+        embedding_file = ""
 
         global generateSubject
         generateSubject = False         # Determines whether or not to vary connection weights given
@@ -163,21 +172,28 @@ class LSNM(QtGui.QWidget):
         # define the action to be taken if Run button is clicked on
         neuralNetButton.clicked.connect(self.browseNeuralNets)
 
+        # define check box to allow user to define LSNM module that will participate as a source
+        # in hebbian learning
+        learningBox = QtGui.QCheckBox('Use Hebbian Learning', self)
+        layout.addWidget(learningBox, 4, 0)
+        # define the action to be taken if learning box is selected
+        learningBox.stateChanged.connect(self.learningOrNot)
+
         # define checkbox to allow users to determine whether or not a TVB connectome will be used
         # in simulation
         connectomeBox = QtGui.QCheckBox('Use TVB Connectome', self)
-        layout.addWidget(connectomeBox, 4, 0)
+        layout.addWidget(connectomeBox, 5, 0)
         connectomeBox.stateChanged.connect(self.connectomeOrNot)
 
         # create a push button object labeled 'Run'
         runButton = QtGui.QPushButton('Run simulation', self)
-        layout.addWidget(runButton, 5, 0)
+        layout.addWidget(runButton, 7, 0)
         # define the action to be taken if Run button is clicked on
         runButton.clicked.connect(self.onStart)
     
         # create a push button object labeled 'Exit'
         exitButton = QtGui.QPushButton('Quit LSNM', self)
-        layout.addWidget(exitButton, 6, 0)
+        layout.addWidget(exitButton, 8, 0)
         # define the action to be taken if Exit button is clicked on
         exitButton.clicked.connect(QtCore.QCoreApplication.instance().quit)
 
@@ -197,20 +213,28 @@ class LSNM(QtGui.QWidget):
         self.neuralNetTextEdit = QtGui.QLineEdit()
         layout.addWidget(self.neuralNetTextEdit, 3, 1)
 
+        # create a text edit object for reading file that contains modules that will undergo learning
+        self.learningTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.learningTextEdit, 4, 1)
+
+        # create text edit object that contains name of file with locations of LSNM nodes within TVB
+        self.embeddingTextEdit = QtGui.QLineEdit()
+        layout.addWidget(self.embeddingTextEdit, 5, 1)
+
         # define checkbox to allow users to determine whether or not to vary weights randomly from
         # weights given to create a new simulated subject
         newSubjectBox= QtGui.QCheckBox('Vary weights to create new subject', self)
-        layout.addWidget(newSubjectBox, 4, 1)
+        layout.addWidget(newSubjectBox, 6, 0)
         newSubjectBox.stateChanged.connect(self.createNewSubject)
         
         # define output display to keep users updated with simulation progress status messages
         self.runTextEdit = QtGui.QTextEdit()
-        layout.addWidget(self.runTextEdit, 5, 1)
+        layout.addWidget(self.runTextEdit, 7, 1)
 
         # define progress bar to keep user informed of simulation progress status
         self.progressBar = QtGui.QProgressBar(self)
         self.progressBar.setRange(0,100)
-        layout.addWidget(self.progressBar, 6, 1)
+        layout.addWidget(self.progressBar, 8, 1)
                         
         # define the main thread as the main simulation code
         self.myLongTask = TaskThread()
@@ -260,19 +284,40 @@ class LSNM(QtGui.QWidget):
         global neural_net
         # allow user to browse files to find desired input file containing neural net (model and weights
         # combined)
-        neural_net = QtGui.QFileDialog.getOpenFileName(self, 'Select *.txt file that contains neural net', '.')
+        neural_net = QtGui.QFileDialog.getOpenFileName(self, 'Select *.json file that contains neural net', '.')
 
-        # display contents of file containing neural net (model and weights combined
+        # display contents of file containing neural net (model and weights combined)
         self.neuralNetTextEdit.setText(neural_net)
 
+    def learningOrNot(self, state):
+
+        global learning
+        global learning_file
+        # allow user to decide whether network weights will be participating in Hebbian learning during
+        # simulation
+        if state == QtCore.Qt.Checked:
+            learning = True
+            print '\rUsing Hebbian learning...'
+            learning_file = QtGui.QFileDialog.getOpenFileName(self, 'Select file that contains learning modules', '.')
+
+            # display contents of file with names of modules whose weights will undergo hebbian learning
+            self.learningTextEdit.setText(learning_file)
+        else:
+            learning = False
+            print '\rNot Using learning...'
         
     def connectomeOrNot(self, state):
 
         global useTVBConnectome
+        global embedding_file
         # allow user to decide whether to use a TVB connectome as part of the simulation
         if state == QtCore.Qt.Checked:
             useTVBConnectome = True
             print '\rUsing TVB Connectome...'
+            embedding_file = QtGui.QFileDialog.getOpenFileName(self,'Select file that contains locations of LSNM nodes', '.')
+
+            # display contents of file with locations of LSNM nodes with TVB connectome
+            self.embeddingTextEdit.setText(embedding_file)
         else:
             useTVBConnectome = False
             print '\rNOT Using TVB Connectome...'
@@ -765,7 +810,7 @@ class TaskThread(QtCore.QThread):
 
         # run the simulation for the number of timesteps given
         print '\rRunning simulation...'        
-
+        
         if useTVBConnectome:
             # the following 'for loop' is the main loop of the TVB simulation with the parameters
             # defined above. Note that the LSNM simulator is literally embedded into the TVB
