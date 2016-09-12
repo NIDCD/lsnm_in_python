@@ -33,16 +33,16 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plot_neural_tvb.py) was created on September 13, 2015.
+#   This file (plot_syn_and_BOLD_tvb.py) was created on August 30, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on August 29, 2016  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on August 30, 2016  
 # **************************************************************************/
 
-# plot_neural_tvb.py
+# plot_syn_and_BOLD_tvb.py
 #
-# Plot output data files of Hagmann's brain simulation using TVB and Hybrid TVB/LSNM
-# simulation (side to side)
+# Plot synaptic and BOLD files of Hagmann's brain using both TVB and Hybrid TVB/LSNM
+# simulations (side to side)
 
 # what are the locations of relevant TVB nodes within TVB array?
 # the following are the so-called 'host nodes'
@@ -73,8 +73,8 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # load file containing TVB nodes electrical activity
-tvb = np.load('output.36trials/tvb_neuronal.npy')
-hybrid_tvb_lsnm = np.load('output.36trials.with_feedback/tvb_neuronal.npy')
+tvb = np.load('output.36trials/tvb_synaptic.npy')
+hybrid_tvb_lsnm = np.load('output.36trials.with_feedback/tvb_synaptic.npy')
 
 
 # the following nodes have the strongest connections with host nodes
