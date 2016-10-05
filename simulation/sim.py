@@ -460,58 +460,24 @@ class TaskThread(QtCore.QThread):
             # we are assuming that each simulation timestep is equivalent to 5 milliseconds
             # of real time. 
         
-            # The TVB brain areas where our LSNM units are going to be embedded it
-            # hardcoded for now, but will be included in as an option in the LSNM GUI.
+            # The TVB brain areas where our LSNM units are going to be embedded are
+            # contained in a file called "lsnm_tvb_link.txt"
         
             # create a python dictionary of LSNM modules and the location of the corresponding
             # TVB node in which the TVB node is to be embedded. In other words, the closest TVB node
             # is  used as a 'host' node to embed a given LSNM module
-            #lsnm_tvb_link = {'ev1v': 345,
-            #                 'iv1v': 345,
-            #                 'ev1h': 345,
-            #                 'iv1h': 345,
-            #                 'ev4v': 393,
-            #                 'iv4v': 393,
-            #                 'ev4c': 393,
-            #                 'iv4c': 393,
-            #                 'ev4h': 393,
-            #                 'iv4h': 393,
-            #                 'exss': 413,
-            #                 'inss': 413,
-            #                 'exfs': 47,
-            #                 'infs': 47,
-            #                 'efd1': 74,
-            #                 'ifd1': 74,
-            #                 'efd2': 41,
-            #                 'ifd2': 41,
-            #                 'exfr': 125,
-            #                 'infr': 125
-            #                 }
-        
-            # the following are the TVB -> LSNM auditory connections
-            # uncomment if simulating auditory processing
-            lsnm_tvb_link = {'ea1d': 474,
-                             'ia1d': 474,
-                             'ea1u': 474,
-                             'ia1u': 474,
-                             'ea2d': 470,
-                             'ia2d': 470,
-                             'ea2c': 470,
-                             'ia2c': 470,
-                             'ea2u': 470,
-                             'ia2u': 470,
-                             'estg': 477,
-                             'istg': 477,
-                             'exfs': 51,
-                             'infs': 51,
-                             'efd1': 51,
-                             'ifd1': 51,
-                             'efd2': 51,
-                             'ifd2': 51,
-                             'exfr': 51,
-                             'infr': 51
-                         }
 
+            lsnm_tvb_link = {}
+
+            # open the input file containing LSNM <-> TVB link declarations, then
+            # load the file into a python list of lists and close file safely
+            with open(embedding_file) as f:
+                for line in f:
+                    (key, val) = line.split()
+                    lsnm_tvb_link[key] = int(val)
+
+            print '\r LSNM <-> TVB Link: ', lsnm_tvb_link
+            
             # create two arrays to store synaptic activity for each and all TVB nodes,
             # one for absolute values of synaptic activities (for fMRI computation):
             tvb_abs_syna = []
@@ -547,37 +513,6 @@ class TaskThread(QtCore.QThread):
         # output files
         synaptic_interval = 10
                    
-        if useTVBConnectome == True:
-            # print which brain areas from TVB we are using,
-            # as well as 'first degree' connections of the TVB areas listed
-            # the folowing printout is only for informational purposes
-
-            print '\rIncoming units from TVB are: '
-
-            print '\rInto ' + white_matter.region_labels[474],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[474])]
-            print 'with the following weights: ',
-            print white_matter.weights[474][np.nonzero(white_matter.weights[474])]
-            
-            print '\rInto ' + white_matter.region_labels[470],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[470])]
-            print 'with the following weights: ',
-            print white_matter.weights[470][np.nonzero(white_matter.weights[470])]
-        
-            print '\rInto ' + white_matter.region_labels[477],
-            print ': ',        
-            print white_matter.region_labels[np.nonzero(white_matter.weights[477])]
-            print 'with the following weights: ',
-            print white_matter.weights[477][np.nonzero(white_matter.weights[477])]
-            
-            print '\rInto ' + white_matter.region_labels[51],
-            print ': ',
-            print white_matter.region_labels[np.nonzero(white_matter.weights[51])]
-            print 'with the following weights: ',
-            print white_matter.weights[51][np.nonzero(white_matter.weights[51])]
-            
         ######### THE FOLLOWING SIMULATES LSNM NETWORK ########################
         # initialize an empty list to store ALL of the modules of the LSNM neural network
         # NOTE: This is the main data structure holding all of the LSNM network values

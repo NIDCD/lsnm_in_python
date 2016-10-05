@@ -33,16 +33,16 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (compute_BOLD_balloon_model.py) was created on April 17, 2015.
+#   This file (compute_BOLD_balloon_66_regions.py) was created on September 27, 2016.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on September 26 2016
+#   Last updated by Antonio Ulloa on September 27 2016
 #
 # **************************************************************************/
 
-# compute_BOLD_balloon_model.py
+# compute_BOLD_balloon_66_regions.py
 #
 # Calculate and plot fMRI BOLD signal, using the
 # Balloon model, as described by Stephan et al (2007)
@@ -52,7 +52,8 @@
 # Parameters for both were taken from Friston et al (2000) and they were
 # estimated using a 2T scanner, with a TR of 2 seconds, 
 # 
-# ... using data from visual delay-match-to-sample simulation.
+# ... using data from visual delay-match-to-sample simulation, 66 regions from
+# Hagmann's connectome.
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
 #
@@ -78,11 +79,13 @@ import matplotlib.pyplot as plt
 
 from scipy.integrate import odeint
 
+from matplotlib import cm as CM
+
 # define the name of the input file where the synaptic activities are stored
 SYN_file  = 'synaptic_in_TVB_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_TVB_ROI.npy'
+BOLD_file = 'bold_balloon_66_regions.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -370,7 +373,7 @@ print 'Size of BOLD time-series after removing scans: ', v1_BOLD.size
 np.save(BOLD_file, lsnm_BOLD)
 
 # increase font size for display purposes
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 20})
 
 # Set up figure to plot synaptic activity
 plt.figure()
@@ -433,13 +436,32 @@ labels = ['V1/V2', 'V4', 'IT', 'FS', 'D1', 'D2', 'FR']
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
+
+
 # plot correlation matrix as a heatmap
-cax = ax.matshow(corr_mat, interpolation='nearest')
+mask = np.tri(corr_mat.shape[0], k=-1)
+mask = np.transpose(mask)
+print mask
+corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the lower triangle
+cmap = CM.get_cmap('jet', 10)
+cmap.set_bad('w')
+cax = ax.imshow(corr_mat, interpolation='nearest', cmap=cmap)
+ax.grid(False)
 plt.colorbar(cax)
 
 # display labels for brain regions
-ax.set_xticklabels(['']+labels)
-ax.set_yticklabels(['']+labels)
+ax.set_xticklabels(['']+labels, minor=False)
+ax.set_yticklabels(['']+labels, minor=False)
+
+# Turn off all the ticks
+ax = plt.gca()
+
+for t in ax.xaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
+for t in ax.yaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
 
 
 # Show the plots on the screen
