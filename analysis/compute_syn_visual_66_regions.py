@@ -33,34 +33,27 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (compute_syn_visual_TVB.py) was created on June 4, 2016.
+#   This file (compute_syn_visual_66_regions.py) was created on October 11, 2016.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on June 4, 2016
+#   Last updated by Antonio Ulloa on October 11, 2016
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
-# compute_syn_visual_TVB.py
+# compute_syn_visual_66_regions.py
 #
-# Calculate and plot simulated synaptic activities in given ROIs that include
-# only TVB connectome nodes
+# Calculate and plot simulated synaptic activities in 33 ROIs (right hemisphere)
+# as defined by Haggman et al
 # 
-# ... using data from visual delay-match-to-sample simulation.
-# It also saves the synaptic activities for each and all modules in a python data file
+# ... using data from visual delay-match-to-sample simulation (or resting state simulation
+# of the same duration as the DMS).
+# It also saves the synaptic activities for 33 ROIs (right hemisphere) in a python data file
 # (*.npy)
-# The data is saved in a numpy array with columns in the following order:
+# The data is saved in a numpy array where the columns are the 33 ROIs:
 #
-# V1 ROI (right hemisphere, contains only TVB nodes) 
-# V4 ROI (right hemisphere, contains only TVB nodes)
-# IT ROI (right hemisphere, contains only TVB nodes)
-# FS ROI (right hemisphere, contains only TVB nodes)
-# D1 ROI (right hemisphere, contains only TVB nodes)
-# D2 ROI (right hemisphere, contains only TVB nodes)
-# FR ROI (right hemisphere, contains only TVB nodes)
-# IT ROI (left hemisphere,  contains only  TVB nodes)
 
 import numpy as np
 
@@ -72,7 +65,7 @@ import matplotlib as mpl
 mpl.style.use('ggplot')
 
 # define the name of the output file where the integrated synaptic activity will be stored
-syn_file = 'synaptic_in_TVB_ROI.npy'
+syn_file = 'synaptic_in_66_ROIs.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
