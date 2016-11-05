@@ -14,6 +14,11 @@
 # Each timestep is roughly equivalent to 5ms
 LSNM_simulation_time = 39600
 
+# define our attention parameter to a low setting since we are running a resting
+# state simulation. We will use 0.05, which is the same attention level that we
+# use for passive viewing during DMS task simulations.
+modules['atts'][8][0][0][0] = 0.05
+
 # define a dictionary of simulation events functions, each associated with
 # a specific simulation timestep
 simulation_events = {        

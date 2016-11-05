@@ -36,7 +36,7 @@
 #   This file (compute_avg_NAI_auditory.py) was created on April 19, 2016.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 19, 2016  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on October 25, 2016  
 # **************************************************************************/
 
 # compute_avg_NAI_auditory.py
@@ -49,6 +49,9 @@ import matplotlib.pyplot as plt
 
 num_of_subjects = 10
 NAI_ts_length = 30
+
+# increase font size prior to plotting
+plt.rcParams.update({'font.size': 20})
 
 # define the names of the input files where the NAI timecourses are contained, for four conditions:
 # TC-PSL, Tones-PSL, TC-DMS and Tones-DMS
@@ -123,44 +126,54 @@ for idx in range(0, num_of_subjects):
 # Set up figure to plot MEG source dynamics averaged across trials
 fig = plt.figure(1)
 
-plt.suptitle('NAI average timecourse during TC DMS')
+plt.suptitle('TC DMS')
 
 # Plot NAI
 aud_plot_S1 = plt.plot(NAI_TC_DMS_avg[0], label='S1')
 aud_plot_S2 = plt.plot(NAI_TC_DMS_avg[1], label='S2')
 
 plt.legend()
+plt.ylabel('Neural Activity')
+plt.xlabel('Simulation timesteps')
 
 # Set up figure to plot MEG source dynamics averaged across trials
 fig = plt.figure(2)
 
-plt.suptitle('NAI average timecourse during Tones DMS')
+plt.suptitle('Tones DMS')
 
 # Plot NAI
 aud_plot_S1 = plt.plot(NAI_Tones_DMS_avg[0], label='S1')
 aud_plot_S2 = plt.plot(NAI_Tones_DMS_avg[1], label='S2')
 
 plt.legend()
+plt.ylabel('Neural Activity')
+plt.xlabel('Simulation timesteps')
+
 # Set up figure to plot MEG source dynamics averaged across trials
 fig = plt.figure(3)
 
-plt.suptitle('NAI average timecourse during TC PSL')
+plt.suptitle('TC PSL')
 
 # Plot NAI
 aud_plot_S1 = plt.plot(NAI_TC_PSL_avg[0], label='S1')
 aud_plot_S2 = plt.plot(NAI_TC_PSL_avg[1], label='S2')
 
 plt.legend()
+plt.ylabel('Neural Activity Index')
+plt.xlabel('Simulation timesteps')
+
 # Set up figure to plot MEG source dynamics averaged across trials
 fig = plt.figure(4)
 
-plt.suptitle('NAI average timecourse during Tones PSL')
+plt.suptitle('Tones PSL')
 
 # Plot NAI
 aud_plot_S1 = plt.plot(NAI_Tones_PSL_avg[0], label='S1')
 aud_plot_S2 = plt.plot(NAI_Tones_PSL_avg[1], label='S2')
 
 plt.legend()
+plt.ylabel('Neural Activity')
+plt.xlabel('Simulation timesteps')
 
 # Show the plot on the screen
 plt.show()

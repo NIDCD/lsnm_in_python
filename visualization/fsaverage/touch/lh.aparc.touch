@@ -1,0 +1,1 @@
+mris_ca_label -aseg ../mri/aseg.mgz fsaverage lh ../surf/lh.sphere.reg /space/minerva/1/users/nicks/freesurfer/average/lh.curvature.buckner40.filled.desikan_killiany.2009-03-04.gcs ../label/lh.aparc.annot

@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on September 27 2016
+#   Last updated by Antonio Ulloa on October 13 2016
 #
 # **************************************************************************/
 
@@ -57,21 +57,7 @@
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
 #
-# The input data (synaptic activities) and the output (BOLD time-series) are numpy arrays
-# with columns in the following order:
-#
-# V1 ROI (right hemisphere, includes LSNM units and TVB nodes) 
-# V4 ROI (right hemisphere, includes LSNM units and TVB nodes)
-# IT ROI (right hemisphere, includes LSNM units and TVB nodes)
-# FS ROI (right hemisphere, includes LSNM units and TVB nodes)
-# D1 ROI (right hemisphere, includes LSNM units and TVB nodes)
-# D2 ROI (right hemisphere, includes LSNM units and TVB nodes)
-# FR ROI (right hemisphere, includes LSNM units and TVB nodes)
-# IT ROI (left hemisphere, contains only  TVB nodes)
-#
-#
 # Finally, the cross-correlation matrix is displayed.
-
 
 import numpy as np
 
@@ -180,14 +166,7 @@ syn = np.load(SYN_file)
 print 'LENGTH OF SYNAPTIC TIME-SERIES: ', syn[0].size
 
 # Throw away first value of each synaptic array (it is always zero)
-v1_syn = np.delete(syn[0], 0)
-v4_syn = np.delete(syn[1], 0)
-it_syn = np.delete(syn[2], 0)
-fs_syn = np.delete(syn[3], 0)
-d1_syn = np.delete(syn[4], 0)
-d2_syn = np.delete(syn[5], 0)
-fr_syn = np.delete(syn[6], 0)
-lit_syn = np.delete(syn[7], 0)
+syn = syn[:, 1:]
 
 # extract the synaptic activities corresponding to each ROI, and normalize to (0,1):
 #v1_syn = np.append(np.ones(320)*0.4, (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min()))
@@ -199,18 +178,12 @@ lit_syn = np.delete(syn[7], 0)
 #fr_syn = np.append(np.ones(320)*0.4, (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min()))
 #lit_syn= np.append(np.ones(320)*0.4, (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min()))
 
-v1_syn = (v1_syn-v1_syn.min()) / (v1_syn.max() - v1_syn.min())
-v4_syn = (v4_syn-v4_syn.min()) / (v4_syn.max() - v4_syn.min())
-it_syn = (it_syn-it_syn.min()) / (it_syn.max() - it_syn.min())
-fs_syn = (fs_syn-fs_syn.min()) / (fs_syn.max() - fs_syn.min())
-d1_syn = (d1_syn-d1_syn.min()) / (d1_syn.max() - d1_syn.min())
-d2_syn = (d2_syn-d2_syn.min()) / (d2_syn.max() - d2_syn.min())
-fr_syn = (fr_syn-fr_syn.min()) / (fr_syn.max() - fr_syn.min())
-lit_syn= (lit_syn-lit_syn.min()) / (lit_syn.max() - lit_syn.min())
-
+# normalize
+for idx, roi in enumerate(syn):
+    syn[idx] = (syn[idx] - syn[idx].min()) / (syn[idx].max() - syn[idx].min())
 
 # Extract number of timesteps from one of the synaptic activity arrays
-synaptic_timesteps = v1_syn.size
+synaptic_timesteps = syn[0].size
 print 'Size of synaptic arrays: ', synaptic_timesteps
 
 # Given neural synaptic time interval and total time of scanning experiment,
@@ -224,14 +197,39 @@ v = 1.  # v, venous blood volume
 q = 1.  # q, deoxyhemoglobin content
 
 # initial conditions vectors
-y_0_v1 = [s, f, v, q]      
-y_0_v4 = [s, f, v, q]      
-y_0_it = [s, f, v, q]      
-y_0_fs = [s, f, v, q]      
-y_0_d1 = [s, f, v, q]      
-y_0_d2 = [s, f, v, q]      
-y_0_fr = [s, f, v, q]      
-y_0_lit= [s, f, v, q]
+y_0_0 = [s, f, v, q]      
+y_0_1 = [s, f, v, q]      
+y_0_2 = [s, f, v, q]      
+y_0_3 = [s, f, v, q]      
+y_0_4 = [s, f, v, q]      
+y_0_5 = [s, f, v, q]      
+y_0_6 = [s, f, v, q]      
+y_0_7 = [s, f, v, q]      
+y_0_8 = [s, f, v, q]      
+y_0_9 = [s, f, v, q]      
+y_0_10 = [s, f, v, q]      
+y_0_11 = [s, f, v, q]      
+y_0_12 = [s, f, v, q]      
+y_0_13 = [s, f, v, q]      
+y_0_14 = [s, f, v, q]      
+y_0_15 = [s, f, v, q]      
+y_0_16 = [s, f, v, q]      
+y_0_17 = [s, f, v, q]      
+y_0_18 = [s, f, v, q]      
+y_0_19 = [s, f, v, q]      
+y_0_20 = [s, f, v, q]      
+y_0_21 = [s, f, v, q]      
+y_0_22 = [s, f, v, q]      
+y_0_23 = [s, f, v, q]      
+y_0_24 = [s, f, v, q]      
+y_0_25 = [s, f, v, q]      
+y_0_26 = [s, f, v, q]      
+y_0_27 = [s, f, v, q]      
+y_0_28 = [s, f, v, q]      
+y_0_29 = [s, f, v, q]      
+y_0_30 = [s, f, v, q]      
+y_0_31 = [s, f, v, q]      
+y_0_32 = [s, f, v, q]      
 
 # generate synaptic time array
 t_syn = np.arange(0, synaptic_timesteps)
@@ -255,66 +253,241 @@ t = time_in_seconds
 #v1_syn[3420:3959]= .01       # 30-second do nothing
 
 # solve the ODEs for given initial conditions, parameters, and timesteps
-state_v1 = odeint(balloon_function, y_0_v1, t, args=(v1_syn,) )
-state_v4 = odeint(balloon_function, y_0_v4, t, args=(v4_syn,) )
-state_it = odeint(balloon_function, y_0_it, t, args=(it_syn,) )
-state_d1 = odeint(balloon_function, y_0_d1, t, args=(d1_syn,) )
-state_d2 = odeint(balloon_function, y_0_d2, t, args=(d2_syn,) )
-state_fs = odeint(balloon_function, y_0_fs, t, args=(fs_syn,) )
-state_fr = odeint(balloon_function, y_0_fr, t, args=(fr_syn,) )
-state_lit= odeint(balloon_function, y_0_lit,t, args=(lit_syn,))
+state_0 = odeint(balloon_function, y_0_0, t, args=(syn[0],) )
+state_1 = odeint(balloon_function, y_0_1, t, args=(syn[1],) )
+state_2 = odeint(balloon_function, y_0_2, t, args=(syn[2],) )
+state_3 = odeint(balloon_function, y_0_3, t, args=(syn[3],) )
+state_4 = odeint(balloon_function, y_0_4, t, args=(syn[4],) )
+state_5 = odeint(balloon_function, y_0_5, t, args=(syn[5],) )
+state_6 = odeint(balloon_function, y_0_6, t, args=(syn[6],) )
+state_7 = odeint(balloon_function, y_0_7, t, args=(syn[7],) )
+state_8 = odeint(balloon_function, y_0_8, t, args=(syn[8],) )
+state_9 = odeint(balloon_function, y_0_9, t, args=(syn[9],) )
+state_10 = odeint(balloon_function, y_0_10, t, args=(syn[10],) )
+state_11 = odeint(balloon_function, y_0_11, t, args=(syn[11],) )
+state_12 = odeint(balloon_function, y_0_12, t, args=(syn[12],) )
+state_13 = odeint(balloon_function, y_0_13, t, args=(syn[13],) )
+state_14 = odeint(balloon_function, y_0_14, t, args=(syn[14],) )
+state_15 = odeint(balloon_function, y_0_15, t, args=(syn[15],) )
+state_16 = odeint(balloon_function, y_0_16, t, args=(syn[16],) )
+state_17 = odeint(balloon_function, y_0_17, t, args=(syn[17],) )
+state_18 = odeint(balloon_function, y_0_18, t, args=(syn[18],) )
+state_19 = odeint(balloon_function, y_0_19, t, args=(syn[19],) )
+state_20 = odeint(balloon_function, y_0_20, t, args=(syn[20],) )
+state_21 = odeint(balloon_function, y_0_21, t, args=(syn[21],) )
+state_22 = odeint(balloon_function, y_0_22, t, args=(syn[22],) )
+state_23 = odeint(balloon_function, y_0_23, t, args=(syn[23],) )
+state_24 = odeint(balloon_function, y_0_24, t, args=(syn[24],) )
+state_25 = odeint(balloon_function, y_0_25, t, args=(syn[25],) )
+state_26 = odeint(balloon_function, y_0_26, t, args=(syn[26],) )
+state_27 = odeint(balloon_function, y_0_27, t, args=(syn[27],) )
+state_28 = odeint(balloon_function, y_0_28, t, args=(syn[28],) )
+state_29 = odeint(balloon_function, y_0_29, t, args=(syn[29],) )
+state_30 = odeint(balloon_function, y_0_30, t, args=(syn[30],) )
+state_31 = odeint(balloon_function, y_0_31, t, args=(syn[31],) )
+state_32 = odeint(balloon_function, y_0_32, t, args=(syn[32],) )
 
 # Unpack the state variables used in the BOLD model
-s_v1 = state_v1[:, 0]
-f_v1 = state_v1[:, 1]
-v_v1 = state_v1[:, 2]
-q_v1 = state_v1[:, 3]        
+s_0 = state_0[:, 0]
+f_0 = state_0[:, 1]
+v_0 = state_0[:, 2]
+q_0 = state_0[:, 3]        
 
-s_v4 = state_v4[:, 0]
-f_v4 = state_v4[:, 1]
-v_v4 = state_v4[:, 2]
-q_v4 = state_v4[:, 3]        
+s_1 = state_1[:, 0]
+f_1 = state_1[:, 1]
+v_1 = state_1[:, 2]
+q_1 = state_1[:, 3]        
 
-s_it = state_it[:, 0]
-f_it = state_it[:, 1]
-v_it = state_it[:, 2]
-q_it = state_it[:, 3]        
+s_2 = state_2[:, 0]
+f_2 = state_2[:, 1]
+v_2 = state_2[:, 2]
+q_2 = state_2[:, 3]        
 
-s_fs = state_fs[:, 0]
-f_fs = state_fs[:, 1]
-v_fs = state_fs[:, 2]
-q_fs = state_fs[:, 3]        
+s_3 = state_3[:, 0]
+f_3 = state_3[:, 1]
+v_3 = state_3[:, 2]
+q_3 = state_3[:, 3]        
 
-s_d1 = state_d1[:, 0]
-f_d1 = state_d1[:, 1]
-v_d1 = state_d1[:, 2]
-q_d1 = state_d1[:, 3]        
+s_4 = state_4[:, 0]
+f_4 = state_4[:, 1]
+v_4 = state_4[:, 2]
+q_4 = state_4[:, 3]        
 
-s_d2 = state_d2[:, 0]
-f_d2 = state_d2[:, 1]
-v_d2 = state_d2[:, 2]
-q_d2 = state_d2[:, 3]        
+s_5 = state_5[:, 0]
+f_5 = state_5[:, 1]
+v_5 = state_5[:, 2]
+q_5 = state_5[:, 3]        
 
-s_fr = state_fr[:, 0]
-f_fr = state_fr[:, 1]
-v_fr = state_fr[:, 2]
-q_fr = state_fr[:, 3]        
+s_6 = state_6[:, 0]
+f_6 = state_6[:, 1]
+v_6 = state_6[:, 2]
+q_6 = state_6[:, 3]        
 
-s_lit= state_lit[:,0]
-f_lit= state_lit[:,1]
-v_lit= state_lit[:,2]
-q_lit= state_lit[:,3]
+s_7 = state_7[:,0]
+f_7 = state_7[:,1]
+v_7 = state_7[:,2]
+q_7 = state_7[:,3]
+
+s_8 = state_8[:, 0]
+f_8 = state_8[:, 1]
+v_8 = state_8[:, 2]
+q_8 = state_8[:, 3]        
+
+s_9 = state_9[:, 0]
+f_9 = state_9[:, 1]
+v_9 = state_9[:, 2]
+q_9 = state_9[:, 3]        
+
+s_10 = state_10[:, 0]
+f_10 = state_10[:, 1]
+v_10 = state_10[:, 2]
+q_10 = state_10[:, 3]        
+
+s_11 = state_11[:, 0]
+f_11 = state_11[:, 1]
+v_11 = state_11[:, 2]
+q_11 = state_11[:, 3]        
+
+s_12 = state_12[:, 0]
+f_12 = state_12[:, 1]
+v_12 = state_12[:, 2]
+q_12 = state_12[:, 3]        
+
+s_13 = state_13[:, 0]
+f_13 = state_13[:, 1]
+v_13 = state_13[:, 2]
+q_13 = state_13[:, 3]        
+
+s_14 = state_14[:, 0]
+f_14 = state_14[:, 1]
+v_14 = state_14[:, 2]
+q_14 = state_14[:, 3]        
+
+s_15= state_15[:,0]
+f_15= state_15[:,1]
+v_15= state_15[:,2]
+q_15= state_15[:,3]
+
+s_16 = state_16[:, 0]
+f_16 = state_16[:, 1]
+v_16 = state_16[:, 2]
+q_16 = state_16[:, 3]        
+
+s_17 = state_17[:, 0]
+f_17 = state_17[:, 1]
+v_17 = state_17[:, 2]
+q_17 = state_17[:, 3]        
+
+s_18 = state_18[:, 0]
+f_18 = state_18[:, 1]
+v_18 = state_18[:, 2]
+q_18 = state_18[:, 3]        
+
+s_19 = state_19[:, 0]
+f_19 = state_19[:, 1]
+v_19 = state_19[:, 2]
+q_19 = state_19[:, 3]        
+
+s_20 = state_20[:, 0]
+f_20 = state_20[:, 1]
+v_20 = state_20[:, 2]
+q_20 = state_20[:, 3]        
+
+s_21 = state_21[:, 0]
+f_21 = state_21[:, 1]
+v_21 = state_21[:, 2]
+q_21 = state_21[:, 3]        
+
+s_22 = state_22[:,0]
+f_22 = state_22[:,1]
+v_22 = state_22[:,2]
+q_22 = state_22[:,3]
+
+s_23 = state_23[:, 0]
+f_23 = state_23[:, 1]
+v_23 = state_23[:, 2]
+q_23 = state_23[:, 3]        
+
+s_24 = state_24[:, 0]
+f_24 = state_24[:, 1]
+v_24 = state_24[:, 2]
+q_24 = state_24[:, 3]        
+
+s_25 = state_25[:, 0]
+f_25 = state_25[:, 1]
+v_25 = state_25[:, 2]
+q_25 = state_25[:, 3]        
+
+s_26 = state_26[:, 0]
+f_26 = state_26[:, 1]
+v_26 = state_26[:, 2]
+q_26 = state_26[:, 3]        
+
+s_27 = state_27[:, 0]
+f_27 = state_27[:, 1]
+v_27 = state_27[:, 2]
+q_27 = state_27[:, 3]        
+
+s_28 = state_28[:, 0]
+f_28 = state_28[:, 1]
+v_28 = state_28[:, 2]
+q_28 = state_28[:, 3]        
+
+s_29= state_29[:,0]
+f_29= state_29[:,1]
+v_29= state_29[:,2]
+q_29= state_29[:,3]
+
+s_30 = state_30[:, 0]
+f_30 = state_30[:, 1]
+v_30 = state_30[:, 2]
+q_30 = state_30[:, 3]        
+
+s_31 = state_31[:, 0]
+f_31 = state_31[:, 1]
+v_31 = state_31[:, 2]
+q_31 = state_31[:, 3]        
+
+s_32 = state_32[:, 0]
+f_32 = state_32[:, 1]
+v_32 = state_32[:, 2]
+q_32 = state_32[:, 3]        
 
 # now, we need to calculate BOLD signal at each timestep, based on v and q obtained from solving
 # balloon model ODE above.
-v1_BOLD = np.array(V_0 * (k1 * (1. - q_v1) + k2 * (1. - q_v1 / v_v1) + k3 * (1. - v_v1)) )
-v4_BOLD = np.array(V_0 * (k1 * (1. - q_v4) + k2 * (1. - q_v4 / v_v4) + k3 * (1. - v_v4)) )
-it_BOLD = np.array(V_0 * (k1 * (1. - q_it) + k2 * (1. - q_it / v_it) + k3 * (1. - v_it)) )
-fs_BOLD = np.array(V_0 * (k1 * (1. - q_fs) + k2 * (1. - q_fs / v_fs) + k3 * (1. - v_fs)) )
-d1_BOLD = np.array(V_0 * (k1 * (1. - q_d1) + k2 * (1. - q_d1 / v_d1) + k3 * (1. - v_d1)) )
-d2_BOLD = np.array(V_0 * (k1 * (1. - q_d2) + k2 * (1. - q_d2 / v_d2) + k3 * (1. - v_d2)) )
-fr_BOLD = np.array(V_0 * (k1 * (1. - q_fr) + k2 * (1. - q_fr / v_fr) + k3 * (1. - v_fr)) )
-lit_BOLD= np.array(V_0 * (k1 * (1. - q_lit)+ k2 * (1. - q_lit/v_lit) + k3 * (1. - v_lit)) )
+BOLD_0 = np.array(V_0 * (k1 * (1. - q_0) + k2 * (1. - q_0 / v_0) + k3 * (1. - v_0)) )
+BOLD_1 = np.array(V_0 * (k1 * (1. - q_1) + k2 * (1. - q_1 / v_1) + k3 * (1. - v_1)) )
+BOLD_2 = np.array(V_0 * (k1 * (1. - q_2) + k2 * (1. - q_2 / v_2) + k3 * (1. - v_2)) )
+BOLD_3 = np.array(V_0 * (k1 * (1. - q_3) + k2 * (1. - q_3 / v_3) + k3 * (1. - v_3)) )
+BOLD_4 = np.array(V_0 * (k1 * (1. - q_4) + k2 * (1. - q_4 / v_4) + k3 * (1. - v_4)) )
+BOLD_5 = np.array(V_0 * (k1 * (1. - q_5) + k2 * (1. - q_5 / v_5) + k3 * (1. - v_5)) )
+BOLD_6 = np.array(V_0 * (k1 * (1. - q_6) + k2 * (1. - q_6 / v_6) + k3 * (1. - v_6)) )
+BOLD_7 = np.array(V_0 * (k1 * (1. - q_7) + k2 * (1. - q_7 / v_7) + k3 * (1. - v_7)) )
+BOLD_8 = np.array(V_0 * (k1 * (1. - q_8) + k2 * (1. - q_8 / v_8) + k3 * (1. - v_8)) )
+BOLD_9 = np.array(V_0 * (k1 * (1. - q_9) + k2 * (1. - q_9 / v_9) + k3 * (1. - v_9)) )
+BOLD_10 = np.array(V_0 * (k1 * (1. - q_10) + k2 * (1. - q_10 / v_10) + k3 * (1. - v_10)) )
+BOLD_11 = np.array(V_0 * (k1 * (1. - q_11) + k2 * (1. - q_11 / v_11) + k3 * (1. - v_11)) )
+BOLD_12 = np.array(V_0 * (k1 * (1. - q_12) + k2 * (1. - q_12 / v_12) + k3 * (1. - v_12)) )
+BOLD_13 = np.array(V_0 * (k1 * (1. - q_13) + k2 * (1. - q_13 / v_13) + k3 * (1. - v_13)) )
+BOLD_14 = np.array(V_0 * (k1 * (1. - q_14) + k2 * (1. - q_14 / v_14) + k3 * (1. - v_14)) )
+BOLD_15 = np.array(V_0 * (k1 * (1. - q_15) + k2 * (1. - q_15 / v_15) + k3 * (1. - v_15)) )
+BOLD_16 = np.array(V_0 * (k1 * (1. - q_16) + k2 * (1. - q_16 / v_16) + k3 * (1. - v_16)) )
+BOLD_17 = np.array(V_0 * (k1 * (1. - q_17) + k2 * (1. - q_17 / v_17) + k3 * (1. - v_17)) )
+BOLD_18 = np.array(V_0 * (k1 * (1. - q_18) + k2 * (1. - q_18 / v_18) + k3 * (1. - v_18)) )
+BOLD_19 = np.array(V_0 * (k1 * (1. - q_19) + k2 * (1. - q_19 / v_19) + k3 * (1. - v_19)) )
+BOLD_20 = np.array(V_0 * (k1 * (1. - q_20) + k2 * (1. - q_20 / v_20) + k3 * (1. - v_20)) )
+BOLD_21 = np.array(V_0 * (k1 * (1. - q_21) + k2 * (1. - q_21 / v_21) + k3 * (1. - v_21)) )
+BOLD_22 = np.array(V_0 * (k1 * (1. - q_22) + k2 * (1. - q_22 / v_22) + k3 * (1. - v_22)) )
+BOLD_23 = np.array(V_0 * (k1 * (1. - q_23) + k2 * (1. - q_23 / v_23) + k3 * (1. - v_23)) )
+BOLD_24 = np.array(V_0 * (k1 * (1. - q_24) + k2 * (1. - q_24 / v_24) + k3 * (1. - v_24)) )
+BOLD_25 = np.array(V_0 * (k1 * (1. - q_25) + k2 * (1. - q_25 / v_25) + k3 * (1. - v_25)) )
+BOLD_26 = np.array(V_0 * (k1 * (1. - q_26) + k2 * (1. - q_26 / v_26) + k3 * (1. - v_26)) )
+BOLD_27 = np.array(V_0 * (k1 * (1. - q_27) + k2 * (1. - q_27 / v_27) + k3 * (1. - v_27)) )
+BOLD_28 = np.array(V_0 * (k1 * (1. - q_28) + k2 * (1. - q_28 / v_28) + k3 * (1. - v_28)) )
+BOLD_29 = np.array(V_0 * (k1 * (1. - q_29) + k2 * (1. - q_29 / v_29) + k3 * (1. - v_29)) )
+BOLD_30 = np.array(V_0 * (k1 * (1. - q_30) + k2 * (1. - q_30 / v_30) + k3 * (1. - v_30)) )
+BOLD_31 = np.array(V_0 * (k1 * (1. - q_31) + k2 * (1. - q_31 / v_31) + k3 * (1. - v_31)) )
+BOLD_32 = np.array(V_0 * (k1 * (1. - q_32) + k2 * (1. - q_32 / v_32) + k3 * (1. - v_32)) )
 
 # The following is for display purposes only:
 # Construct a numpy array of timesteps (data points provided in data file)
@@ -332,16 +505,41 @@ scanning_timescale = np.linspace(0, synaptic_timesteps, num=T/Tr)
 scanning_timescale = np.round(scanning_timescale)
 scanning_timescale = scanning_timescale.astype(int)
 mr_time = t[scanning_timescale]
-v1_BOLD = v1_BOLD[scanning_timescale]
-v4_BOLD = v4_BOLD[scanning_timescale]
-it_BOLD = it_BOLD[scanning_timescale]
-d1_BOLD = d1_BOLD[scanning_timescale]
-d2_BOLD = d2_BOLD[scanning_timescale]
-fs_BOLD = fs_BOLD[scanning_timescale]
-fr_BOLD = fr_BOLD[scanning_timescale]
-lit_BOLD=lit_BOLD[scanning_timescale]
+BOLD_0 = BOLD_0[scanning_timescale]
+BOLD_1 = BOLD_1[scanning_timescale]
+BOLD_2 = BOLD_2[scanning_timescale]
+BOLD_3 = BOLD_3[scanning_timescale]
+BOLD_4 = BOLD_4[scanning_timescale]
+BOLD_5 = BOLD_5[scanning_timescale]
+BOLD_6 = BOLD_6[scanning_timescale]
+BOLD_7 = BOLD_7[scanning_timescale]
+BOLD_8 = BOLD_8[scanning_timescale]
+BOLD_9 = BOLD_9[scanning_timescale]
+BOLD_10 = BOLD_10[scanning_timescale]
+BOLD_11 = BOLD_11[scanning_timescale]
+BOLD_12 = BOLD_12[scanning_timescale]
+BOLD_13 = BOLD_13[scanning_timescale]
+BOLD_14 = BOLD_14[scanning_timescale]
+BOLD_15 = BOLD_15[scanning_timescale]
+BOLD_16 = BOLD_16[scanning_timescale]
+BOLD_17 = BOLD_17[scanning_timescale]
+BOLD_18 = BOLD_18[scanning_timescale]
+BOLD_19 = BOLD_19[scanning_timescale]
+BOLD_20 = BOLD_20[scanning_timescale]
+BOLD_21 = BOLD_21[scanning_timescale]
+BOLD_22 = BOLD_22[scanning_timescale]
+BOLD_23 = BOLD_23[scanning_timescale]
+BOLD_24 = BOLD_24[scanning_timescale]
+BOLD_25 = BOLD_25[scanning_timescale]
+BOLD_26 = BOLD_26[scanning_timescale]
+BOLD_27 = BOLD_27[scanning_timescale]
+BOLD_28 = BOLD_28[scanning_timescale]
+BOLD_29 = BOLD_29[scanning_timescale]
+BOLD_30 = BOLD_30[scanning_timescale]
+BOLD_31 = BOLD_31[scanning_timescale]
+BOLD_32 = BOLD_32[scanning_timescale]
 
-print 'Size of BOLD arrays before deleting scans: ', v1_BOLD.size
+print 'Size of BOLD arrays before deleting scans: ', BOLD_0.size
 
 # now we are going to remove the first trial
 # estimate how many 'synaptic ticks' there are in each trial
@@ -351,107 +549,135 @@ print 'Size of BOLD arrays before deleting scans: ', v1_BOLD.size
 
 # remove first few scans from BOLD signal array and from BOLD timescale array
 mr_time = np.delete(mr_time, np.arange(scans_to_remove))
-v1_BOLD = np.delete(v1_BOLD, np.arange(scans_to_remove))
-v4_BOLD = np.delete(v4_BOLD, np.arange(scans_to_remove))
-it_BOLD = np.delete(it_BOLD, np.arange(scans_to_remove))
-d1_BOLD = np.delete(d1_BOLD, np.arange(scans_to_remove))
-d2_BOLD = np.delete(d2_BOLD, np.arange(scans_to_remove))
-fs_BOLD = np.delete(fs_BOLD, np.arange(scans_to_remove))
-fr_BOLD = np.delete(fr_BOLD, np.arange(scans_to_remove))
-lit_BOLD= np.delete(lit_BOLD,np.arange(scans_to_remove))
+BOLD_0 = np.delete(BOLD_0, np.arange(scans_to_remove))
+BOLD_1 = np.delete(BOLD_1, np.arange(scans_to_remove))
+BOLD_2 = np.delete(BOLD_2, np.arange(scans_to_remove))
+BOLD_3 = np.delete(BOLD_3, np.arange(scans_to_remove))
+BOLD_4 = np.delete(BOLD_4, np.arange(scans_to_remove))
+BOLD_5 = np.delete(BOLD_5, np.arange(scans_to_remove))
+BOLD_6 = np.delete(BOLD_6, np.arange(scans_to_remove))
+BOLD_7 = np.delete(BOLD_7, np.arange(scans_to_remove))
+BOLD_8 = np.delete(BOLD_8, np.arange(scans_to_remove))
+BOLD_9 = np.delete(BOLD_9, np.arange(scans_to_remove))
+BOLD_10 = np.delete(BOLD_10, np.arange(scans_to_remove))
+BOLD_11 = np.delete(BOLD_11, np.arange(scans_to_remove))
+BOLD_12 = np.delete(BOLD_12, np.arange(scans_to_remove))
+BOLD_13 = np.delete(BOLD_13, np.arange(scans_to_remove))
+BOLD_14 = np.delete(BOLD_14, np.arange(scans_to_remove))
+BOLD_15 = np.delete(BOLD_15, np.arange(scans_to_remove))
+BOLD_16 = np.delete(BOLD_16, np.arange(scans_to_remove))
+BOLD_17 = np.delete(BOLD_17, np.arange(scans_to_remove))
+BOLD_18 = np.delete(BOLD_18, np.arange(scans_to_remove))
+BOLD_19 = np.delete(BOLD_19, np.arange(scans_to_remove))
+BOLD_20 = np.delete(BOLD_20, np.arange(scans_to_remove))
+BOLD_21 = np.delete(BOLD_21, np.arange(scans_to_remove))
+BOLD_22 = np.delete(BOLD_22, np.arange(scans_to_remove))
+BOLD_23 = np.delete(BOLD_23, np.arange(scans_to_remove))
+BOLD_24 = np.delete(BOLD_24, np.arange(scans_to_remove))
+BOLD_25 = np.delete(BOLD_25, np.arange(scans_to_remove))
+BOLD_26 = np.delete(BOLD_26, np.arange(scans_to_remove))
+BOLD_27 = np.delete(BOLD_27, np.arange(scans_to_remove))
+BOLD_28 = np.delete(BOLD_28, np.arange(scans_to_remove))
+BOLD_29 = np.delete(BOLD_29, np.arange(scans_to_remove))
+BOLD_30 = np.delete(BOLD_30, np.arange(scans_to_remove))
+BOLD_31 = np.delete(BOLD_31, np.arange(scans_to_remove))
+BOLD_32 = np.delete(BOLD_32, np.arange(scans_to_remove))
 
 # round of mr time for display purposes
 mr_time = np.round(mr_time, decimals=0)
 
 # create a numpy array of timeseries
-lsnm_BOLD = np.array([v1_BOLD, v4_BOLD, it_BOLD,
-                      fs_BOLD, d1_BOLD, d2_BOLD, fr_BOLD])
+lsnm_BOLD = np.array([BOLD_0, BOLD_1, BOLD_2, BOLD_3, BOLD_4, BOLD_5, BOLD_6, BOLD_7,
+                      BOLD_8, BOLD_9, BOLD_10, BOLD_11, BOLD_12, BOLD_13, BOLD_14, BOLD_15,
+                      BOLD_16, BOLD_17, BOLD_18, BOLD_19, BOLD_20, BOLD_21, BOLD_22, BOLD_23,
+                      BOLD_24, BOLD_25, BOLD_26, BOLD_27, BOLD_28, BOLD_29, BOLD_30, BOLD_31,
+                      BOLD_32])
 
-print 'Size of BOLD time-series after removing scans: ', v1_BOLD.size
+print 'Size of BOLD time-series after removing scans: ', BOLD_0.size
 
 # now, save all BOLD timeseries to a single file 
 np.save(BOLD_file, lsnm_BOLD)
 
 # increase font size for display purposes
-plt.rcParams.update({'font.size': 20})
+#plt.rcParams.update({'font.size': 20})
 
-# Set up figure to plot synaptic activity
 plt.figure()
 
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
+plt.suptitle('SIMULATED SYNAPTIC SIGNAL')
 
-# Plot synaptic activities
-plt.plot(t, syn[0], linewidth=3.0, color='yellow')
-plt.plot(t, syn[1], linewidth=3.0, color='blue')
-plt.plot(t, syn[2], linewidth=3.0, color='red')
-plt.gca().set_axis_bgcolor('black')
+# plot synaptic time-series for all ROIs
+for idx, roi in enumerate(syn):
+    plt.plot(syn[idx], linewidth=1.0, color='black')
 
-# Set up separate figures to plot fMRI BOLD signal
 plt.figure()
 
 plt.suptitle('SIMULATED fMRI BOLD SIGNAL')
 
-plt.plot(mr_time, v1_BOLD, linewidth=3.0, color='yellow')
-plt.gca().set_axis_bgcolor('black')
-
-#plt.figure()
-
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN V4')
-
-plt.plot(mr_time, v4_BOLD, linewidth=3.0, color='green')
-#plt.gca().set_axis_bgcolor('black')
-
-#plt.figure()
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN IT')
-
-plt.plot(mr_time, it_BOLD, linewidth=3.0, color='blue')
-plt.gca().set_axis_bgcolor('black')
-
-#plt.figure()
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN D1')
-
-plt.plot(mr_time, fs_BOLD, linewidth=3.0, color='orange')
-
-plt.plot(mr_time, d1_BOLD, linewidth=3.0, color='red')
-#plt.gca().set_axis_bgcolor('black')
-
-plt.plot(mr_time, d2_BOLD, linewidth=3.0, color='pink')
-#plt.gca().set_axis_bgcolor('black')
-
-plt.plot(mr_time, fr_BOLD, linewidth=3.0, color='purple')
-
-#plt.figure()
-#plt.suptitle('SIMULATED fMRI BOLD SIGNAL IN LIT')
-
-#plt.plot(lit_BOLD, linewidth=3.0, color='pink')
-#plt.gca().set_axis_bgcolor('black')
+# plot BOLD time-series for all ROIs
+for idx, roi in enumerate(lsnm_BOLD):
+    plt.plot(mr_time, lsnm_BOLD[idx], linewidth=1.0, color='black')
 
 # calculate correlation matrix
 corr_mat = np.corrcoef(lsnm_BOLD)
+print 'Number of ROIs: ', lsnm_BOLD.shape
+print 'Shape of correlation matrix: ', corr_mat.shape
 
 # prepare labels
-labels = ['V1/V2', 'V4', 'IT', 'FS', 'D1', 'D2', 'FR']
+labels =  ['rLOF',     
+    'rPORB',         
+    'rFP'  ,          
+    'rMOF' ,          
+    'rPTRI',          
+    'rPOPE',          
+    'rRMF' ,          
+    'rSF'  ,          
+    'rCMF' ,          
+    'rPREC',          
+    'rPARC',          
+    'rRAC' ,          
+    'rCAC' ,          
+    'rPC'  ,          
+    'rISTC',          
+    'rPSTC',          
+    'rSMAR',          
+    'rSP'  ,          
+    'rIP'  ,          
+    'rPCUN',          
+    'rCUN' ,          
+    'rPCAL',          
+    'rLOCC',          
+    'rLING',          
+    'rFUS' ,          
+    'rPARH',          
+    'rENT' ,          
+    'rTP'  ,          
+    'rIT'  ,          
+    'rMT'  ,          
+    'rBSTS',          
+    'rST'  ,          
+    'rTT']            
 
 #initialize new figure for correlations
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
-
-
 # plot correlation matrix as a heatmap
 mask = np.tri(corr_mat.shape[0], k=-1)
 mask = np.transpose(mask)
-print mask
-corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the lower triangle
+corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the upper triangle
 cmap = CM.get_cmap('jet', 10)
 cmap.set_bad('w')
-cax = ax.imshow(corr_mat, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(corr_mat, vmin=-0.6, vmax=1.0, interpolation='nearest', cmap=cmap)
 ax.grid(False)
 plt.colorbar(cax)
 
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
 # display labels for brain regions
-ax.set_xticklabels(['']+labels, minor=False)
-ax.set_yticklabels(['']+labels, minor=False)
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
 
 # Turn off all the ticks
 ax = plt.gca()
@@ -462,7 +688,6 @@ for t in ax.xaxis.get_major_ticks():
 for t in ax.yaxis.get_major_ticks():
     t.tick1On = False
     t.tick2On = False
-
 
 # Show the plots on the screen
 plt.show()

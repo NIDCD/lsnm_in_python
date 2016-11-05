@@ -69,78 +69,65 @@ syn_file = 'synaptic_in_66_ROIs.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
-#       "Hagmann's Talairach Coordinates (obtained from TVB).xlsx"
+#       "Location of visual LSNM modules within Connectome.xlsx"
 # Extracted from The Virtual Brain Demo Data Sets
-# Please note that arrays in Python start from zero so one does need to account for that and shift
-# indices given by the above document by one location.
-# Use 6 nodes within rPCAL including host node 345
-v1_loc = range(344, 350)     # Hagmann's brain nodes included within V1 ROI
 
-# Use 6 nodes within rFUS including host node 393
-v4_loc = range(390, 396)     # Hagmann's brain nodes included within V4 ROI       
-
-# Use 6 nodes within rPARH including host node 413
-it_loc = range(412, 418)     # Hagmann's brain nodes included within IT ROI
-
-# Use 6 nodes within rRMF including host node 74
-d1_loc = range(73, 79)       # Hagmann's brain nodes included within D1 ROI
-
-# Use 6 nodes within rPTRI including host node 41
-d2_loc = range(39, 45)       # Hagmann's brain nodes included within D2 ROI
-
-# Use 6 nodes within rPOPE including host node 47
-fs_loc = range(47, 53)       # Hagmann's brain nodes included within FS ROI
-
-# Use 6 nodes within rCMF including host node 125
-fr_loc = range(125, 131)     # Hagmann's brain nodes included within FR ROI
-
-# Use 6 nodes within lPARH
-lit_loc= range(911, 917)     # Hagmann's brain nodes included within left IT ROI
+roi_dict = {
+    'rLOF'  : range(  0,  19),    
+    'rPORB' : range( 19,  25),          
+    'rFP'   : range( 25,  27),          
+    'rMOF'  : range( 27,  39),          
+    'rPTRI' : range( 39,  47),          
+    'rPOPE' : range( 47,  57),          
+    'rRMF'  : range( 57,  79),          
+    'rSF'   : range( 79, 125),          
+    'rCMF'  : range(125, 138),          
+    'rPREC' : range(138, 174),          
+    'rPARC' : range(174, 186),          
+    'rRAC'  : range(186, 190),          
+    'rCAC'  : range(190, 194),          
+    'rPC'   : range(194, 201),          
+    'rISTC' : range(201, 209),          
+    'rPSTC' : range(209, 240),          
+    'rSMAR' : range(240, 256),          
+    'rSP'   : range(256, 283),          
+    'rIP'   : range(283, 311),          
+    'rPCUN' : range(311, 334),          
+    'rCUN'  : range(334, 344),          
+    'rPCAL' : range(344, 354),          
+    'rLOCC' : range(354, 373),          
+    'rLING' : range(373, 390),          
+    'rFUS'  : range(390, 412),          
+    'rPARH' : range(412, 418),          
+    'rENT'  : range(418, 420),          
+    'rTP'   : range(420, 423),          
+    'rIT'   : range(423, 442),          
+    'rMT'   : range(442, 462),          
+    'rBSTS' : range(462, 469),          
+    'rST'   : range(469, 497),          
+    'rTT'   : range(497, 500)          
+}
 
 # Load TVB nodes synaptic activity
 tvb_synaptic = np.load("tvb_abs_syn.npy")
 
+# create a numpy array of synaptic time-series, with a number of elements defined
+# by the number of ROIs above and the number of time points in each synaptic time-series
+synaptic = np.empty([len(roi_dict), tvb_synaptic.shape[0]])
+
 # Load TVB host node synaptic activities into separate numpy arrays
-tvb_ev1 = tvb_synaptic[:, 0, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_ev4 = tvb_synaptic[:, 0, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_eit = tvb_synaptic[:, 0, it_loc[0]:it_loc[-1]+1, 0]
-tvb_ed1 = tvb_synaptic[:, 0, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_ed2 = tvb_synaptic[:, 0, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_efs = tvb_synaptic[:, 0, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_efr = tvb_synaptic[:, 0, fr_loc[0]:fr_loc[-1]+1, 0]
-tvb_iv1 = tvb_synaptic[:, 1, v1_loc[0]:v1_loc[-1]+1, 0]
-tvb_iv4 = tvb_synaptic[:, 1, v4_loc[0]:v4_loc[-1]+1, 0]
-tvb_iit = tvb_synaptic[:, 1, it_loc[0]:it_loc[-1]+1, 0]
-tvb_id1 = tvb_synaptic[:, 1, d1_loc[0]:d1_loc[-1]+1, 0]
-tvb_id2 = tvb_synaptic[:, 1, d2_loc[0]:d2_loc[-1]+1, 0]
-tvb_ifs = tvb_synaptic[:, 1, fs_loc[0]:fs_loc[-1]+1, 0]
-tvb_ifr = tvb_synaptic[:, 1, fr_loc[0]:fr_loc[-1]+1, 0]
-
-# now extract synaptic activity in the contralateral IT
-tvb_elit = tvb_synaptic[:, 0, lit_loc[0]:lit_loc[-1]+1, 0]
-tvb_ilit = tvb_synaptic[:, 1, lit_loc[0]:lit_loc[-1]+1, 0]
-
-# add all units WITHIN each region together across space to calculate
-# synaptic activity in EACH brain region
-v1_syn = np.sum(tvb_ev1+tvb_iv1, axis=1)
-v4_syn = np.sum(tvb_ev4+tvb_iv4, axis=1)
-it_syn = np.sum(tvb_eit+tvb_iit, axis=1)
-d1_syn = np.sum(tvb_ed1+tvb_id1, axis=1)
-d2_syn = np.sum(tvb_ed2+tvb_id2, axis=1)
-fs_syn = np.sum(tvb_efs+tvb_ifs, axis=1)
-fr_syn = np.sum(tvb_efr+tvb_ifr, axis=1)
-
-# now, add unit across space in the contralateral IT
-lit_syn = np.sum(tvb_elit + tvb_ilit, axis=1)
-
-# create a numpy array of timeseries
-synaptic = np.array([v1_syn, v4_syn, it_syn, fs_syn, d1_syn, d2_syn, fr_syn, lit_syn])
-
+idx=0
+for roi in roi_dict:
+    synaptic[idx] = np.sum(tvb_synaptic[:, 0, roi_dict[roi], 0] +   # excitatory unit of ROI
+                           tvb_synaptic[:, 1, roi_dict[roi], 0],    # inhibitory unit of ROI
+                           axis=1)
+    idx = idx + 1
+                         
 # now, save all synaptic timeseries to a single file 
 np.save(syn_file, synaptic)
 
-# Extract number of timesteps from one of the matrices
-timesteps = v1_syn.shape[0]
+# Extract total number of timesteps from synaptic time-series
+timesteps = tvb_synaptic.shape[0]
 print 'Timesteps = ', timesteps
 
 # Construct a numpy array of timesteps (data points provided in data file)
@@ -156,36 +143,8 @@ t = np.linspace(0, timesteps * 50.0 / 1000., num=timesteps)
 
 # Set up figures to plot synaptic activity
 plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN V1')
-plt.plot(t, v1_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN V4')
-plt.plot(v4_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN IT')
-plt.plot(it_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN FS')
-plt.plot(fs_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN D1')
-plt.plot(d1_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN D2')
-plt.plot(d2_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN FR')
-plt.plot(fr_syn)
-# Set up figures to plot synaptic activity
-plt.figure()
-plt.suptitle('SIMULATED SYNAPTIC ACTIVITY IN LEFT IT')
-plt.plot(lit_syn)
+plt.suptitle('SIMULATED SYNAPTIC ACTIVITY OF ONE ROI')
+plt.plot(t, synaptic[0])
 
 # Show the plots on the screen
 plt.show()

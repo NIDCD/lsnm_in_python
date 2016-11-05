@@ -60,7 +60,7 @@ from scipy import stats
 #mpl.style.use('ggplot')
 
 # increase font size prior to plotting
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 20})
 
 # define number of groups to plot
 N = 10

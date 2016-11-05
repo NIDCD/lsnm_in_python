@@ -42,7 +42,7 @@
 #   This program makes use of The Virtual Brain library toolbox, downloaded
 #   from the TVB GitHub page.
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on September 13 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on October 19 2016 
 # **************************************************************************/
 #
 # sim_without_LSNM.py
@@ -66,10 +66,8 @@ import numpy as np
 import matplotlib.pyplot as pl
 
 neuronal_FILE = 'tvb_neuronal.npy'
-synaptic_FILE = 'tvb_synaptic.npy'
-
-# declare how many closest nodes to a given brain region will be part of that region's ROI
-number_of_closest = 5
+abs_syn_FILE  = 'tvb_abs_syn.npy'
+signed_syn_FILE = 'tvb_signed_syn.npy'
 
 class WilsonCowanPositive(models.WilsonCowan):
     "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
@@ -94,7 +92,10 @@ w_ei =  4.0
 w_ie = 13.0
 
 # create an array to store synaptic activity for each and all TVB nodes
-tvb_syna = []
+# one for absolute values of synaptic activities (for fMRI computation):
+tvb_abs_syna = []
+# ... and the other one for signed values of synaptic activity (for MEG computation):
+tvb_signed_syna = []
 # also, create an array to store electrical activity for all TVB nodes
 tvb_elec = []
 
@@ -106,7 +107,10 @@ TVB_number_of_nodes = 998
 # The synaptic activity for each node is zero at first, then it accumulates values
 # (integration) during a given number of timesteps. Every number of timesteps
 # (given by 'synaptic_interval'), the array below is re-initialized to zero.
-current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+# One array is for accumulating the absolute value of synaptic activity (for BOLD computation):
+current_tvb_abs_syn =    [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+# ... and another array for accumulating the signed values of synaptic activity (for MEG computation):
+current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
         
 # declare an integration interval for the 'integrated' synaptic activity,
 # for fMRI computation, in number of timesteps.
@@ -118,8 +122,7 @@ synaptic_interval = 10
 speed = 4.0
 
 # define length of simulation in ms
-#simulation_length = 198000.0
-simulation_length = 1.0
+simulation_length = 198000.0
 
 # define the simulation time in total number of timesteps
 # Each timestep is roughly equivalent to 5ms
@@ -144,16 +147,16 @@ white_matter_coupling = coupling.Linear(a=global_coupling_strength)
 # now, define a pulse train to be used as a stimulus to V1
 white_matter.configure()
 node_to_be_stimulated = 345 
-stim_weights = numpy.zeros((white_matter.number_of_regions, 1))
-stim_weights[node_to_be_stimulated] = numpy.array([1.0])[:, numpy.newaxis]
-eqn_t = equations.PulseTrain()
-eqn_t.parameters["onset"] = 2000.0 # Pulse onset in ms
-eqn_t.parameters["tau"]   = 1000.0   # Pulse duration in ms
-eqn_t.parameters["T"]     = 2500.  # Pulse repetition period in ms
+#stim_weights = numpy.zeros((white_matter.number_of_regions, 1))
+#stim_weights[node_to_be_stimulated] = numpy.array([1.0])[:, numpy.newaxis]
+#eqn_t = equations.PulseTrain()
+#eqn_t.parameters["onset"] = 2000.0 # Pulse onset in ms
+#eqn_t.parameters["tau"]   = 1000.0   # Pulse duration in ms
+#eqn_t.parameters["T"]     = 2500.  # Pulse repetition period in ms
 
-stim = patterns.StimuliRegion(temporal = eqn_t,
-                              connectivity = white_matter, 
-                              weight = stim_weights)
+#stim = patterns.StimuliRegion(temporal = eqn_t,
+#                              connectivity = white_matter, 
+#                              weight = stim_weights)
 
 #Initialize an Integrator
 euler_int = integrators.EulerStochastic(dt=5, noise=noise.Additive(nsig=0.01))
@@ -262,11 +265,10 @@ raw_data = []
 raw_time = []
 for raw in sim(simulation_length=simulation_length):
 
-    print t
-
     # apply stimulus pattern to given node.
-    if t in stimulus_pattern:
-        raw[0][1][0][node_to_be_stimulated] += 0.7
+    # uncomment the two lines below if V1 stimulation is desired
+    #if t in stimulus_pattern:
+    #    raw[0][1][0][node_to_be_stimulated] += 0.7
     
     # the following calculates (and integrates) synaptic activity at each TVB node
     # at the current timestep
@@ -297,18 +299,26 @@ for raw in sim(simulation_length=simulation_length):
             # update synaptic activity in excitatory population, by multiplying each
             # incoming connection weight times the value of the node sending such
             # connection
-            current_tvb_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
+            current_tvb_abs_syn[0][tvb_node]    += wm[cxn] * tvb_origin_node[cxn][0]
+            current_tvb_signed_syn[0][tvb_node] += wm[cxn] * tvb_origin_node[cxn][0]
 
         # now, add the influence of the local (within the same node) connectivity
-        # onto the synaptic activity of the current node, excitatory population
-        current_tvb_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
+        # onto the synaptic activity of the current node, excitatory population, USING ABSOLUTE
+        # VALUES OF SYNAPTIC ACTIVITIES (for BOLD computation).
+        current_tvb_abs_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] + w_ie * current_tvb_neu[1][tvb_node]
+
+        # ... but also do a sum of synaptic activities using the sign of the synaptic activity (for MEG
+        # computation:
+        current_tvb_signed_syn[0][tvb_node] += w_ee * current_tvb_neu[0][tvb_node] - w_ie * current_tvb_neu[1][tvb_node]
+        
             
         # now, update synaptic activity in inhibitory population
         # Please note that we are assuming that there are no incoming connections
         # to inhibitory nodes from other nodes (in the Virtual Brain nodes).
         # Therefore, only the local (within the same node) connections are
-        # considered
-        current_tvb_syn[1][tvb_node] += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+        # considered (store both absolute synaptic and signed synaptic):
+        current_tvb_abs_syn[1][tvb_node]    += w_ii * current_tvb_neu[1][tvb_node] + w_ei * current_tvb_neu[0][tvb_node]
+        current_tvb_signed_syn[1][tvb_node] += w_ei * current_tvb_neu[0][tvb_node] - w_ii * current_tvb_neu[1][tvb_node] 
             
     # also write neural and synaptic activity of all TVB nodes to output files at
     # the current
@@ -318,9 +328,11 @@ for raw in sim(simulation_length=simulation_length):
         # append the current TVB node electrical activity to array
         tvb_elec.append(current_tvb_neu)
         # append current synaptic activity array to synaptic activity timeseries
-        tvb_syna.append(current_tvb_syn)
+        tvb_abs_syna.append(current_tvb_abs_syn)
+        tvb_signed_syna.append(current_tvb_signed_syn)
         # reset TVB synaptic activity, but not TVB neuroelectrical activity
-        current_tvb_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+        current_tvb_abs_syn    = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
+        current_tvb_signed_syn = [ [0.0]*TVB_number_of_nodes for _ in range(2) ]
 
     # increase the timestep counter
     t = t + 1
@@ -357,28 +369,30 @@ for raw in sim(simulation_length=simulation_length):
 #print closest, white_matter.centres[closest]
 
 # AUDITORY MODEL TALAIRACH COORDINATES
-d_a1 = ds.cdist([(48, -26, 10)], white_matter.centres, 'euclidean')
-closest = d_a1[0].argsort()[:number_of_closest]
-print closest, white_matter.centres[closest]
+#d_a1 = ds.cdist([(48, -26, 10)], white_matter.centres, 'euclidean')
+#closest = d_a1[0].argsort()[:number_of_closest]
+#print closest, white_matter.centres[closest]
 
-d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
+#d_a2 = ds.cdist([(62, -32, 10)], white_matter.centres, 'euclidean')
 #closest = d_a2[0].argmin()
-closest = d_a2[0].argsort()[:number_of_closest]
-print closest, white_matter.centres[closest]
+#closest = d_a2[0].argsort()[:number_of_closest]
+#print closest, white_matter.centres[closest]
 
-d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
-closest = d_st[0].argsort()[:number_of_closest]
-print closest, white_matter.centres[closest]
+#d_st = ds.cdist([(59, -17, 4)], white_matter.centres, 'euclidean')
+#closest = d_st[0].argsort()[:number_of_closest]
+#print closest, white_matter.centres[closest]
 
-d_pf= ds.cdist([(54, 9, 8)], white_matter.centres, 'euclidean')
-closest = d_pf[0].argsort()[:number_of_closest]
-print closest, white_matter.centres[closest]
+#d_pf= ds.cdist([(54, 9, 8)], white_matter.centres, 'euclidean')
+#closest = d_pf[0].argsort()[:number_of_closest]
+#print closest, white_matter.centres[closest]
 
 
 # convert electrical and synaptic activity of TVB nodes into numpy arrays
 TVB_elec = numpy.array(tvb_elec)
-TVB_syna = numpy.array(tvb_syna)
+TVB_abs_syna = numpy.array(tvb_abs_syna)
+TVB_signed_syna = numpy.array(tvb_signed_syna)
 
 # now, save the TVB electrical and synaptic activities to separate files
 numpy.save(neuronal_FILE, TVB_elec)
-numpy.save(synaptic_FILE, TVB_syna)
+numpy.save(abs_syn_FILE, TVB_abs_syna)
+numpy.save(signed_syn_FILE, TVB_signed_syna)
