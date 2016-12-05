@@ -42,7 +42,7 @@
 #   This program makes use of The Virtual Brain library toolbox, downloaded
 #   from the TVB GitHub page.
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on October 19 2016 
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 5 2016 
 # **************************************************************************/
 #
 # sim_without_LSNM.py
@@ -64,6 +64,9 @@ import scipy.spatial.distance as ds
 import numpy as np
 
 import matplotlib.pyplot as pl
+
+# import random function modules
+import random as rdm
 
 neuronal_FILE = 'tvb_neuronal.npy'
 abs_syn_FILE  = 'tvb_abs_syn.npy'
@@ -88,8 +91,8 @@ class WilsonCowanPositive(models.WilsonCowan):
 # calculate synaptic activities
 w_ee = 12.0
 w_ii = 11.0
-w_ei =  4.0
-w_ie = 13.0
+w_ei = 13.0
+w_ie =  4.0
 
 # create an array to store synaptic activity for each and all TVB nodes
 # one for absolute values of synaptic activities (for fMRI computation):
@@ -260,10 +263,14 @@ stimulus_pattern = np.concatenate((range(200, 401),
                                    range(39200, 39401)
                                ))
 
+# initialize random seed
+seed = 20
+random_state = np.random.RandomState(seed)
+
 # Run the simulation
 raw_data = []
 raw_time = []
-for raw in sim(simulation_length=simulation_length):
+for raw in sim(simulation_length=simulation_length, random_state=random_state.get_state()):
 
     # apply stimulus pattern to given node.
     # uncomment the two lines below if V1 stimulation is desired

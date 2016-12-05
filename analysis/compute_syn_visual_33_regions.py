@@ -33,27 +33,26 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (compute_syn_visual_66_regions.py) was created on October 11, 2016.
+#   This file (compute_syn_visual_66_regions.py) was created on November 22, 2016.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on November 20, 2016
+#   Last updated by Antonio Ulloa on November 22, 2016
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 # **************************************************************************/
 
-# compute_syn_visual_66_regions.py
+# compute_syn_visual_33_regions.py
 #
-# Calculate and plot simulated synaptic activities in 66 ROIs (33 in the right hemisphere
-# and 33 in the left hemisphere)
+# Calculate and plot simulated synaptic activities in 33 ROIs (33 in the right hemisphere)
 # as defined by Haggman et al
 # 
 # ... using data from visual delay-match-to-sample simulation (or resting state simulation
 # of the same duration as the DMS).
-# It also saves the synaptic activities for 66 ROIs in a python data file
+# It also saves the synaptic activities for 33 ROIs in a python data file
 # (*.npy)
-# The data is saved in a numpy array where the columns are the 66 ROIs:
+# The data is saved in a numpy array where the columns are the 33 ROIs
 #
 
 import numpy as np
@@ -66,7 +65,7 @@ import matplotlib as mpl
 mpl.style.use('ggplot')
 
 # define the name of the output file where the integrated synaptic activity will be stored
-syn_file = 'synaptic_in_66_ROIs.npy'
+syn_file = 'synaptic_in_33_ROIs.npy'
 
 # the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
 # They were taken from the excel document:
@@ -107,43 +106,10 @@ roi_dict = {
     'rBSTS' : range(462, 469),          
     'rST'   : range(469, 497),          
     'rTT'   : range(497, 500),
-    'lLOF'  : range(500, 520),
-    'lPORB' : range(520, 526),
-    'lFP'   : range(526, 528),
-    'lMOF'  : range(528, 540),
-    'lPTRI' : range(540, 547),
-    'lPOPE' : range(547, 558),
-    'LRMF'  : range(558, 577),
-    'lSF'   : range(577, 627),
-    'lCMF'  : range(627, 640),
-    'lPREC' : range(640, 676),
-    'lPARC' : range(676, 687),
-    'lRAC'  : range(687, 691),
-    'lCAC'  : range(691, 695),
-    'lPC'   : range(695, 702),
-    'lISTC' : range(702, 710),
-    'lPSTC' : range(710, 740),
-    'lSMAR' : range(740, 759),
-    'lSP'   : range(759, 786),
-    'lIP'   : range(786, 811),
-    'lPCUN' : range(811, 834),
-    'lCUN'  : range(834, 842),
-    'lPCAL' : range(842, 851),
-    'lLOC'  : range(851, 873),
-    'lLING' : range(873, 889),
-    'lFUS'  : range(889, 911),
-    'lPARH' : range(911, 917),
-    'lENT'  : range(917, 920),
-    'lTP'   : range(920, 924),
-    'lIT'   : range(924, 941),
-    'lMT'   : range(941, 960),
-    'lBSTS' : range(960, 965),
-    'lST'   : range(965, 994),
-    'lTT'   : range(994, 998)
 }
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_abs_syn.npy")
+tvb_synaptic = np.load("tvb_synaptic.npy")
 
 # create a numpy array of synaptic time-series, with a number of elements defined
 # by the number of ROIs above and the number of time points in each synaptic time-series

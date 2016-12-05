@@ -33,16 +33,16 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (compute_BOLD_balloon_66_regions.py) was created on September 27, 2016.
+#   This file (compute_BOLD_balloon_33_regions.py) was created on November 22, 2016.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on November 20 2016
+#   Last updated by Antonio Ulloa on November 22 2016
 #
 # **************************************************************************/
-
-# compute_BOLD_balloon_66_regions.py
+#
+# compute_BOLD_balloon_33_regions.py
 #
 # Calculate and plot fMRI BOLD signal, using the
 # Balloon model, as described by Stephan et al (2007)
@@ -52,8 +52,8 @@
 # Parameters for both were taken from Friston et al (2000) and they were
 # estimated using a 2T scanner, with a TR of 2 seconds, 
 # 
-# ... using data from visual delay-match-to-sample simulation, 66 regions from
-# Hagmann's connectome.
+# ... using data from visual delay-match-to-sample simulation, 33 regions from
+# Hagmann's connectome (right hemisphere).
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
 #
@@ -76,14 +76,14 @@ from matplotlib import cm as CM
 
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_66_ROIs.npy'
+SYN_file  = 'synaptic_in_33_ROIs.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_66_regions.npy'
+BOLD_file = 'bold_balloon_33_regions.npy'
 
 # define the name of the output file where the cross-correlation matrix will
 # be stored
-xcorr_file = 'xcorr_matrix_66_regions.npy'
+xcorr_file = 'xcorr_matrix_33_regions.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -242,39 +242,6 @@ y_0_29 = [s, f, v, q]
 y_0_30 = [s, f, v, q]      
 y_0_31 = [s, f, v, q]      
 y_0_32 = [s, f, v, q]
-y_0_33 = [s, f, v, q]      
-y_0_34 = [s, f, v, q]      
-y_0_35 = [s, f, v, q]      
-y_0_36 = [s, f, v, q]      
-y_0_37 = [s, f, v, q]      
-y_0_38 = [s, f, v, q]      
-y_0_39 = [s, f, v, q]      
-y_0_40 = [s, f, v, q]      
-y_0_41 = [s, f, v, q]      
-y_0_42 = [s, f, v, q]      
-y_0_43 = [s, f, v, q]      
-y_0_44 = [s, f, v, q]      
-y_0_45 = [s, f, v, q]      
-y_0_46 = [s, f, v, q]      
-y_0_47 = [s, f, v, q]      
-y_0_48 = [s, f, v, q]      
-y_0_49 = [s, f, v, q]      
-y_0_50 = [s, f, v, q]      
-y_0_51 = [s, f, v, q]      
-y_0_52 = [s, f, v, q]      
-y_0_53 = [s, f, v, q]      
-y_0_54 = [s, f, v, q]      
-y_0_55 = [s, f, v, q]      
-y_0_56 = [s, f, v, q]      
-y_0_57 = [s, f, v, q]      
-y_0_58 = [s, f, v, q]      
-y_0_59 = [s, f, v, q]      
-y_0_60 = [s, f, v, q]      
-y_0_61 = [s, f, v, q]      
-y_0_62 = [s, f, v, q]
-y_0_63 = [s, f, v, q]      
-y_0_64 = [s, f, v, q]      
-y_0_65 = [s, f, v, q]      
 
 
 # generate synaptic time array
@@ -332,39 +299,6 @@ state_29 = odeint(balloon_function, y_0_29, t, args=(syn[29],) )
 state_30 = odeint(balloon_function, y_0_30, t, args=(syn[30],) )
 state_31 = odeint(balloon_function, y_0_31, t, args=(syn[31],) )
 state_32 = odeint(balloon_function, y_0_32, t, args=(syn[32],) )
-state_33 = odeint(balloon_function, y_0_33, t, args=(syn[33],) )
-state_34 = odeint(balloon_function, y_0_34, t, args=(syn[34],) )
-state_35 = odeint(balloon_function, y_0_35, t, args=(syn[35],) )
-state_36 = odeint(balloon_function, y_0_36, t, args=(syn[36],) )
-state_37 = odeint(balloon_function, y_0_37, t, args=(syn[37],) )
-state_38 = odeint(balloon_function, y_0_38, t, args=(syn[38],) )
-state_39 = odeint(balloon_function, y_0_39, t, args=(syn[39],) )
-state_40 = odeint(balloon_function, y_0_40, t, args=(syn[40],) )
-state_41 = odeint(balloon_function, y_0_41, t, args=(syn[41],) )
-state_42 = odeint(balloon_function, y_0_42, t, args=(syn[42],) )
-state_43 = odeint(balloon_function, y_0_43, t, args=(syn[43],) )
-state_44 = odeint(balloon_function, y_0_44, t, args=(syn[44],) )
-state_45 = odeint(balloon_function, y_0_45, t, args=(syn[45],) )
-state_46 = odeint(balloon_function, y_0_46, t, args=(syn[46],) )
-state_47 = odeint(balloon_function, y_0_47, t, args=(syn[47],) )
-state_48 = odeint(balloon_function, y_0_48, t, args=(syn[48],) )
-state_49 = odeint(balloon_function, y_0_49, t, args=(syn[49],) )
-state_50 = odeint(balloon_function, y_0_50, t, args=(syn[50],) )
-state_51 = odeint(balloon_function, y_0_51, t, args=(syn[51],) )
-state_52 = odeint(balloon_function, y_0_52, t, args=(syn[52],) )
-state_53 = odeint(balloon_function, y_0_53, t, args=(syn[53],) )
-state_54 = odeint(balloon_function, y_0_54, t, args=(syn[54],) )
-state_55 = odeint(balloon_function, y_0_55, t, args=(syn[55],) )
-state_56 = odeint(balloon_function, y_0_56, t, args=(syn[56],) )
-state_57 = odeint(balloon_function, y_0_57, t, args=(syn[57],) )
-state_58 = odeint(balloon_function, y_0_58, t, args=(syn[58],) )
-state_59 = odeint(balloon_function, y_0_59, t, args=(syn[59],) )
-state_60 = odeint(balloon_function, y_0_60, t, args=(syn[60],) )
-state_61 = odeint(balloon_function, y_0_61, t, args=(syn[61],) )
-state_62 = odeint(balloon_function, y_0_62, t, args=(syn[62],) )
-state_63 = odeint(balloon_function, y_0_63, t, args=(syn[63],) )
-state_64 = odeint(balloon_function, y_0_64, t, args=(syn[64],) )
-state_65 = odeint(balloon_function, y_0_65, t, args=(syn[65],) )
 
 # Unpack the state variables used in the BOLD model
 s_0 = state_0[:, 0]
@@ -532,170 +466,6 @@ f_32 = state_32[:, 1]
 v_32 = state_32[:, 2]
 q_32 = state_32[:, 3]        
 
-s_33 = state_33[:, 0]
-f_33 = state_33[:, 1]
-v_33 = state_33[:, 2]
-q_33 = state_33[:, 3]        
-
-s_34 = state_34[:, 0]
-f_34 = state_34[:, 1]
-v_34 = state_34[:, 2]
-q_34 = state_34[:, 3]        
-
-s_35 = state_35[:, 0]
-f_35 = state_35[:, 1]
-v_35 = state_35[:, 2]
-q_35 = state_35[:, 3]        
-
-s_36 = state_36[:, 0]
-f_36 = state_36[:, 1]
-v_36 = state_36[:, 2]
-q_36 = state_36[:, 3]        
-
-s_37 = state_37[:,0]
-f_37 = state_37[:,1]
-v_37 = state_37[:,2]
-q_37 = state_37[:,3]
-
-s_38 = state_38[:, 0]
-f_38 = state_38[:, 1]
-v_38 = state_38[:, 2]
-q_38 = state_38[:, 3]        
-
-s_39 = state_39[:, 0]
-f_39 = state_39[:, 1]
-v_39 = state_39[:, 2]
-q_39 = state_39[:, 3]        
-
-s_40 = state_40[:, 0]
-f_40 = state_40[:, 1]
-v_40 = state_40[:, 2]
-q_40 = state_40[:, 3]        
-
-s_41 = state_41[:, 0]
-f_41 = state_41[:, 1]
-v_41 = state_41[:, 2]
-q_41 = state_41[:, 3]        
-
-s_42 = state_42[:, 0]
-f_42 = state_42[:, 1]
-v_42 = state_42[:, 2]
-q_42 = state_42[:, 3]        
-
-s_43 = state_43[:, 0]
-f_43 = state_43[:, 1]
-v_43 = state_43[:, 2]
-q_43 = state_43[:, 3]        
-
-s_44 = state_44[:, 0]
-f_44 = state_44[:, 1]
-v_44 = state_44[:, 2]
-q_44 = state_44[:, 3]        
-
-s_45= state_45[:,0]
-f_45= state_45[:,1]
-v_45= state_45[:,2]
-q_45= state_45[:,3]
-
-s_46 = state_46[:, 0]
-f_46 = state_46[:, 1]
-v_46 = state_46[:, 2]
-q_46 = state_46[:, 3]        
-
-s_47 = state_47[:, 0]
-f_47 = state_47[:, 1]
-v_47 = state_47[:, 2]
-q_47 = state_47[:, 3]        
-
-s_48 = state_48[:, 0]
-f_48 = state_48[:, 1]
-v_48 = state_48[:, 2]
-q_48 = state_48[:, 3]        
-
-s_49 = state_49[:, 0]
-f_49 = state_49[:, 1]
-v_49 = state_49[:, 2]
-q_49 = state_49[:, 3]        
-
-s_50 = state_50[:, 0]
-f_50 = state_50[:, 1]
-v_50 = state_50[:, 2]
-q_50 = state_50[:, 3]        
-
-s_51 = state_51[:, 0]
-f_51 = state_51[:, 1]
-v_51 = state_51[:, 2]
-q_51 = state_51[:, 3]        
-
-s_52 = state_52[:,0]
-f_52 = state_52[:,1]
-v_52 = state_52[:,2]
-q_52 = state_52[:,3]
-
-s_53 = state_53[:, 0]
-f_53 = state_53[:, 1]
-v_53 = state_53[:, 2]
-q_53 = state_53[:, 3]        
-
-s_54 = state_54[:, 0]
-f_54 = state_54[:, 1]
-v_54 = state_54[:, 2]
-q_54 = state_54[:, 3]        
-
-s_55 = state_55[:, 0]
-f_55 = state_55[:, 1]
-v_55 = state_55[:, 2]
-q_55 = state_55[:, 3]        
-
-s_56 = state_56[:, 0]
-f_56 = state_56[:, 1]
-v_56 = state_56[:, 2]
-q_56 = state_56[:, 3]        
-
-s_57 = state_57[:, 0]
-f_57 = state_57[:, 1]
-v_57 = state_57[:, 2]
-q_57 = state_57[:, 3]        
-
-s_58 = state_58[:, 0]
-f_58 = state_58[:, 1]
-v_58 = state_58[:, 2]
-q_58 = state_58[:, 3]        
-
-s_59= state_59[:,0]
-f_59= state_59[:,1]
-v_59= state_59[:,2]
-q_59= state_59[:,3]
-
-s_60 = state_60[:, 0]
-f_60 = state_60[:, 1]
-v_60 = state_60[:, 2]
-q_60 = state_60[:, 3]        
-
-s_61 = state_61[:, 0]
-f_61 = state_61[:, 1]
-v_61 = state_61[:, 2]
-q_61 = state_61[:, 3]        
-
-s_62 = state_62[:, 0]
-f_62 = state_62[:, 1]
-v_62 = state_62[:, 2]
-q_62 = state_62[:, 3]        
-
-s_63 = state_63[:, 0]
-f_63 = state_63[:, 1]
-v_63 = state_63[:, 2]
-q_63 = state_63[:, 3]        
-
-s_64 = state_64[:, 0]
-f_64 = state_64[:, 1]
-v_64 = state_64[:, 2]
-q_64 = state_64[:, 3]        
-
-s_65 = state_65[:, 0]
-f_65 = state_65[:, 1]
-v_65 = state_65[:, 2]
-q_65 = state_65[:, 3]        
 
 # now, we need to calculate BOLD signal at each timestep, based on v and q obtained from solving
 # balloon model ODE above.
@@ -732,39 +502,6 @@ BOLD_29 = np.array(V_0 * (k1 * (1. - q_29) + k2 * (1. - q_29 / v_29) + k3 * (1. 
 BOLD_30 = np.array(V_0 * (k1 * (1. - q_30) + k2 * (1. - q_30 / v_30) + k3 * (1. - v_30)) )
 BOLD_31 = np.array(V_0 * (k1 * (1. - q_31) + k2 * (1. - q_31 / v_31) + k3 * (1. - v_31)) )
 BOLD_32 = np.array(V_0 * (k1 * (1. - q_32) + k2 * (1. - q_32 / v_32) + k3 * (1. - v_32)) )
-BOLD_33 = np.array(V_0 * (k1 * (1. - q_33) + k2 * (1. - q_33 / v_33) + k3 * (1. - v_33)) )
-BOLD_34 = np.array(V_0 * (k1 * (1. - q_34) + k2 * (1. - q_34 / v_34) + k3 * (1. - v_34)) )
-BOLD_35 = np.array(V_0 * (k1 * (1. - q_35) + k2 * (1. - q_35 / v_35) + k3 * (1. - v_35)) )
-BOLD_36 = np.array(V_0 * (k1 * (1. - q_36) + k2 * (1. - q_36 / v_36) + k3 * (1. - v_36)) )
-BOLD_37 = np.array(V_0 * (k1 * (1. - q_37) + k2 * (1. - q_37 / v_37) + k3 * (1. - v_37)) )
-BOLD_38 = np.array(V_0 * (k1 * (1. - q_38) + k2 * (1. - q_38 / v_38) + k3 * (1. - v_38)) )
-BOLD_39 = np.array(V_0 * (k1 * (1. - q_39) + k2 * (1. - q_39 / v_39) + k3 * (1. - v_39)) )
-BOLD_40 = np.array(V_0 * (k1 * (1. - q_40) + k2 * (1. - q_40 / v_40) + k3 * (1. - v_40)) )
-BOLD_41 = np.array(V_0 * (k1 * (1. - q_41) + k2 * (1. - q_41 / v_41) + k3 * (1. - v_41)) )
-BOLD_42 = np.array(V_0 * (k1 * (1. - q_42) + k2 * (1. - q_42 / v_42) + k3 * (1. - v_42)) )
-BOLD_43 = np.array(V_0 * (k1 * (1. - q_43) + k2 * (1. - q_43 / v_43) + k3 * (1. - v_43)) )
-BOLD_44 = np.array(V_0 * (k1 * (1. - q_44) + k2 * (1. - q_44 / v_44) + k3 * (1. - v_44)) )
-BOLD_45 = np.array(V_0 * (k1 * (1. - q_45) + k2 * (1. - q_45 / v_45) + k3 * (1. - v_45)) )
-BOLD_46 = np.array(V_0 * (k1 * (1. - q_46) + k2 * (1. - q_46 / v_46) + k3 * (1. - v_46)) )
-BOLD_47 = np.array(V_0 * (k1 * (1. - q_47) + k2 * (1. - q_47 / v_47) + k3 * (1. - v_47)) )
-BOLD_48 = np.array(V_0 * (k1 * (1. - q_48) + k2 * (1. - q_48 / v_48) + k3 * (1. - v_48)) )
-BOLD_49 = np.array(V_0 * (k1 * (1. - q_49) + k2 * (1. - q_49 / v_49) + k3 * (1. - v_49)) )
-BOLD_50 = np.array(V_0 * (k1 * (1. - q_50) + k2 * (1. - q_50 / v_50) + k3 * (1. - v_50)) )
-BOLD_51 = np.array(V_0 * (k1 * (1. - q_51) + k2 * (1. - q_51 / v_51) + k3 * (1. - v_51)) )
-BOLD_52 = np.array(V_0 * (k1 * (1. - q_52) + k2 * (1. - q_52 / v_52) + k3 * (1. - v_52)) )
-BOLD_53 = np.array(V_0 * (k1 * (1. - q_53) + k2 * (1. - q_53 / v_53) + k3 * (1. - v_53)) )
-BOLD_54 = np.array(V_0 * (k1 * (1. - q_54) + k2 * (1. - q_54 / v_54) + k3 * (1. - v_54)) )
-BOLD_55 = np.array(V_0 * (k1 * (1. - q_55) + k2 * (1. - q_55 / v_55) + k3 * (1. - v_55)) )
-BOLD_56 = np.array(V_0 * (k1 * (1. - q_56) + k2 * (1. - q_56 / v_56) + k3 * (1. - v_56)) )
-BOLD_57 = np.array(V_0 * (k1 * (1. - q_57) + k2 * (1. - q_57 / v_57) + k3 * (1. - v_57)) )
-BOLD_58 = np.array(V_0 * (k1 * (1. - q_58) + k2 * (1. - q_58 / v_58) + k3 * (1. - v_58)) )
-BOLD_59 = np.array(V_0 * (k1 * (1. - q_59) + k2 * (1. - q_59 / v_59) + k3 * (1. - v_59)) )
-BOLD_60 = np.array(V_0 * (k1 * (1. - q_60) + k2 * (1. - q_60 / v_60) + k3 * (1. - v_60)) )
-BOLD_61 = np.array(V_0 * (k1 * (1. - q_61) + k2 * (1. - q_61 / v_61) + k3 * (1. - v_61)) )
-BOLD_62 = np.array(V_0 * (k1 * (1. - q_62) + k2 * (1. - q_62 / v_62) + k3 * (1. - v_62)) )
-BOLD_63 = np.array(V_0 * (k1 * (1. - q_63) + k2 * (1. - q_63 / v_63) + k3 * (1. - v_63)) )
-BOLD_64 = np.array(V_0 * (k1 * (1. - q_64) + k2 * (1. - q_64 / v_64) + k3 * (1. - v_64)) )
-BOLD_65 = np.array(V_0 * (k1 * (1. - q_65) + k2 * (1. - q_65 / v_65) + k3 * (1. - v_65)) )
 
 # The following is for display purposes only:
 # Construct a numpy array of timesteps (data points provided in data file)
@@ -815,39 +552,6 @@ BOLD_29 = BOLD_29[scanning_timescale]
 BOLD_30 = BOLD_30[scanning_timescale]
 BOLD_31 = BOLD_31[scanning_timescale]
 BOLD_32 = BOLD_32[scanning_timescale]
-BOLD_33 = BOLD_33[scanning_timescale]
-BOLD_34 = BOLD_34[scanning_timescale]
-BOLD_35 = BOLD_35[scanning_timescale]
-BOLD_36 = BOLD_36[scanning_timescale]
-BOLD_37 = BOLD_37[scanning_timescale]
-BOLD_38 = BOLD_38[scanning_timescale]
-BOLD_39 = BOLD_39[scanning_timescale]
-BOLD_40 = BOLD_40[scanning_timescale]
-BOLD_41 = BOLD_41[scanning_timescale]
-BOLD_42 = BOLD_42[scanning_timescale]
-BOLD_43 = BOLD_43[scanning_timescale]
-BOLD_44 = BOLD_44[scanning_timescale]
-BOLD_45 = BOLD_45[scanning_timescale]
-BOLD_46 = BOLD_46[scanning_timescale]
-BOLD_47 = BOLD_47[scanning_timescale]
-BOLD_48 = BOLD_48[scanning_timescale]
-BOLD_49 = BOLD_49[scanning_timescale]
-BOLD_50 = BOLD_50[scanning_timescale]
-BOLD_51 = BOLD_51[scanning_timescale]
-BOLD_52 = BOLD_52[scanning_timescale]
-BOLD_53 = BOLD_53[scanning_timescale]
-BOLD_54 = BOLD_54[scanning_timescale]
-BOLD_55 = BOLD_55[scanning_timescale]
-BOLD_56 = BOLD_56[scanning_timescale]
-BOLD_57 = BOLD_57[scanning_timescale]
-BOLD_58 = BOLD_58[scanning_timescale]
-BOLD_59 = BOLD_59[scanning_timescale]
-BOLD_60 = BOLD_60[scanning_timescale]
-BOLD_61 = BOLD_61[scanning_timescale]
-BOLD_62 = BOLD_62[scanning_timescale]
-BOLD_63 = BOLD_63[scanning_timescale]
-BOLD_64 = BOLD_64[scanning_timescale]
-BOLD_65 = BOLD_65[scanning_timescale]
 
 print 'Size of BOLD arrays before deleting scans: ', BOLD_0.size
 
@@ -892,39 +596,6 @@ BOLD_29 = np.delete(BOLD_29, np.arange(scans_to_remove))
 BOLD_30 = np.delete(BOLD_30, np.arange(scans_to_remove))
 BOLD_31 = np.delete(BOLD_31, np.arange(scans_to_remove))
 BOLD_32 = np.delete(BOLD_32, np.arange(scans_to_remove))
-BOLD_33 = np.delete(BOLD_33, np.arange(scans_to_remove))
-BOLD_34 = np.delete(BOLD_34, np.arange(scans_to_remove))
-BOLD_35 = np.delete(BOLD_35, np.arange(scans_to_remove))
-BOLD_36 = np.delete(BOLD_36, np.arange(scans_to_remove))
-BOLD_37 = np.delete(BOLD_37, np.arange(scans_to_remove))
-BOLD_38 = np.delete(BOLD_38, np.arange(scans_to_remove))
-BOLD_39 = np.delete(BOLD_39, np.arange(scans_to_remove))
-BOLD_40 = np.delete(BOLD_40, np.arange(scans_to_remove))
-BOLD_41 = np.delete(BOLD_41, np.arange(scans_to_remove))
-BOLD_42 = np.delete(BOLD_42, np.arange(scans_to_remove))
-BOLD_43 = np.delete(BOLD_43, np.arange(scans_to_remove))
-BOLD_44 = np.delete(BOLD_44, np.arange(scans_to_remove))
-BOLD_45 = np.delete(BOLD_45, np.arange(scans_to_remove))
-BOLD_46 = np.delete(BOLD_46, np.arange(scans_to_remove))
-BOLD_47 = np.delete(BOLD_47, np.arange(scans_to_remove))
-BOLD_48 = np.delete(BOLD_48, np.arange(scans_to_remove))
-BOLD_49 = np.delete(BOLD_49, np.arange(scans_to_remove))
-BOLD_50 = np.delete(BOLD_50, np.arange(scans_to_remove))
-BOLD_51 = np.delete(BOLD_51, np.arange(scans_to_remove))
-BOLD_52 = np.delete(BOLD_52, np.arange(scans_to_remove))
-BOLD_53 = np.delete(BOLD_53, np.arange(scans_to_remove))
-BOLD_54 = np.delete(BOLD_54, np.arange(scans_to_remove))
-BOLD_55 = np.delete(BOLD_55, np.arange(scans_to_remove))
-BOLD_56 = np.delete(BOLD_56, np.arange(scans_to_remove))
-BOLD_57 = np.delete(BOLD_57, np.arange(scans_to_remove))
-BOLD_58 = np.delete(BOLD_58, np.arange(scans_to_remove))
-BOLD_59 = np.delete(BOLD_59, np.arange(scans_to_remove))
-BOLD_60 = np.delete(BOLD_60, np.arange(scans_to_remove))
-BOLD_61 = np.delete(BOLD_61, np.arange(scans_to_remove))
-BOLD_62 = np.delete(BOLD_62, np.arange(scans_to_remove))
-BOLD_63 = np.delete(BOLD_63, np.arange(scans_to_remove))
-BOLD_64 = np.delete(BOLD_64, np.arange(scans_to_remove))
-BOLD_65 = np.delete(BOLD_65, np.arange(scans_to_remove))
 
 # round of mr time for display purposes
 mr_time = np.round(mr_time, decimals=0)
@@ -1011,12 +682,12 @@ ax = fig.add_subplot(111)
 #plt.rcParams.update({'font.size': 15})
 
 # plot correlation matrix as a heatmap
-mask = np.tri(corr_mat.shape[0], k=-1)
+mask = np.tri(corr_mat.shape[0], k=0)
 mask = np.transpose(mask)
 corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the upper triangle
 cmap = CM.get_cmap('jet', 10)
 cmap.set_bad('w')
-cax = ax.imshow(corr_mat, vmin=-0.6, vmax=1.0, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(corr_mat, vmin=-1, vmax=1, interpolation='nearest', cmap=cmap)
 ax.grid(False)
 plt.colorbar(cax)
 
@@ -1056,7 +727,7 @@ plt.hist(corr_mat, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-0.6, 0.6, 0, 100])
+plt.axis([-1, 1, 0, 100])
 
 # calculate and print kurtosis
 print 'Fishers kurtosis: ', kurtosis(corr_mat, fisher=True)

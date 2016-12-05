@@ -734,6 +734,10 @@ class TaskThread(QtCore.QThread):
         # initialize timestep counter for LSNM timesteps
         t = 0
 
+        # initialize random seed
+        seed = 20
+        random_state = np.random.RandomState(seed)
+
         # import the experimental script given by user's script file
         exec(experiment_script)
         
@@ -750,7 +754,7 @@ class TaskThread(QtCore.QThread):
             # the following 'for loop' is the main loop of the TVB simulation with the parameters
             # defined above. Note that the LSNM simulator is literally embedded into the TVB
             # simulation and both run concurrently, timestep by timestep.
-            for raw in sim(simulation_length=TVB_simulation_length):
+            for raw in sim(simulation_length=TVB_simulation_length, random_state=random_state.get_state()):
             
                 # convert current TVB connectome electrical activity to a numpy array 
                 RawData = numpy.array(raw[0][1])
