@@ -92,7 +92,7 @@ ROIs = np.arange(33)
 subjects = np.arange(10)
 
 # define output file where means, standard deviations, and variances will be stored
-RS_FC_avg_file = 'rs_fc_avg.npy'
+RS_FC_avg_file = 'tvb_only_rs_fc_avg.npy'
 TB_FC_avg_file = 'tb_fc_avg.npy'
 
 # declare ROI labels
@@ -132,16 +132,16 @@ labels =  ['rLOF',
 
 
 # define the names of the input files where the correlation coefficients were stored
-FC_RS_subj1  = 'subject_11/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj2  = 'subject_12/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj3  = 'subject_13/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj4  = 'subject_14/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj5  = 'subject_15/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj6  = 'subject_16/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj7  = 'subject_17/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj8  = 'subject_18/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj9  = 'subject_19/output.RestingState/xcorr_matrix_33_regions.npy'
-FC_RS_subj10 = 'subject_20/output.RestingState/xcorr_matrix_33_regions.npy'
+FC_RS_subj1  = 'subject_tvb/output.RestingState_01/xcorr_matrix_33_regions.npy'
+FC_RS_subj2  = 'subject_tvb/output.RestingState_02/xcorr_matrix_33_regions.npy'
+FC_RS_subj3  = 'subject_tvb/output.RestingState_03/xcorr_matrix_33_regions.npy'
+FC_RS_subj4  = 'subject_tvb/output.RestingState_04/xcorr_matrix_33_regions.npy'
+FC_RS_subj5  = 'subject_tvb/output.RestingState_05/xcorr_matrix_33_regions.npy'
+FC_RS_subj6  = 'subject_tvb/output.RestingState_06/xcorr_matrix_33_regions.npy'
+FC_RS_subj7  = 'subject_tvb/output.RestingState_07/xcorr_matrix_33_regions.npy'
+FC_RS_subj8  = 'subject_tvb/output.RestingState_08/xcorr_matrix_33_regions.npy'
+FC_RS_subj9  = 'subject_tvb/output.RestingState_09/xcorr_matrix_33_regions.npy'
+FC_RS_subj10 = 'subject_tvb/output.RestingState_10/xcorr_matrix_33_regions.npy'
 
 FC_TB_subj1  = 'subject_11/output.TaskBased/xcorr_matrix_33_regions.npy'
 FC_TB_subj2  = 'subject_12/output.TaskBased/xcorr_matrix_33_regions.npy'

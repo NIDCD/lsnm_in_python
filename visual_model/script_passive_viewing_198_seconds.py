@@ -1,5 +1,7 @@
 #!/usr/bin/python
 #
+# Script created on December 5 2016
+#
 # There are 3 Passive Viewing trials and 3 control trials (rest) for each of six blocks
 #
 # The total number of timesteps is 39600 = 198 seconds
@@ -8,13 +10,11 @@
 #
 # Each block is 3300 timesteps = 16.5 seconds
 #
-# Both DMS trials and control trials are: MATCH, MISMATCH, MATCH.
-# The attention parameter in DMS trials is 0.3
-# The control trials constitute 'passive viewing': degraded shapes are presented and
-# the same low attention (0.05) is used throughout the control trials
+# The attention parameter in all trials (passive viewing and rest) is 0.05
+# 'passive viewing': degraded shapes are presented and
+# low attention (0.05) is used throughout
 #
-# The first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in
-# Horwitz et al (2005)
+# We assume 1 timestep = 5 ms, as in Horwitz et al (2005)
 #
 # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
 # we are assuming that each simulation timestep is equivalent to 5 milliseconds
@@ -44,65 +44,6 @@ rand_shape2 = rdm.sample(range(81),18)
 rand_indeces2 = np.unravel_index(rand_shape2,(9,9))
 script_params[6] = zip(*rand_indeces2)
         
-def o_shape(modules, script_params):
-    
-    """
-    generates an o-shaped visual input to neural network with parameters given
-    
-    """
-    
-    modules['atts'][8][0][0][0] = script_params[1]
-    
-    # insert the inputs stimulus into LGN and see what happens
-    # the following stimulus is an 'O' shape
-    modules['lgns'][8][4][3][0] = script_params[3]
-    modules['lgns'][8][4][4][0] = script_params[3]
-    modules['lgns'][8][4][5][0] = script_params[3]
-    modules['lgns'][8][4][6][0] = script_params[3]
-    modules['lgns'][8][4][7][0] = script_params[3]
-    modules['lgns'][8][4][8][0] = script_params[3]
-    modules['lgns'][8][8][3][0] = script_params[3]
-    modules['lgns'][8][8][4][0] = script_params[3]
-    modules['lgns'][8][8][5][0] = script_params[3]
-    modules['lgns'][8][8][6][0] = script_params[3]
-    modules['lgns'][8][8][7][0] = script_params[3]
-    modules['lgns'][8][8][8][0] = script_params[3]
-    modules['lgns'][8][5][3][0] = script_params[3]
-    modules['lgns'][8][6][3][0] = script_params[3]
-    modules['lgns'][8][7][3][0] = script_params[3]
-    modules['lgns'][8][5][8][0] = script_params[3]
-    modules['lgns'][8][6][8][0] = script_params[3]
-    modules['lgns'][8][7][8][0] = script_params[3]
-    
-def t_shape(modules, script_params):
-    
-    """
-    generates a t-shaped visual input to neural network with parameters given"
-    
-    """
-    modules['atts'][8][0][0][0] = script_params[1]
-
-    # insert the inputs stimulus into LGN and see what happens
-    # the following is a 'T' shape
-    modules['lgns'][8][3][0][0] = script_params[3]
-    modules['lgns'][8][3][1][0] = script_params[3]
-    modules['lgns'][8][3][2][0] = script_params[3]
-    modules['lgns'][8][3][3][0] = script_params[3]
-    modules['lgns'][8][3][4][0] = script_params[3]
-    modules['lgns'][8][3][5][0] = script_params[3]
-    modules['lgns'][8][3][6][0] = script_params[3]
-    modules['lgns'][8][3][7][0] = script_params[3]
-    modules['lgns'][8][0][6][0] = script_params[3]
-    modules['lgns'][8][1][6][0] = script_params[3]
-    modules['lgns'][8][1][7][0] = script_params[3]
-    modules['lgns'][8][2][6][0] = script_params[3]
-    modules['lgns'][8][2][7][0] = script_params[3]
-    modules['lgns'][8][4][6][0] = script_params[3]
-    modules['lgns'][8][4][7][0] = script_params[3]
-    modules['lgns'][8][5][6][0] = script_params[3]
-    modules['lgns'][8][5][7][0] = script_params[3]
-    modules['lgns'][8][6][6][0] = script_params[3]
-
 def random_shape_1(modules, script_params):
     """
     generates a random visual input to neural network with parameters given
@@ -158,33 +99,9 @@ def intertrial_interval(modules, script_params):
     
 # define a dictionary of simulation events functions, each associated with
 # a specific simulation timestep
-simulation_events = {        
-    ################### FIRST BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '200': o_shape,                
-
-    '400': delay_period,
-
-    '700': o_shape,
-
-    '900': intertrial_interval,             
-
-    '1300': o_shape,
-
-    '1500': delay_period,
-
-    '1800': t_shape,
-
-    '2000': intertrial_interval,
-             
-    '2400': t_shape,
-
-    '2600': delay_period,
-
-    '2900': t_shape,
-
-    '3100': intertrial_interval,
-
-    ################### FIRST BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+simulation_events = {
+    '0'  : intertrial_interval,             # rest block begins
+    ################### FIRST BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '3500': random_shape_1,
 
     '3700': delay_period,
@@ -207,34 +124,9 @@ simulation_events = {
 
     '6200': random_shape_2,
 
-    '6400': intertrial_interval,
+    '6400': intertrial_interval,             # rest block begins
 
-    ################### SECOND BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '6800': o_shape,                
-
-    '7000': delay_period,
-
-    '7300': o_shape,
-
-    '7500': intertrial_interval,             
-
-    '7900': o_shape,
-
-    '8100': delay_period,
-
-    '8400': t_shape,
-
-    '8600': intertrial_interval,
-
-    '9000': t_shape,
-
-    '9200': delay_period,
-
-    '9500': t_shape,
-
-    '9700': intertrial_interval,
-
-    ################### SECOND BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+    ################### SECOND BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '10100': random_shape_1,
 
     '10300': delay_period,
@@ -257,34 +149,9 @@ simulation_events = {
 
     '12800': random_shape_2,
 
-    '13000': intertrial_interval,
+    '13000': intertrial_interval,             # rest block begins
     
-    ################### THIRD BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '13400': o_shape,                
-
-    '13600': delay_period,
-
-    '13900': o_shape,
-
-    '14100': intertrial_interval,             
-
-    '14500': o_shape,
-
-    '14700': delay_period,
-
-    '15000': t_shape,
-
-    '15200': intertrial_interval,
-             
-    '15600': t_shape,
-
-    '15800': delay_period,
-
-    '16100': t_shape,
-
-    '16300': intertrial_interval,
-
-    ################### THIRD BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+    ################### THIRD BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '16700': random_shape_1,
 
     '16900': delay_period,
@@ -307,34 +174,9 @@ simulation_events = {
 
     '19400': random_shape_2,
 
-    '19600': intertrial_interval,
+    '19600': intertrial_interval,             # rest block begins
     
-    ################### FOURTH BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '20000': o_shape,                
-
-    '20200': delay_period,
-
-    '20500': o_shape,
-
-    '20700': intertrial_interval,             
-
-    '21100': o_shape,
-
-    '21300': delay_period,
-
-    '21600': t_shape,
-
-    '21800': intertrial_interval,
-             
-    '22200': t_shape,
-
-    '22400': delay_period,
-
-    '22700': t_shape,
-
-    '22900': intertrial_interval,
-
-    ################### FOURTH BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+    ################### FOURTH BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '23300': random_shape_1,
 
     '23500': delay_period,
@@ -357,34 +199,9 @@ simulation_events = {
 
     '26000': random_shape_2,
 
-    '26200': intertrial_interval,
+    '26200': intertrial_interval,             # rest block begins
     
-    ################### FIFTH BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '26600': o_shape,                
-
-    '26800': delay_period,
-
-    '27100': o_shape,
-
-    '27300': intertrial_interval,             
-
-    '27700': o_shape,
-
-    '27900': delay_period,
-
-    '28200': t_shape,
-
-    '28400': intertrial_interval,
-             
-    '28800': t_shape,
-
-    '29000': delay_period,
-
-    '29300': t_shape,
-
-    '29500': intertrial_interval,
-
-    ################### FIFTH BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+    ################### FIFTH BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '29900': random_shape_1,
 
     '30100': delay_period,
@@ -407,34 +224,9 @@ simulation_events = {
 
     '32600': random_shape_2,
 
-    '32800': intertrial_interval,
+    '32800': intertrial_interval,             # rest block begins
     
-    ################### SIXTH BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '33200': o_shape,                
-
-    '33400': delay_period,
-
-    '33700': o_shape,
-
-    '33900': intertrial_interval,             
-
-    '34300': o_shape,
-
-    '34500': delay_period,
-
-    '34800': t_shape,
-
-    '35000': intertrial_interval,
-             
-    '35400': t_shape,
-
-    '35600': delay_period,
-
-    '35900': t_shape,
-
-    '36100': intertrial_interval,
-
-    ################### SIXTH BLOCK OF 3 CONTROL TRIALS (MATCH, MISMATCH, MATCH)
+    ################### SIXTH BLOCK OF PASSIVE VIEWING TRIALS (MATCH, MISMATCH, MATCH)
     '36500': random_shape_1,
 
     '36700': delay_period,

@@ -109,7 +109,7 @@ roi_dict = {
 }
 
 # Load TVB nodes synaptic activity
-tvb_synaptic = np.load("tvb_synaptic.npy")
+tvb_synaptic = np.load("tvb_abs_syn.npy")
 
 # create a numpy array of synaptic time-series, with a number of elements defined
 # by the number of ROIs above and the number of time points in each synaptic time-series

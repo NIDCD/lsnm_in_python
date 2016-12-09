@@ -42,7 +42,7 @@
 #   This program makes use of The Virtual Brain library toolbox, downloaded
 #   from the TVB GitHub page.
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 5 2016 
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 6 2016 
 # **************************************************************************/
 #
 # sim_without_LSNM.py
@@ -263,9 +263,8 @@ stimulus_pattern = np.concatenate((range(200, 401),
                                    range(39200, 39401)
                                ))
 
-# initialize random seed
-seed = 20
-random_state = np.random.RandomState(seed)
+# declare random number generator
+random_state = np.random.RandomState()
 
 # Run the simulation
 raw_data = []

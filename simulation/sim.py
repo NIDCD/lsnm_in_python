@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on April 16 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 6 2016
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)
@@ -734,9 +734,8 @@ class TaskThread(QtCore.QThread):
         # initialize timestep counter for LSNM timesteps
         t = 0
 
-        # initialize random seed
-        seed = 20
-        random_state = np.random.RandomState(seed)
+        # declare random number generator
+        random_state = np.random.RandomState()
 
         # import the experimental script given by user's script file
         exec(experiment_script)

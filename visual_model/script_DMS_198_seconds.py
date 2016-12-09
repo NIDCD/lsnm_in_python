@@ -2,7 +2,8 @@
 #
 # Script created on December 5 2016
 #
-# There are 6 Delayed match-to-sample (DMS) trials for each of twelve blocks
+# There are 6 Delayed match-to-sample (DMS) task blocks in this script, interspersed
+# with 6 rest blocks
 #
 # The total number of timesteps is 39600 = 198 seconds
 #
@@ -10,11 +11,11 @@
 #
 # Each block is 3300 timesteps = 16.5 seconds
 #
-# DMS trials are in the following order: MATCH, MISMATCH, MATCH, MATCH, MISMATCH, MATCH.
-# The attention parameter in DMS trials is 0.3
+# Each task block is composed of 3 DMS trials in the following order: MATCH, MISMATCH, MATCH.
+# The attention parameter in the task trials is 0.3 and the attention parameter in the rest
+# blocks is 0.05
 #
-# The first 200 timesteps = 1000 ms we do nothing. We assume 1 timestep = 5 ms, as in
-# Horwitz et al (2005)
+# We assume 1 timestep = 5 ms, as in Horwitz et al (2005)
 #
 # To maintain consistency with Husain et al (2004) and Tagamets and Horwitz (1998),
 # we are assuming that each simulation timestep is equivalent to 5 milliseconds
@@ -125,33 +126,9 @@ def intertrial_interval(modules, script_params):
     
 # define a dictionary of simulation events functions, each associated with
 # a specific simulation timestep
-simulation_events = {        
-    ################### FIRST BLOCK OF 3 DMS TRIALS (MATCH, MISMATCH, MATCH)
-    '200': o_shape,                
-
-    '400': delay_period,
-
-    '700': o_shape,
-
-    '900': intertrial_interval,             
-
-    '1300': o_shape,
-
-    '1500': delay_period,
-
-    '1800': t_shape,
-
-    '2000': intertrial_interval,
-             
-    '2400': t_shape,
-
-    '2600': delay_period,
-
-    '2900': t_shape,
-
-    '3100': intertrial_interval,
-
-    ################### SECOND BLOCK 
+simulation_events = {
+    '0'   : intertrial_interval,             # rest block begins
+    ################### BLOCK 1
     '3500': o_shape,
 
     '3700': delay_period,
@@ -174,34 +151,9 @@ simulation_events = {
 
     '6200': t_shape,
 
-    '6400': intertrial_interval,
+    '6400': intertrial_interval,             # rest block begins
 
-    ################### THIRD BLOCK
-    '6800': o_shape,                
-
-    '7000': delay_period,
-
-    '7300': o_shape,
-
-    '7500': intertrial_interval,             
-
-    '7900': o_shape,
-
-    '8100': delay_period,
-
-    '8400': t_shape,
-
-    '8600': intertrial_interval,
-
-    '9000': t_shape,
-
-    '9200': delay_period,
-
-    '9500': t_shape,
-
-    '9700': intertrial_interval,
-
-    ################### FOURTH BLOCK
+    ################### BLOCK 2
     '10100': o_shape,
 
     '10300': delay_period,
@@ -224,34 +176,9 @@ simulation_events = {
 
     '12800': t_shape,
 
-    '13000': intertrial_interval,
+    '13000': intertrial_interval,             # rest block begins
     
-    ################### FIFTH BLOCK
-    '13400': o_shape,                
-
-    '13600': delay_period,
-
-    '13900': o_shape,
-
-    '14100': intertrial_interval,             
-
-    '14500': o_shape,
-
-    '14700': delay_period,
-
-    '15000': t_shape,
-
-    '15200': intertrial_interval,
-             
-    '15600': t_shape,
-
-    '15800': delay_period,
-
-    '16100': t_shape,
-
-    '16300': intertrial_interval,
-
-    ################### SIXTH BLOCK
+    ################### BLOCK 3
     '16700': o_shape,
 
     '16900': delay_period,
@@ -274,34 +201,9 @@ simulation_events = {
 
     '19400': t_shape,
 
-    '19600': intertrial_interval,
+    '19600': intertrial_interval,             # rest block begins
     
-    ################### SEVENTH BLOCK 
-    '20000': o_shape,                
-
-    '20200': delay_period,
-
-    '20500': o_shape,
-
-    '20700': intertrial_interval,             
-
-    '21100': o_shape,
-
-    '21300': delay_period,
-
-    '21600': t_shape,
-
-    '21800': intertrial_interval,
-             
-    '22200': t_shape,
-
-    '22400': delay_period,
-
-    '22700': t_shape,
-
-    '22900': intertrial_interval,
-
-    ################### EIGHT BLOCK
+    ################### BLOCK 4
     '23300': o_shape,
 
     '23500': delay_period,
@@ -324,34 +226,9 @@ simulation_events = {
 
     '26000': t_shape,
 
-    '26200': intertrial_interval,
+    '26200': intertrial_interval,             # rest block begins
     
-    ################### NINTH BLOCK
-    '26600': o_shape,                
-
-    '26800': delay_period,
-
-    '27100': o_shape,
-
-    '27300': intertrial_interval,             
-
-    '27700': o_shape,
-
-    '27900': delay_period,
-
-    '28200': t_shape,
-
-    '28400': intertrial_interval,
-             
-    '28800': t_shape,
-
-    '29000': delay_period,
-
-    '29300': t_shape,
-
-    '29500': intertrial_interval,
-
-    ################### TENTH BLOCK
+    ################### BLOCK 5
     '29900': o_shape,
 
     '30100': delay_period,
@@ -374,34 +251,9 @@ simulation_events = {
 
     '32600': t_shape,
 
-    '32800': intertrial_interval,
+    '32800': intertrial_interval,             # rest block begins
     
-    ################### ELEVENTH BLOCK
-    '33200': o_shape,                
-
-    '33400': delay_period,
-
-    '33700': o_shape,
-
-    '33900': intertrial_interval,             
-
-    '34300': o_shape,
-
-    '34500': delay_period,
-
-    '34800': t_shape,
-
-    '35000': intertrial_interval,
-             
-    '35400': t_shape,
-
-    '35600': delay_period,
-
-    '35900': t_shape,
-
-    '36100': intertrial_interval,
-
-    ################### TWELVE BLOCK
+    ################### BLOCK 6
     '36500': o_shape,
 
     '36700': delay_period,
@@ -424,7 +276,7 @@ simulation_events = {
 
     '39200': t_shape,
 
-    '39400': intertrial_interval,
+    '39400': intertrial_interval,      
 
 }
 
