@@ -79,10 +79,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_TVB_ROI.npy'
+SYN_file  = 'synaptic_in_ROI.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_TVB_ROI.npy'
+BOLD_file = 'bold_balloon_in_ROI.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
