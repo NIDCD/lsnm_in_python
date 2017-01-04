@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on November 20 2016
+#   Last updated by Antonio Ulloa on January 3 2017
 #
 # **************************************************************************/
 
@@ -929,12 +929,17 @@ BOLD_65 = np.delete(BOLD_65, np.arange(scans_to_remove))
 # round of mr time for display purposes
 mr_time = np.round(mr_time, decimals=0)
 
-# create a numpy array of timeseries, using only the 33 ROIs in the right hemisphere
+# create a numpy array of timeseries, using the 66 ROIs
 lsnm_BOLD = np.array([BOLD_0, BOLD_1, BOLD_2, BOLD_3, BOLD_4, BOLD_5, BOLD_6, BOLD_7,
                       BOLD_8, BOLD_9, BOLD_10, BOLD_11, BOLD_12, BOLD_13, BOLD_14, BOLD_15,
                       BOLD_16, BOLD_17, BOLD_18, BOLD_19, BOLD_20, BOLD_21, BOLD_22, BOLD_23,
                       BOLD_24, BOLD_25, BOLD_26, BOLD_27, BOLD_28, BOLD_29, BOLD_30, BOLD_31,
-                      BOLD_32])
+                      BOLD_32,
+                      BOLD_33, BOLD_34, BOLD_35, BOLD_36, BOLD_37, BOLD_38, BOLD_39, BOLD_40,
+                      BOLD_41, BOLD_42, BOLD_43, BOLD_44, BOLD_45, BOLD_46, BOLD_47, BOLD_48,
+                      BOLD_49, BOLD_50, BOLD_51, BOLD_52, BOLD_53, BOLD_54, BOLD_55, BOLD_56,
+                      BOLD_57, BOLD_58, BOLD_59, BOLD_60, BOLD_61, BOLD_62, BOLD_63, BOLD_64,
+                      BOLD_65 ])
 
 print 'Size of BOLD time-series after removing scans: ', BOLD_0.size
 
@@ -1001,7 +1006,41 @@ labels =  ['rLOF',
     'rMT'  ,          
     'rBSTS',          
     'rST'  ,          
-    'rTT']            
+    'rTT'  ,
+    'lLOF' ,
+    'lPORB',
+    'lFP'  ,
+    'lMOF' ,
+    'lPTRI',
+    'lPOPE',
+    'LRMF' ,
+    'lSF'  ,
+    'lCMF' ,
+    'lPREC',
+    'lPARC',
+    'lRAC' ,
+    'lCAC' ,
+    'lPC'  ,
+    'lISTC',
+    'lPSTC',
+    'lSMAR',
+    'lSP'  ,
+    'lIP'  ,
+    'lPCUN',
+    'lCUN' ,
+    'lPCAL',
+    'lLOC' ,
+    'lLING',
+    'lFUS' ,
+    'lPARH',
+    'lENT' ,
+    'lTP'  ,
+    'lIT'  ,
+    'lMT'  ,
+    'lBSTS',
+    'lST'  ,
+    'lTT'
+]            
 
 #initialize new figure for correlations
 fig = plt.figure()
@@ -1011,12 +1050,12 @@ ax = fig.add_subplot(111)
 #plt.rcParams.update({'font.size': 15})
 
 # plot correlation matrix as a heatmap
-mask = np.tri(corr_mat.shape[0], k=-1)
-mask = np.transpose(mask)
-corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the upper triangle
+#mask = np.tri(corr_mat.shape[0], k=0)
+#mask = np.transpose(mask)
+#corr_mat = np.ma.array(corr_mat, mask=mask)          # mask out the upper triangle
 cmap = CM.get_cmap('jet', 10)
-cmap.set_bad('w')
-cax = ax.imshow(corr_mat, vmin=-0.6, vmax=1.0, interpolation='nearest', cmap=cmap)
+#cmap.set_bad('w')
+cax = ax.imshow(corr_mat, vmin=-1, vmax=1.0, interpolation='nearest', cmap=cmap)
 ax.grid(False)
 plt.colorbar(cax)
 
@@ -1056,7 +1095,7 @@ plt.hist(corr_mat, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-0.6, 0.6, 0, 100])
+plt.axis([-1, 1, 0, 100])
 
 # calculate and print kurtosis
 print 'Fishers kurtosis: ', kurtosis(corr_mat, fisher=True)
