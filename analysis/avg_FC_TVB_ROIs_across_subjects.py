@@ -38,9 +38,10 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on January 3 2016
+#   Last updated by Antonio Ulloa on January 8 2016
 #
 #   Based on computer code originally developed by Barry Horwitz et al
+#   Also based on Python2.7 tutorials
 # **************************************************************************/
 #
 # avg_FC_TVB_ROIs_across_subjects.py
@@ -85,6 +86,10 @@ from scipy.stats import skew
 from matplotlib import cm as CM
 
 from mne.viz import circular_layout, plot_connectivity_circle
+
+import bct as bct
+
+from matplotlib.ticker import NullFormatter
 
 # set matplot lib parameters to produce visually appealing plots
 #mpl.style.use('ggplot')
@@ -353,39 +358,11 @@ tvb_lsnm_dms_z_mean = np.mean(tvb_lsnm_dms_z, axis=0)
 #ax.grid(False)
 #plt.colorbar(cax)
 
-# change frequency of ticks to match number of ROI labels
-#plt.xticks(np.arange(0, len(labels)))
-#plt.yticks(np.arange(0, len(labels)))
-
-# display labels for brain regions
-#ax.set_xticklabels(labels, rotation=90)
-#ax.set_yticklabels(labels)
-
-# Turn off all the ticks
-#ax = plt.gca()
-
-#for t in ax.xaxis.get_major_ticks():
-#    t.tick1On = False
-#    t.tick2On = False
-#for t in ax.yaxis.get_major_ticks():
-#    t.tick1On = False
-#    t.tick2On = False
-
 # now, convert back to from Z to R correlation coefficients
 tvb_rs_mean  = np.tanh(tvb_rs_z_mean)
 tvb_lsnm_rs_mean  = np.tanh(tvb_lsnm_rs_z_mean)
 tvb_lsnm_pv_mean  = np.tanh(tvb_lsnm_pv_z_mean)
 tvb_lsnm_dms_mean  = np.tanh(tvb_lsnm_dms_z_mean)
-
-#fc_rs_std  = np.tanh(fc_rs_z_mean)
-#fc_tb_std  = np.tanh(fc_tb_z_mean)
-
-#fc_rs_mean  = np.tanh(fc_rs_z_mean)
-#fc_tb_mean  = np.tanh(fc_tb_z_mean)
-
-# save the averages of both resting state and task based functional connectivity arrays
-#np.save(RS_FC_avg_file, fc_rs_mean)
-#np.save(TB_FC_avg_file, fc_tb_mean)
 
 #initialize new figure for correlations of TVB-only Resting State mean
 fig = plt.figure('Mean TVB-only RS FC')
@@ -395,25 +372,33 @@ ax = fig.add_subplot(111)
 cmap = CM.get_cmap('jet', 10)
 cax = ax.imshow(tvb_rs_mean, vmin=-1, vmax=1, interpolation='nearest', cmap=cmap)
 ax.grid(False)
-plt.colorbar(cax)
+color_bar=plt.colorbar(cax)
 
-# change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
+fig.savefig('mean_tvb_only_rs_fc.png')
 
-# display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
+# threshold the connectivity matrix to preserve only a proportion 'p' of
+# the strongest weights, then binarize the matrix
+p = .6
+tvb_rs_mean_p = bct.threshold_proportional(tvb_rs_mean, p, copy=True)
+tvb_rs_mean_bin = bct.binarize(tvb_rs_mean_p, copy=True)
 
-# Turn off all the ticks
-ax = plt.gca()
+# calculate global efficiency using Brain Connectivity Toolbox
+tvb_rs_global_efficiency = bct.efficiency_bin(tvb_rs_mean_bin, local=False)
+print '\nTVB-only RS Global Efficiency: ', tvb_rs_global_efficiency
 
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
+# calculate clustering coefficient vector using Brain Connectivity Toolbox
+tvb_rs_mean_clustering_coefficient = np.mean(bct.clustering_coef_bu(tvb_rs_mean_bin))
+print '\nTVB-only RS mean clustering coefficient: ',tvb_rs_mean_clustering_coefficient
+
+# calculate modularity using Brain Connectivity Toolbox
+tvb_rs_modularity = bct.modularity_und(tvb_rs_mean_bin, gamma=1, kci=None)
+print '\nTVB-LSNM RS Modularity: ', tvb_rs_modularity
+
+# calculate nodal degree using BCT
+tvb_rs_nodal_degree = bct.degrees_und(tvb_rs_mean_p)
+
+# calculate nodal strength using BCT
+tvb_rs_nodal_strength = bct.strengths_und_sign(tvb_rs_mean_p)
 
 #initialize new figure for correlations of TVB/LSNM RS FC mean
 fig = plt.figure('Mean TVB/LSNM RS FC')
@@ -423,25 +408,33 @@ ax = fig.add_subplot(111)
 cmap = CM.get_cmap('jet', 10)
 cax = ax.imshow(tvb_lsnm_rs_mean, vmin=-1, vmax=1, interpolation='nearest', cmap=cmap)
 ax.grid(False)
-plt.colorbar(cax)
+color_bar=plt.colorbar(cax)
 
-# change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
+fig.savefig('mean_tvb_lsnm_rs_fc.png')
 
-# display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
+# threshold the connectivity matrix to preserve only a proportion 'p' of
+# the strongest weights, then binarize the matrix
+p = .6
+tvb_lsnm_rs_mean_p = bct.threshold_proportional(tvb_lsnm_rs_mean, p, copy=True)
+tvb_lsnm_rs_mean_bin = bct.binarize(tvb_lsnm_rs_mean_p, copy=True)
 
-# Turn off all the ticks
-ax = plt.gca()
+# calculate global efficiency using Brain Connectivity Toolbox
+tvb_lsnm_rs_global_efficiency = bct.efficiency_bin(tvb_lsnm_rs_mean_bin, local=False)
+print '\nTVB-LSNM RS Global Efficiency: ', tvb_lsnm_rs_global_efficiency
 
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
+# calculate clustering coefficient vector using Brain Connectivity Toolbox
+tvb_lsnm_rs_mean_clustering_coefficient = np.mean(bct.clustering_coef_bu(tvb_lsnm_rs_mean_bin))
+print '\nTVB-LSNM RS mean clustering coefficient: ',tvb_lsnm_rs_mean_clustering_coefficient
+
+# calculate modularity using Brain Connectivity Toolbox
+tvb_lsnm_rs_modularity = bct.modularity_und(tvb_lsnm_rs_mean_bin, gamma=1, kci=None)
+print '\nTVB-LSNM RS Modularity: ', tvb_lsnm_rs_modularity
+
+# calculate nodal degree using BCT
+tvb_lsnm_rs_nodal_degree = bct.degrees_und(tvb_lsnm_rs_mean_p)
+
+# calculate nodal strength using BCT
+tvb_lsnm_rs_nodal_strength = bct.strengths_und_sign(tvb_lsnm_rs_mean_p)
 
 #initialize new figure for correlations of TVB/LSNM PV FC mean
 fig = plt.figure('Mean TVB/LSNM PV FC')
@@ -451,25 +444,33 @@ ax = fig.add_subplot(111)
 cmap = CM.get_cmap('jet', 10)
 cax = ax.imshow(tvb_lsnm_pv_mean, vmin=-1, vmax=1, interpolation='nearest', cmap=cmap)
 ax.grid(False)
-plt.colorbar(cax)
+color_bar=plt.colorbar(cax)
 
-# change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
+fig.savefig('mean_tvb_lsnm_pv_fc.png')
 
-# display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
+# threshold the connectivity matrix to preserve only a proportion 'p' of
+# the strongest weights, then binarize the matrix
+p = .6
+tvb_lsnm_pv_mean_p = bct.threshold_proportional(tvb_lsnm_pv_mean, p, copy=True)
+tvb_lsnm_pv_mean_bin = bct.binarize(tvb_lsnm_pv_mean_p, copy=True)
 
-# Turn off all the ticks
-ax = plt.gca()
+# calculate global efficiency using Brain Connectivity Toolbox
+tvb_lsnm_pv_global_efficiency = bct.efficiency_bin(tvb_lsnm_pv_mean_bin, local=False)
+print '\nTVB-LSNM PV Global Efficiency: ', tvb_lsnm_pv_global_efficiency
 
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
+# calculate clustering coefficient vector using Brain Connectivity Toolbox
+tvb_lsnm_pv_mean_clustering_coefficient = np.mean(bct.clustering_coef_bu(tvb_lsnm_pv_mean_bin))
+print '\nTVB-LSNM PV mean clustering coefficient: ',tvb_lsnm_pv_mean_clustering_coefficient
+
+# calculate modularity using Brain Connectivity Toolbox
+tvb_lsnm_pv_modularity = bct.modularity_und(tvb_lsnm_pv_mean_bin, gamma=1, kci=None)
+print '\nTVB-LSNM PV Modularity: ', tvb_lsnm_pv_modularity
+
+# calculate nodal degree using BCT
+tvb_lsnm_pv_nodal_degree = bct.degrees_und(tvb_lsnm_pv_mean_p)
+
+# calculate nodal strength using BCT
+tvb_lsnm_pv_nodal_strength = bct.strengths_und_sign(tvb_lsnm_pv_mean_p)
 
 #initialize new figure for correlations of TVB/LSNM DMS FC mean
 fig = plt.figure('Mean TVB/LSNM DMS FC')
@@ -479,75 +480,150 @@ ax = fig.add_subplot(111)
 cmap = CM.get_cmap('jet', 10)
 cax = ax.imshow(tvb_lsnm_dms_mean, vmin=-1, vmax=1, interpolation='nearest', cmap=cmap)
 ax.grid(False)
-plt.colorbar(cax)
+color_bar=plt.colorbar(cax)
 
-# change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
+fig.savefig('mean_tvb_lsnm_dms_fc.png')
 
-# display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
+# threshold the connectivity matrix to preserve only a proportion 'p' of
+# the strongest weights, then binarize the matrix
+p = .6
+tvb_lsnm_dms_mean_p = bct.threshold_proportional(tvb_lsnm_dms_mean, p, copy=True)
+tvb_lsnm_dms_mean_bin = bct.binarize(tvb_lsnm_dms_mean_p, copy=True)
 
-# Turn off all the ticks
-ax = plt.gca()
+# calculate global efficiency using Brain Connectivity Toolbox
+tvb_lsnm_dms_global_efficiency = bct.efficiency_bin(tvb_lsnm_dms_mean_bin, local=False)
+print '\nTVB-LSNM DMS Global Efficiency: ', tvb_lsnm_dms_global_efficiency
 
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
+# calculate clustering coefficient vector using Brain Connectivity Toolbox
+tvb_lsnm_dms_clustering_coefficient = np.mean(bct.clustering_coef_bu(tvb_lsnm_dms_mean_bin))
+print '\nTVB-LSNM DMS mean clustering coefficient: ',tvb_lsnm_dms_clustering_coefficient
+
+# calculate modularity using Brain Connectivity Toolbox
+tvb_lsnm_dms_modularity = bct.modularity_und(tvb_lsnm_dms_mean_bin, gamma=1, kci=None)
+print '\nTVB-LSNM DMS Modularity: ', tvb_lsnm_dms_modularity
+
+# calculate nodal degree using BCT
+tvb_lsnm_dms_nodal_degree = bct.degrees_und(tvb_lsnm_dms_mean_p)
+
+# calculate nodal strength using BCT
+tvb_lsnm_dms_nodal_strength = bct.strengths_und_sign(tvb_lsnm_dms_mean_p)
+
+# the following plots bar graphs in subplots, one for each experimental condition,
+# where each bar represents the nodal strength of each node
+# Four subplots sharing both x/y axes
+
+# initialize new figure for nodal strength bar charts
+index = np.arange(66)
+bar_width = 1
+colors = 'lightblue '*66            # create array of colors for bar chart
+c_tvb_rs_s = colors.split()         # one for each bar chart type
+c_tvb_lsnm_rs_s = colors.split()
+c_tvb_lsnm_pv_s = colors.split()
+c_tvb_lsnm_dms_s = colors.split()
+c_tvb_rs_k = colors.split()
+c_tvb_lsnm_rs_k = colors.split()
+c_tvb_lsnm_pv_k = colors.split()
+c_tvb_lsnm_dms_k = colors.split()
+
+# Find 10 maximum values for each condition and for each metric,
+# then highlight top 10 by changing bar color to red
+top_10_s1 = tvb_rs_nodal_strength[0].argsort()[-10:][::-1]
+for idx in top_10_s1:
+    c_tvb_rs_s[idx] = 'red'
+top_10_s2 = tvb_lsnm_rs_nodal_strength[0].argsort()[-10:][::-1]
+for idx in top_10_s2:
+    c_tvb_lsnm_rs_s[idx] = 'red'
+top_10_s3 = tvb_lsnm_pv_nodal_strength[0].argsort()[-10:][::-1]
+for idx in top_10_s3:
+    c_tvb_lsnm_pv_s[idx] = 'red'
+top_10_s4 = tvb_lsnm_dms_nodal_strength[0].argsort()[-10:][::-1]
+for idx in top_10_s4:
+    c_tvb_lsnm_dms_s[idx] = 'red'
+top_10_k1 = tvb_rs_nodal_degree.argsort()[-10:][::-1]
+for idx in top_10_k1:
+    c_tvb_rs_k[idx] = 'red'
+top_10_k2 = tvb_lsnm_rs_nodal_degree.argsort()[-10:][::-1]
+for idx in top_10_k2:
+    c_tvb_lsnm_rs_k[idx] = 'red'
+top_10_k3 = tvb_lsnm_pv_nodal_degree.argsort()[-10:][::-1]
+for idx in top_10_k3:
+    c_tvb_lsnm_pv_k[idx] = 'red'
+top_10_k4 = tvb_lsnm_dms_nodal_degree.argsort()[-10:][::-1]
+for idx in top_10_k4:
+    c_tvb_lsnm_dms_k[idx] = 'red'
     
-##### TESTING CIRCULAR GRAPHS FOR MAJOR FUNCTIONAL CONNECTIONS
-label_names = labels
-node_order = labels
-node_angles = circular_layout(label_names, node_order, start_pos=90,
-                              group_boundaries=[0, len(label_names) / 2])
+# generate bar charts
+f, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True, sharey=True)
+ax1.bar(index, tvb_rs_nodal_strength[0], bar_width, color=c_tvb_rs_s)
+ax1.set_title('Nodal strength for all 66 nodes')
+ax2.bar(index, tvb_lsnm_rs_nodal_strength[0], bar_width, color=c_tvb_lsnm_rs_s)
+ax3.bar(index, tvb_lsnm_pv_nodal_strength[0], bar_width, color=c_tvb_lsnm_pv_s)
+ax4.bar(index, tvb_lsnm_dms_nodal_strength[0], bar_width, color=c_tvb_lsnm_dms_s)
 
+plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
+plt.xticks(index + bar_width/2.0, labels, rotation='vertical')
+
+# initialize new figure for nodal degree bar charts
+f, (ax5, ax6, ax7, ax8) = plt.subplots(4, sharex=True, sharey=True)
+ax5.bar(index, tvb_rs_nodal_degree, bar_width, color=c_tvb_rs_k)
+ax5.set_title('Nodal degree for all 66 nodes')
+ax6.bar(index, tvb_lsnm_rs_nodal_degree, bar_width, color=c_tvb_lsnm_rs_k)
+ax7.bar(index, tvb_lsnm_pv_nodal_degree, bar_width, color=c_tvb_lsnm_pv_k)
+ax8.bar(index, tvb_lsnm_dms_nodal_degree, bar_width, color=c_tvb_lsnm_dms_k)
+
+plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
+plt.xticks(index + bar_width/2.0, labels, rotation='vertical')
+
+
+##### TESTING CIRCULAR GRAPHS FOR MAJOR FUNCTIONAL CONNECTIONS
+#label_names = labels
+#node_order = labels
+#node_angles = circular_layout(label_names, node_order, start_pos=90,
+#                              group_boundaries=[0, len(label_names) / 2])
+#
 # We only show the strongest connections.
-fig = plt.figure('TVB RS FC')
-fig.patch.set_facecolor('black')
-ax = fig.add_subplot(111)
-print tvb_rs_mean.shape
-plot_connectivity_circle(tvb_rs_mean, label_names, n_lines=15,
-                         node_angles=node_angles, 
-                         title='TVB Resting State Functional Connectivity',
-                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
-fig.savefig('circle_tvb_rs_fc.png', facecolor='black')
+#fig = plt.figure('TVB RS FC')
+#fig.patch.set_facecolor('black')
+#ax = fig.add_subplot(111)
+#print tvb_rs_mean.shape
+#plot_connectivity_circle(tvb_rs_mean, label_names, n_lines=30,
+#                         node_angles=node_angles, 
+#                         title='TVB Resting State Functional Connectivity',
+#                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
+#fig.savefig('circle_tvb_rs_fc.png', facecolor='black')
 # We only show the strongest connections.
-fig = plt.figure('TVB/LSNM RS FC')
-fig.patch.set_facecolor('black')
-ax = fig.add_subplot(111)
-plot_connectivity_circle(tvb_lsnm_rs_mean, label_names, n_lines=15,
-                         node_angles=node_angles, 
-                         title='TVB/LSNM Resting State Functional Connectivity',
-                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
-fig.savefig('circle_tvb_lsnm_rs_fc.png', facecolor='black')
+#fig = plt.figure('TVB/LSNM RS FC')
+#fig.patch.set_facecolor('black')
+#ax = fig.add_subplot(111)
+#plot_connectivity_circle(tvb_lsnm_rs_mean, label_names, n_lines=30,
+#                         node_angles=node_angles, 
+#                         title='TVB/LSNM Resting State Functional Connectivity',
+#                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
+#fig.savefig('circle_tvb_lsnm_rs_fc.png', facecolor='black')
 # We only show the strongest connections.
-fig = plt.figure('TVB/LSNM PV FC')
-fig.patch.set_facecolor('black')
-ax = fig.add_subplot(111)
-plot_connectivity_circle(tvb_lsnm_pv_mean, label_names, n_lines=15,
-                         node_angles=node_angles, 
-                         title='TVB/LSNM Passive Viewing Functional Connectivity',
-                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
-fig.savefig('circle_tvb_lsnm_pv_fc.png', facecolor='black')
+#fig = plt.figure('TVB/LSNM PV FC')
+#fig.patch.set_facecolor('black')
+#ax = fig.add_subplot(111)
+#plot_connectivity_circle(tvb_lsnm_pv_mean, label_names, n_lines=30,
+#                         node_angles=node_angles, 
+#                         title='TVB/LSNM Passive Viewing Functional Connectivity',
+#                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
+#fig.savefig('circle_tvb_lsnm_pv_fc.png', facecolor='black')
 # We only show the strongest connections.
-fig = plt.figure('TVB/LSNM DMS FC')
-fig.patch.set_facecolor('black')
-ax = fig.add_subplot(111)
-plot_connectivity_circle(tvb_lsnm_dms_mean, label_names, n_lines=15,
-                         node_angles=node_angles, 
-                         title='TVB/LSNM DMS Task Functional Connectivity',
-                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
-fig.savefig('circle_tvb_lsnm_dms_fc.png', facecolor='black')
+#fig = plt.figure('TVB/LSNM DMS FC')
+#fig.patch.set_facecolor('black')
+#ax = fig.add_subplot(111)
+#plot_connectivity_circle(tvb_lsnm_dms_mean, label_names, n_lines=30,
+#                         node_angles=node_angles, 
+#                         title='TVB/LSNM DMS Task Functional Connectivity',
+#                         vmin=-1, vmax=1, colormap=cmap, fig=fig)
+#fig.savefig('circle_tvb_lsnm_dms_fc.png', facecolor='black')
 ##### TESTING A CIRCULAR GRAPH FOR MAJOR FUNCTIONAL CONNECTIONS
 
 
 # initialize new figure for tvb resting-state histogram
 fig = plt.figure('TVB Resting State')
-ax = fig.add_subplot(111)
+cax = fig.add_subplot(111)
 
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_rs_mean.shape[0], k=0)
@@ -565,7 +641,10 @@ plt.hist(corr_mat_tvb_rs, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-1, 1, 0, 110])
+plt.axis([-1, 1, 0, 600])
+
+fig.savefig('tvb_rs_hist_66_ROIs')
+
 
 # calculate and print kurtosis
 print '\nTVB Resting-State Fishers kurtosis: ', kurtosis(corr_mat_tvb_rs, fisher=True)
@@ -573,7 +652,7 @@ print 'TVB Resting-State Skewness: ', skew(corr_mat_tvb_rs)
 
 # initialize new figure for tvb/lsnm resting-state histogram
 fig = plt.figure('TVB/LSNM Resting State')
-ax = fig.add_subplot(111)
+cax = fig.add_subplot(111)
 
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_lsnm_rs_mean.shape[0], k=0)
@@ -591,7 +670,9 @@ plt.hist(corr_mat_tvb_lsnm_rs, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-1, 1, 0, 110])
+plt.axis([-1, 1, 0, 600])
+
+fig.savefig('tvb_lsnm_rs_hist_66_ROIs')
 
 # calculate and print kurtosis
 print '\nTVB/LSNM Resting-State Fishers kurtosis: ', kurtosis(corr_mat_tvb_lsnm_rs, fisher=True)
@@ -599,7 +680,7 @@ print 'TVB/LSNM Resting-State Skewness: ', skew(corr_mat_tvb_lsnm_rs)
 
 # initialize new figure for tvb/lsnm resting-state histogram
 fig = plt.figure('TVB/LSNM Passive Viewing')
-ax = fig.add_subplot(111)
+cax = fig.add_subplot(111)
 
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_lsnm_pv_mean.shape[0], k=0)
@@ -617,7 +698,9 @@ plt.hist(corr_mat_tvb_lsnm_pv, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-1, 1, 0, 110])
+plt.axis([-1, 1, 0, 600])
+
+fig.savefig('tvb_lsnm_pv_hist_66_ROIs')
 
 # calculate and print kurtosis
 print '\nTVB/LSNM Passive Viewing Fishers kurtosis: ', kurtosis(corr_mat_tvb_lsnm_pv, fisher=True)
@@ -625,7 +708,7 @@ print 'TVB/LSNM Passive Viewing Skewness: ', skew(corr_mat_tvb_lsnm_pv)
 
 # initialize new figure for tvb/lsnm resting-state histogram
 fig = plt.figure('TVB/LSNM DMS Task')
-ax = fig.add_subplot(111)
+cax = fig.add_subplot(111)
 
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_lsnm_dms_mean.shape[0], k=0)
@@ -643,18 +726,117 @@ plt.hist(corr_mat_tvb_lsnm_dms, 25)
 
 plt.xlabel('Correlation Coefficient')
 plt.ylabel('Number of occurrences')
-plt.axis([-1, 1, 0, 110])
+plt.axis([-1, 1, 0, 600])
 
+fig.savefig('tvb_lsnm_dms_hist_66_ROIs')
 
 # calculate and print kurtosis
 print '\nTVB/LSNM DMS Task Fishers kurtosis: ', kurtosis(corr_mat_tvb_lsnm_dms, fisher=True)
 print 'TVB/LSNM DMS Task Skewness: ', skew(corr_mat_tvb_lsnm_dms)
 
 # find the 10 highest correlation values in a cross-correlation matrix
-corr_mat_tvb_lsnm_dms_sorted = np.sort(corr_mat_tvb_lsnm_dms, axis=None)[::-1]
-np.set_printoptions(threshold='nan')
-print 'Sorted FCs in DMS mean array', corr_mat_tvb_lsnm_dms_sorted[:20]
+#corr_mat_tvb_lsnm_dms_sorted = np.sort(corr_mat_tvb_lsnm_dms, axis=None)[::-1]
+#np.set_printoptions(threshold='nan')
+#print 'Sorted FCs in DMS mean array', corr_mat_tvb_lsnm_dms_sorted[:20]
 
+# plot scatter plots to show correlations of TVB-RS vs TVB-LSNM-RS,
+# TVB-LSNM RS vs TVB-LSNM PV, and TVB-LSNM PV vs TVB-LSNM DMS 
+
+nullfmt = NullFormatter()         # no labels
+
+# definitions for the axes
+left, width = 0.1, 0.65
+bottom, height = 0.1, 0.65
+bottom_h = left_h = left + width + 0.02
+
+rect_scatter = [left, bottom, width, height]
+rect_histx = [left, bottom_h, width, 0.2]
+rect_histy = [left_h, bottom, 0.2, height]
+
+# start with a rectangular Figure
+fig=plt.figure(figsize=(8, 8))
+
+axScatter = plt.axes(rect_scatter)
+axHistx = plt.axes(rect_histx)
+axHisty = plt.axes(rect_histy)
+
+# no labels
+axHistx.xaxis.set_major_formatter(nullfmt)
+axHisty.yaxis.set_major_formatter(nullfmt)
+
+# scatter plot
+axScatter.scatter(tvb_rs_mean, tvb_lsnm_rs_mean)
+#axScatter.xlabel('TVB-Only RS FC')
+#axScatter.ylabel('TVB/LSNM RS FC')
+axScatter.axis([-1,1,-1,1])
+
+axHistx.hist(corr_mat_tvb_rs, bins=25)
+axHisty.hist(corr_mat_tvb_lsnm_rs, bins=25, orientation='horizontal')
+
+axHistx.set_xlim([-1,1])
+axHistx.set_ylim([0,600])
+axHisty.set_xlim([0,600])
+axHisty.set_ylim([-1,1])
+
+fig.savefig('rs_vs_rs_scatter_66_ROIs')
+
+# start with a rectangular Figure
+fig=plt.figure(figsize=(8, 8))
+
+axScatter = plt.axes(rect_scatter)
+axHistx = plt.axes(rect_histx)
+axHisty = plt.axes(rect_histy)
+
+# no labels
+axHistx.xaxis.set_major_formatter(nullfmt)
+axHisty.yaxis.set_major_formatter(nullfmt)
+
+# scatter plot
+axScatter.scatter(tvb_lsnm_rs_mean, tvb_lsnm_pv_mean)
+#axScatter.xlabel('TVB/LSNM RS FC')
+#axScatter.ylabel('TVB/LSNM PV FC')
+axScatter.axis([-1,1,-1,1])
+
+axHistx.hist(corr_mat_tvb_lsnm_rs, bins=25)
+axHisty.hist(corr_mat_tvb_lsnm_pv, bins=25, orientation='horizontal')
+
+axHistx.set_xlim([-1,1])
+axHistx.set_ylim([0,600])
+axHisty.set_xlim([0,600])
+axHisty.set_ylim([-1,1])
+
+fig.savefig('rs_vs_pv_scatter_66_ROIs')
+
+# start with a rectangular Figure
+fig=plt.figure(figsize=(8, 8))
+
+axScatter = plt.axes(rect_scatter)
+axHistx = plt.axes(rect_histx)
+axHisty = plt.axes(rect_histy)
+
+# no labels
+axHistx.xaxis.set_major_formatter(nullfmt)
+axHisty.yaxis.set_major_formatter(nullfmt)
+
+# scatter plot
+axScatter.scatter(tvb_lsnm_rs_mean, tvb_lsnm_dms_mean)
+#axScatter.xlabel('TVB/LSNM RS FC')
+#axScatter.ylabel('TVB/LSNM DMS FC')
+axScatter.axis([-1,1,-1,1])
+
+# fit scatter plot with np.polyfit
+#m, b = np.polyfit(corr_mat_tvb_lsnm_rs, corr_mat_tvb_lsnm_dms, 1)
+#plt.plot(corr_mat_tvb_lsnm_rs, m*corr_mat_tvb_lsnm_rs + b, '-')
+
+axHistx.hist(corr_mat_tvb_lsnm_rs, bins=25)
+axHisty.hist(corr_mat_tvb_lsnm_dms, bins=25, orientation='horizontal')
+
+axHistx.set_xlim([-1,1])
+axHistx.set_ylim([0,600])
+axHisty.set_xlim([0,600])
+axHisty.set_ylim([-1,1])
+
+fig.savefig('rs_vs_dms_scatter_66_ROIs')
 
 # Show the plots on the screen
 plt.show()
