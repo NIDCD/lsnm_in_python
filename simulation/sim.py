@@ -357,15 +357,6 @@ class LSNM(QtGui.QWidget):
         self.runTextEdit.moveCursor(QtGui.QTextCursor.End)
         self.runTextEdit.insertPlainText(message)
 
-class WilsonCowanPositive(models.WilsonCowan):
-    "Declares a class of Wilson-Cowan models that use the default TVB parameters but"
-    "only allows values between 0 and 1 at integration time. In other words, it clips state"
-    "variables to the range [0,1] when a stochastic integration is used"
-    def dfun(self, state_variables, coupling, local_coupling=0.0):
-        state_variables[state_variables < 0.0] = 0.0
-        state_variables[state_variables > 1.0] = 1.0
-        return super(WilsonCowanPositive, self).dfun(state_variables, coupling, local_coupling)
-            
 class TaskThread(QtCore.QThread):
 
     def __init__(self):
@@ -433,6 +424,7 @@ class TaskThread(QtCore.QThread):
         
         # now load white matter connectivity (998 ROI matrix from TVB demo set, AKA Hagmann's connectome)
         if useTVBConnectome == True:
+            WC = models.WilsonCowan()
             white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
         
             # Define the transmission speed of white matter tracts (4 mm/ms)
@@ -450,7 +442,7 @@ class TaskThread(QtCore.QThread):
             what_to_watch = monitors.Raw()
         
             # Initialize a TVB simulator
-            sim = simulator.Simulator(model=WilsonCowanPositive(), connectivity=white_matter,
+            sim = simulator.Simulator(model=WC, connectivity=white_matter,
                                       coupling=white_matter_coupling,
                                       integrator=euler_int, monitors=what_to_watch)
 
@@ -686,7 +678,7 @@ class TaskThread(QtCore.QThread):
                             # now we decide whether the weights will be multiplied by a random amount
                             # varying between that amount and 1.0 in order to generate a new subject
                             if generateSubject == True:
-                                connectionWeight = destination[1] * random.uniform(subject_variation, 1)
+                                connectionWeight = destination[1] * rdm.uniform(subject_variation, 1)
                             else:
                                 connectionWeight = destination[1]
 
@@ -1005,7 +997,7 @@ class TaskThread(QtCore.QThread):
                                 in_value = in_value - threshold
 
                                 # now compute a random value between -0.5 and 0.5
-                                r_value = random.uniform(0,1) - 0.5
+                                r_value = rdm.uniform(0,1) - 0.5
 
                                 # multiply it by the noise parameter and add it to input value
                                 in_value = in_value + r_value * noise
@@ -1147,7 +1139,7 @@ class TaskThread(QtCore.QThread):
                                 in_value = in_value - threshold
 
                                 # now compute a random value between -0.5 and 0.5
-                                r_value = random.uniform(0,1) - 0.5
+                                r_value = rdm.uniform(0,1) - 0.5
 
                                 # multiply it by the noise parameter and add it to input value
                                 in_value = in_value + r_value * noise
