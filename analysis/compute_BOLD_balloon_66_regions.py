@@ -76,14 +76,14 @@ from matplotlib import cm as CM
 
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_66_ROIs.npy'
+SYN_file  = 'synaptic_in_66_ROIs_incl_LSNM.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_66_regions.npy'
+BOLD_file = 'bold_balloon_66_regions_incl_LSNM.npy'
 
 # define the name of the output file where the cross-correlation matrix will
 # be stored
-xcorr_file = 'xcorr_matrix_66_regions.npy'
+xcorr_file = 'xcorr_matrix_66_regions_incl_LSNM.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds

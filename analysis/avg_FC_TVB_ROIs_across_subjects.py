@@ -86,6 +86,8 @@ import pandas as pd
 
 from scipy.stats import t
 
+from scipy.stats import itemfreq
+
 from scipy import stats
 
 import math as m
@@ -93,6 +95,8 @@ import math as m
 from scipy.stats import kurtosis
 
 from scipy.stats import skew
+
+import scipy.io
 
 from matplotlib import cm as CM
 
@@ -130,77 +134,81 @@ ROIs = np.arange(66)
 # construct array of subjects to be considered
 subjects = np.arange(10)
 
+# define name of input file where Hagmann empirical data is stored (matlab file given to us
+# by Olaf Sporns and Chris Honey
+hagmann_data = 'DSI_release2_2011.mat'
+
 # define output file where means, standard deviations, and variances will be stored
 RS_FC_avg_file = 'tvb_only_rs_fc_avg.npy'
 TB_FC_avg_file = 'tb_fc_avg.npy'
 
 # declare ROI labels
-labels =  ['rLOF',     
-    'rPORB',         
-    'rFP'  ,          
-    'rMOF' ,          
-    'rPTRI',          
-    'rPOPE',          
-    'rRMF' ,          
-    'rSF'  ,          
-    'rCMF' ,          
-    'rPREC',          
-    'rPARC',          
-    'rRAC' ,          
-    'rCAC' ,          
-    'rPC'  ,          
-    'rISTC',          
-    'rPSTC',          
-    'rSMAR',          
-    'rSP'  ,          
-    'rIP'  ,          
-    'rPCUN',          
-    'rCUN' ,          
-    'rPCAL',          
-    'rLOCC',          
-    'rLING',          
-    'rFUS' ,          
-    'rPARH',          
-    'rENT' ,          
-    'rTP'  ,          
-    'rIT'  ,          
-    'rMT'  ,          
-    'rBSTS',          
-    'rST'  ,          
-    'rTT',
-    'lLOF' ,
-    'lPORB',
-    'lFP'  ,
-    'lMOF' ,
-    'lPTRI',
-    'lPOPE',
-    'LRMF' ,
-    'lSF'  ,
-    'lCMF' ,
-    'lPREC',
-    'lPARC',
-    'lRAC' ,
-    'lCAC' ,
-    'lPC'  ,
-    'lISTC',
-    'lPSTC',
-    'lSMAR',
-    'lSP'  ,
-    'lIP'  ,
-    'lPCUN',
-    'lCUN' ,
-    'lPCAL',
-    'lLOC' ,
-    'lLING',
-    'lFUS' ,
-    'lPARH',
-    'lENT' ,
-    'lTP'  ,
-    'lIT'  ,
-    'lMT'  ,
-    'lBSTS',
-    'lST'  ,
-    'lTT'
+labels =  [' rLOF',     
+           'rPORB',         
+           '  rFP',          
+           ' rMOF',          
+           'rPTRI',          
+           'rPOPE',          
+           ' rRMF',          
+           '  rSF',          
+           ' rCMF',          
+           'rPREC',          
+           'rPARC',          
+           ' rRAC',          
+           ' rCAC',          
+           '  rPC',          
+           'rISTC',          
+           'rPSTC',          
+           'rSMAR',          
+           '  rSP',          
+           '  rIP',          
+           'rPCUN',          
+           ' rCUN',          
+           'rPCAL',          
+           'rLOCC',          
+           'rLING',          
+           ' rFUS',          
+           'rPARH',          
+           ' rENT',          
+           '  rTP',          
+           '  rIT',          
+           '  rMT',          
+           'rBSTS',          
+           '  rST',          
+           '  rTT',
+           ' lLOF',
+           'lPORB',
+           '  lFP',
+           ' lMOF',
+           'lPTRI',
+           'lPOPE',
+           ' lRMF',
+           '  lSF',
+           ' lCMF',
+           'lPREC',
+           'lPARC',
+           ' lRAC',
+           ' lCAC',
+           '  lPC',
+           'lISTC',
+           'lPSTC',
+           'lSMAR',
+           '  lSP',
+           '  lIP',
+           'lPCUN',
+           ' lCUN',
+           'lPCAL',
+           'lLOCC',
+           'lLING',
+           ' lFUS',
+           'lPARH',
+           ' lENT',
+           '  lTP',
+           '  lIT',
+           '  lMT',
+           'lBSTS',
+           '  lST',
+           '  lTT'
 ]            
 
 
@@ -249,6 +257,8 @@ TVB_LSNM_DMS_subj8  = 'subject_18/output.DMSTask/xcorr_matrix_66_regions.npy'
 TVB_LSNM_DMS_subj9  = 'subject_19/output.DMSTask/xcorr_matrix_66_regions.npy'
 TVB_LSNM_DMS_subj10 = 'subject_20/output.DMSTask/xcorr_matrix_66_regions.npy'
 
+# open matlab file that contains hagmann empirical data
+hagmann_empirical = scipy.io.loadmat(hagmann_data)
 
 # open files that contain correlation coefficients
 tvb_rs_subj1  = np.load(TVB_RS_subj1)
@@ -408,7 +418,7 @@ fig.savefig('mean_tvb_only_rs_fc.png')
 # plot the correlation coefficients for rPC
 fig = plt.figure('Correlation coefficients using rPC as seed')
 ax = fig.add_subplot(111)
-rPC_loc   = labels.index('rPC')
+rPC_loc   = labels.index('  rPC')
 y_pos = np.arange(len(labels))
 ax.barh(y_pos, tvb_rs_mean[rPC_loc])
 ax.set_yticks(y_pos)
@@ -1062,6 +1072,98 @@ plt.plot(TVB_LSNM_RS_DEGREE[0], m*TVB_LSNM_RS_DEGREE[0] + b, '-', color='red')
 r = np.corrcoef(TVB_LSNM_RS_DEGREE[0], TVB_LSNM_DMS_DEGREE[0])[1,0]
 plt.text(1, 22, 'r=' + '{:.2f}'.format(r))
 
+
+###################################################################################################
+# plot correlation coefficients of the simulated ROIs vs empirical ROIs
+# first, find average of correlation coefficients within each lo-res ROI by averaging across hi-res
+# ROIs located within each one of the 66 lo-res ROIs
+##################################################################################################
+
+# we need to apply a Fisher Z transformation to the correlation coefficients,
+# prior to averaging.
+empirical_fc_mat_Z = np.arctanh(hagmann_empirical['COR_fMRI_average'])
+
+# initialize 66x66 matrix
+empirical_fc_lowres_Z = np.zeros([66,66])
+
+# subtract 1 from labels array bc numpy arrays start with zero
+hagmann_empirical['roi_lbls'][0] = hagmann_empirical['roi_lbls'][0] - 1
+
+# compress 998x998 FC matrix to 66x66 FC matrix by averaging
+for i in range(0,998):
+    for j in range(0,998):
+
+        # extract low-res coordinates from hi-res labels matrix
+        x = hagmann_empirical['roi_lbls'][0][i]
+        y = hagmann_empirical['roi_lbls'][0][j]
+
+        empirical_fc_lowres_Z[x, y] += empirical_fc_mat_Z[i, j]
+
+# count the number of times each lowres label appears in the hires matrix
+freq_array = itemfreq(hagmann_empirical['roi_lbls'][0])
+
+# divide each sum by the number of hires ROIs within each lowres ROI
+for i in range(0,66):
+    for j in range(0,66):
+        total_freq = freq_array[i][1] * freq_array[j][1]
+        empirical_fc_lowres_Z[i,j] = empirical_fc_lowres_Z[i,j] / total_freq 
+
+# now, convert back to from Z to R correlation coefficients
+empirical_fc_lowres = np.tanh(empirical_fc_lowres_Z)
+
+# initialize figure to plot simulated FC
+fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
+ax = fig.add_subplot(111)
+cmap = CM.get_cmap('jet', 10)
+empirical_fc_lowres = np.asarray(empirical_fc_lowres)
+cax = ax.imshow(empirical_fc_lowres, vmin=-0.4, vmax=1.0, interpolation='nearest', cmap=cmap)
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+
+# simulated RS FC needs to be rearranged prior to scatter plotting
+new_TVB_RS_FC = np.zeros([66, 66])
+for i in range(0, 66):
+    for j in range(0, 66):
+
+        # extract labels of current ROI label from simulated labels list of simulated FC 
+        label_i = labels[i]
+        label_j = labels[j]
+        # extract index of corresponding ROI label from empirical FC labels list
+        emp_i = np.where(hagmann_empirical['anat_lbls'] == label_i)[0][0]
+        emp_j = np.where(hagmann_empirical['anat_lbls'] == label_j)[0][0]
+        new_TVB_RS_FC[emp_i, emp_j] = tvb_rs_mean[i, j]
+
+# initialize figure to plot correlations between empirical and simulated FC
+fig=plt.figure('Empirical vs Simulated FC')
+
+# apply mask to get rid of upper triangle, including main diagonal
+mask = np.tri(new_TVB_RS_FC.shape[0], k=0)
+mask = np.transpose(mask)
+new_TVB_RS_FC = np.ma.array(new_TVB_RS_FC, mask=mask)    # mask out upper triangle
+empirical_fc_lowres = np.ma.array(empirical_fc_lowres, mask=mask)    # mask out upper triangle
+
+# flatten the numpy cross-correlation matrix
+corr_mat_sim_TVB_RS_FC = np.ma.ravel(new_TVB_RS_FC)
+corr_mat_emp_FC = np.ma.ravel(empirical_fc_lowres)
+
+# remove masked elements from cross-correlation matrix
+corr_mat_sim_TVB_RS_FC = np.ma.compressed(corr_mat_sim_TVB_RS_FC)
+corr_mat_emp_FC = np.ma.compressed(corr_mat_emp_FC)
+
+# scatter plot
+plt.scatter(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)
+plt.xlabel('Empirical FC')
+plt.ylabel('Model FC')
+
+print corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC
+
+# fit scatter plot with np.polyfit
+m, b = np.polyfit(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC, 1)
+plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
+
+# calculate correlation coefficient and display it on plot
+r = np.corrcoef(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)[1,0]
+plt.text(0.5, 0.3, 'r=' + '{:.2f}'.format(r))
 
 # Show the plots on the screen
 plt.show()
