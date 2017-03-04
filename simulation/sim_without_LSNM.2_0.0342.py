@@ -123,10 +123,10 @@ synaptic_interval = 10
         
 # white matter transmission speed in mm/ms
 #speed = 4.0
-speed = 1.0
+speed = 2.0
 
 # define length of simulation in ms
-simulation_length = 5.0
+simulation_length = 198000.0
 
 # define the simulation time in total number of timesteps
 # Each timestep is roughly equivalent to 5ms
@@ -138,7 +138,7 @@ t = 0
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
 #global_coupling_strength = 0.0042
-global_coupling_strength = 0.0042
+global_coupling_strength = 0.0342
 
 # Define connectivity to be used (998 ROI matrix from TVB demo set)
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")

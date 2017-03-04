@@ -57,7 +57,7 @@
 # It also saves the BOLD timeseries for each and all modules in a python data file
 # (*.npy)
 #
-# Finally, the cross-correlation matrix is displayed and saved in a python data file.
+# Finally, the functional connectivity matrix is displayed and saved in a python data file.
 # ... and we also display a histogram of frequencies of correlations. And we calculate
 # and print Fisher's kurtosis and skewness of cross-correlation coefficients.
 #
@@ -76,14 +76,14 @@ from matplotlib import cm as CM
 
 
 # define the name of the input file where the synaptic activities are stored
-SYN_file  = 'synaptic_in_66_ROIs_incl_LSNM.npy'
+SYN_file  = 'synaptic_in_66_ROIs.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_66_regions_incl_LSNM.npy'
+BOLD_file = 'bold_balloon_66_regions.npy'
 
 # define the name of the output file where the cross-correlation matrix will
 # be stored
-xcorr_file = 'xcorr_matrix_66_regions_incl_LSNM.npy'
+xcorr_file = 'xcorr_matrix_66_regions.npy'
 
 # define balloon model parameters...
 tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
@@ -158,7 +158,7 @@ def balloon_function(y, t, syn):
 Ti = 0.005 * 10
 
 # Total time of scanning experiment in seconds (timesteps X 5)
-T = 210
+T = 198
 #T = 110
 
 # Time for one complete trial in milliseconds

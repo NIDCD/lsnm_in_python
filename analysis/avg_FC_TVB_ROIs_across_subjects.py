@@ -842,10 +842,10 @@ cax = fig.add_subplot(111)
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_rs_mean.shape[0], k=0)
 mask = np.transpose(mask)
-tvb_rs_mean = np.ma.array(tvb_rs_mean, mask=mask)    # mask out upper triangle
+masked_tvb_rs_mean = np.ma.array(tvb_rs_mean, mask=mask)    # mask out upper triangle
 
 # flatten the numpy cross-correlation matrix
-corr_mat_tvb_rs = np.ma.ravel(tvb_rs_mean)
+corr_mat_tvb_rs = np.ma.ravel(masked_tvb_rs_mean)
 
 # remove masked elements from cross-correlation matrix
 corr_mat_tvb_rs = np.ma.compressed(corr_mat_tvb_rs)
@@ -1154,8 +1154,6 @@ corr_mat_emp_FC = np.ma.compressed(corr_mat_emp_FC)
 plt.scatter(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)
 plt.xlabel('Empirical FC')
 plt.ylabel('Model FC')
-
-print corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC
 
 # fit scatter plot with np.polyfit
 m, b = np.polyfit(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC, 1)
