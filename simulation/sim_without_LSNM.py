@@ -42,7 +42,7 @@
 #   This program makes use of The Virtual Brain library toolbox, downloaded
 #   from the TVB GitHub page.
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 6 2016 
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on March 16 2017 
 # **************************************************************************/
 #
 # sim_without_LSNM.py
@@ -138,7 +138,7 @@ t = 0
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
 #global_coupling_strength = 0.0042
-global_coupling_strength = 0.0042
+global_coupling_strength = 0.0542
 
 # Define connectivity to be used (998 ROI matrix from TVB demo set)
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")

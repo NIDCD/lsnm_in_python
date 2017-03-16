@@ -244,8 +244,8 @@ for k in range(0, len(TVB_RS_FC)):
 
 
 # now, convert back to from Z to R correlation coefficients
-empirical_fc_lowres = np.tanh(empirical_fc_lowres_Z)
-tvb_rs_fc_lowres = np.tanh(tvb_rs_fc_lowres_Z)
+empirical_fc_lowres = empirical_fc_lowres_Z
+tvb_rs_fc_lowres = tvb_rs_fc_lowres_Z
 
 # save the simulated FCs to a file 
 np.save(tvb_fc_file, tvb_rs_fc_lowres)

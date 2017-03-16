@@ -390,11 +390,11 @@ class TaskThread(QtCore.QThread):
         timesteps_to_time_constant = 5.0
         
         # define white matter transmission speed in mm/ms for TVB simulation
-        TVB_speed = 4.0
+        TVB_speed = 1.0                       # was 4.0 in original tvb sims
 
         # define global coupling strength as in Sanz-Leon et al (2015), figure 17,
         # 3rd column, 3rd row
-        TVB_global_coupling_strength = 0.0042
+        TVB_global_coupling_strength = 0.0542          # was 0.0042 in original tvb sims
 
         # declare a variable that describes number of nodes in TVB connectome
         TVB_number_of_nodes = 998
