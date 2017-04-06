@@ -244,8 +244,8 @@ for k in range(0, len(TVB_RS_FC)):
 
 
 # now, convert back to from Z to R correlation coefficients
-empirical_fc_lowres = empirical_fc_lowres_Z
-tvb_rs_fc_lowres = tvb_rs_fc_lowres_Z
+empirical_fc_lowres = np.tanh(empirical_fc_lowres_Z)
+tvb_rs_fc_lowres = np.tanh(tvb_rs_fc_lowres_Z)
 
 # save the simulated FCs to a file 
 np.save(tvb_fc_file, tvb_rs_fc_lowres)
@@ -361,7 +361,7 @@ ax.set_yticks([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
 ax.set_xticklabels(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
 ax.set_yticklabels(['.0042', '.0142', '.0242', '.0342', '.0442',
                     '.0542', '.0642', '.0742', '.0842', '.0942'])
-plt.xlabel('White matter speed')
+plt.xlabel('Conduction speed')
 plt.ylabel('Global coupling strength')
 color_bar=plt.colorbar(cax)
 
@@ -424,9 +424,10 @@ plt.plot(flat_sc, m*flat_sc + b, '-', color='red')
 cc = np.corrcoef(flat_sc, flat_fc)[1,0]
 plt.text(0.9, -0.3, 'r=' + '{:.2f}'.format(cc))
 
-# scatter plot of empirical FC vs best matched simulated FC 
+#################################################################
+# scatter plot of lo-res (66 ROI) empirical FC vs best matched simulated FC 
 # initialize figure to plot correlations between empirical and simulated FC
-fig=plt.figure('Empirical vs Simulated FC')
+fig=plt.figure('Empirical vs Simulated FC (66 ROIs)')
 flat_sim_fc_m = np.ma.array(flat_sim_rs_fc[max_r], mask=sc_mask)   # mask where struct. connections absent
 flat_sim_fc = np.ma.compressed(flat_sim_fc_m)                      # remove masked elements
 plt.scatter(flat_emp_fc, flat_sim_fc)

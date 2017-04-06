@@ -1,0 +1,9 @@
+* Simulation Start Time: Fri Dec  9 12:23:31 2016
+* Simulation End Time: Fri Dec  9 19:56:56 2016
+* Simulation duration (timesteps): 39600
+* Model description used: /home/ulloa/SIMULATIONS.120916/lsnm_in_python/visual_model/model.txt
+* Weights list used: /home/ulloa/SIMULATIONS.120916/lsnm_in_python/visual_model/subject_17/weightslist.txt
+* Neural net used: 
+* Simulation script used: /home/ulloa/SIMULATIONS.120916/lsnm_in_python/visual_model/script_resting_state_198_seconds.py
+* Were weights changed to generate a new subject? NO
+* Was TVB Connectome used in the simulation? YES

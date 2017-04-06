@@ -126,7 +126,7 @@ synaptic_interval = 10
 speed = 1.0
 
 # define length of simulation in ms
-simulation_length = 5.0
+simulation_length = 198000.0
 
 # define the simulation time in total number of timesteps
 # Each timestep is roughly equivalent to 5ms
