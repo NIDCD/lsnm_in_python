@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 12 2016
+#   Last updated by Antonio Ulloa on April 12 2017
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 #   Also based on Python2.7 tutorials
@@ -74,6 +74,8 @@
 #from mayavi import mlab
 ################## TESTING 3D PLOT OF ADJACENCY MATRIX
 
+from tvb.datatypes import connectivity
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -105,6 +107,7 @@ from mne.viz import circular_layout, plot_connectivity_circle
 import bct as bct
 
 import csv
+
 
 # The following converts from adjacency matrix to edge list
 # Adapted from code by: Jermaine Kaminski
@@ -257,11 +260,17 @@ TVB_LSNM_DMS_subj8  = 'subject_18/output.DMSTask/xcorr_matrix_998_regions.npy'
 TVB_LSNM_DMS_subj9  = 'subject_19/output.DMSTask/xcorr_matrix_998_regions.npy'
 TVB_LSNM_DMS_subj10 = 'subject_20/output.DMSTask/xcorr_matrix_998_regions.npy'
 
+# Define structural connectivity that was used for simulations (998 ROI matrix from TVB demo set)
+print 'Loading TVB structural connectivity used for simulations'
+white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
+empirical_sc_hires = np.asarray(white_matter.weights)
+
+
 ##################################################################################
 # Open input files containing both empirical and simulated functional connectivity
 # matrices
 ##################################################################################
-print 'Opening input files containing FC matrices...'
+print 'Opening input files containing FC matrices (empirical and simulated)...'
 
 # open matlab file that contains hagmann empirical data
 hagmann_empirical = scipy.io.loadmat(hagmann_data)
@@ -333,7 +342,7 @@ tvb_lsnm_dms = np.array([tvb_lsnm_dms_subj1, tvb_lsnm_dms_subj2, tvb_lsnm_dms_su
 num_of_sub = len(tvb_rs)
 
 # num_of_density thresholds to be used
-num_of_densities = 9
+num_of_densities = 100 #35
 
 # number of randomly generated functional connectiviy matrices to be generated. These FC matrices
 # will be used to compare against actual FC matrices. Used 20 found in the graph theory literature.
@@ -391,7 +400,7 @@ for s in range(0, num_of_sub):
             tvb_lsnm_dms_lowres_Z[s, x, y]= tvb_lsnm_dms_lowres_Z[s, x, y] / total_freq
 
 ###########################################################################
-# Compress hi-res empirical FC matrices into lo-res FC matrices
+# Compress hi-res empirical SC & FC matrices into lo-res SC & FC matrices
 # we need to apply a Fisher Z transformation to the correlation coefficients,
 # prior to averaging.
 ###########################################################################
@@ -399,6 +408,7 @@ empirical_fc_hires_Z = np.arctanh(hagmann_empirical['COR_fMRI_average'])
 
 # initialize 66x66 matrix
 empirical_fc_lowres_Z = np.zeros([lores_ROIs, lores_ROIs])
+empirical_sc_lowres   = np.zeros([lores_ROIs, lores_ROIs])
 
 # compress 998x998 FC matrix to 66x66 FC matrix by averaging
 for i in range(0, hires_ROIs):
@@ -409,12 +419,14 @@ for i in range(0, hires_ROIs):
         y = hagmann_empirical['roi_lbls'][0][j]
 
         empirical_fc_lowres_Z[x, y] += empirical_fc_hires_Z[i, j]
+        empirical_sc_lowres[x, y]   += empirical_sc_hires[i, j]
 
 # divide each sum by the number of hires ROIs within each lowres ROI
 for x in range(0, lores_ROIs):
     for y in range(0, lores_ROIs):
         total_freq = freq_array[x][1] * freq_array[y][1]
-        empirical_fc_lowres_Z[x, y] = empirical_fc_lowres_Z[x, y] / total_freq 
+        empirical_fc_lowres_Z[x, y] = empirical_fc_lowres_Z[x, y] / total_freq
+        empirical_sc_lowres[x, y]   = empirical_sc_lowres[x, y] / total_freq
 
 # now, convert back to from Z to R correlation coefficients
 empirical_fc_hires  = np.tanh(empirical_fc_hires_Z)
@@ -526,33 +538,40 @@ tvb_lsnm_dms_mean  = np.tanh(tvb_lsnm_dms_z_mean)
 # threshold the connectivity matrix to preserve only a proportion 'p' of
 # the strongest weights, then binarize the matrix
 min_sparsity = 0.1
-max_sparsity = 0.5
+max_sparsity = 1.0
 num_sparsity = num_of_densities
-EMP_RS_EFFICIENCY = np.zeros(num_sparsity)
+EMP_RS_EFFICIENCY_G   = np.zeros(num_sparsity)
+EMP_RS_EFFICIENCY_L = np.zeros(num_sparsity)
 EMP_RS_CLUSTERING = np.zeros(num_sparsity)
 EMP_RS_MODULARITY = np.zeros(num_sparsity)
-EMP_RS_DEGREE     = np.zeros((num_sparsity, hires_ROIs))
+EMP_RS_DEGREE     = np.zeros((num_sparsity, lores_ROIs))
 EMP_RS_BW_RATIO   = np.zeros(num_sparsity)
-TVB_RS_EFFICIENCY = np.zeros(num_sparsity)
+TVB_RS_EFFICIENCY_G  = np.zeros(num_sparsity)
+TVB_RS_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_RS_CLUSTERING = np.zeros(num_sparsity)
 TVB_RS_MODULARITY = np.zeros(num_sparsity)
-TVB_RS_DEGREE     = np.zeros((num_sparsity, hires_ROIs))
+TVB_RS_DEGREE     = np.zeros((num_sparsity, lores_ROIs))
 TVB_RS_BW_RATIO   = np.zeros(num_sparsity)
-TVB_LSNM_RS_EFFICIENCY = np.zeros(num_sparsity)
+TVB_LSNM_RS_EFFICIENCY_G = np.zeros(num_sparsity)
+TVB_LSNM_RS_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_RS_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_RS_MODULARITY = np.zeros(num_sparsity)
-TVB_LSNM_RS_DEGREE     = np.zeros((num_sparsity, hires_ROIs))
+TVB_LSNM_RS_DEGREE     = np.zeros((num_sparsity, lores_ROIs))
 TVB_LSNM_RS_BW_RATIO  = np.zeros(num_sparsity)
-TVB_LSNM_PV_EFFICIENCY = np.zeros(num_sparsity)
+TVB_LSNM_PV_EFFICIENCY_G = np.zeros(num_sparsity)
+TVB_LSNM_PV_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_PV_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_PV_MODULARITY = np.zeros(num_sparsity)
-TVB_LSNM_PV_DEGREE     = np.zeros((num_sparsity, hires_ROIs))
+TVB_LSNM_PV_DEGREE     = np.zeros((num_sparsity, lores_ROIs))
 TVB_LSNM_PV_BW_RATIO  = np.zeros(num_sparsity)
-TVB_LSNM_DMS_EFFICIENCY = np.zeros(num_sparsity)
+TVB_LSNM_DMS_EFFICIENCY_G = np.zeros(num_sparsity)
+TVB_LSNM_DMS_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_DMS_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_DMS_MODULARITY = np.zeros(num_sparsity)
-TVB_LSNM_DMS_DEGREE     = np.zeros((num_sparsity, hires_ROIs))
+TVB_LSNM_DMS_DEGREE     = np.zeros((num_sparsity, lores_ROIs))
 TVB_LSNM_DMS_BW_RATIO  = np.zeros(num_sparsity)
+
+DMS_RS_DEGREE_DIFF = np.zeros((num_sparsity, lores_ROIs))
 
 RAND_MAT_EFFICIENCY=np.zeros(num_sparsity)
 RAND_MAT_CLUSTERING=np.zeros(num_sparsity)
@@ -574,10 +593,10 @@ tvb_lsnm_dms_hr_bin= np.zeros((num_of_densities, hires_ROIs, hires_ROIs))
 
 # generate a number of random weighted undirected FC matrices that will be used
 # as a reference to compare functional connectivity matrices
-rand_mat = np.random.rand(num_random, hires_ROIs, hires_ROIs)
-for r in range(0, num_random):
-    rand_mat[r] = (rand_mat[r] + rand_mat[r].T) / 2       # make it symmetrical
-    np.fill_diagonal(rand_mat[r], 1.0)                    # fill diagonal with 1's
+#rand_mat = np.random.rand(num_random, lores_ROIs, lores_ROIs)
+#for r in range(0, num_random):
+#    rand_mat[r] = (rand_mat[r] + rand_mat[r].T) / 2       # make it symmetrical
+#    np.fill_diagonal(rand_mat[r], 1.0)                    # fill diagonal with 1's
 
 
 threshold_array = np.linspace(min_sparsity, max_sparsity, num_sparsity)
@@ -610,7 +629,7 @@ for d in range(num_of_densities):
     # Do these calculations for both, hi and low resolution FC matrices
     emp_rs_a           = np.absolute(empirical_fc_lowres)
     emp_rs_p           = bct.threshold_proportional(emp_rs_a, threshold_array[d], copy=True)
-    emp_rs_bin[d]   = bct.binarize(emp_rs_p, copy=True)    
+    emp_rs_bin[d]      = bct.binarize(emp_rs_p, copy=True)    
     
     emp_rs_a           = np.absolute(empirical_fc_hires)
     emp_rs_p           = bct.threshold_proportional(emp_rs_a, threshold_array[d], copy=True)
@@ -649,33 +668,43 @@ for d in range(num_of_densities):
     tvb_lsnm_dms_hr_bin[d] = bct.binarize(tvb_lsnm_dms_p, copy=True)
 
     # calculate global efficiency for each condition using Brain Connectivity Toolbox
-    EMP_RS_EFFICIENCY[d]      = np.mean(bct.efficiency_bin(emp_rs_hr_bin[d], local=True))  
-    TVB_RS_EFFICIENCY[d]      = np.mean(bct.efficiency_bin(tvb_rs_hr_bin[d], local=True)) 
-    TVB_LSNM_RS_EFFICIENCY[d] = np.mean(bct.efficiency_bin(tvb_lsnm_rs_hr_bin[d], local=True)) 
-    TVB_LSNM_PV_EFFICIENCY[d] = np.mean(bct.efficiency_bin(tvb_lsnm_pv_hr_bin[d], local=True))
-    TVB_LSNM_DMS_EFFICIENCY[d]= np.mean(bct.efficiency_bin(tvb_lsnm_dms_hr_bin[d], local=True)) 
+    EMP_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(emp_rs_bin[d])  
+    TVB_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(tvb_rs_bin[d]) 
+    TVB_LSNM_RS_EFFICIENCY_G[d] = bct.efficiency_bin(tvb_lsnm_rs_bin[d]) 
+    TVB_LSNM_PV_EFFICIENCY_G[d] = bct.efficiency_bin(tvb_lsnm_pv_bin[d])
+    TVB_LSNM_DMS_EFFICIENCY_G[d]= bct.efficiency_bin(tvb_lsnm_dms_bin[d]) 
+
+    # calculate mean local efficiency for each condition using Brain Connectivity Toolbox
+    EMP_RS_EFFICIENCY_L[d]      = bct.efficiency_bin(emp_rs_bin[d], local=True)  
+    TVB_RS_EFFICIENCY_L[d]      = bct.efficiency_bin(tvb_rs_bin[d], local=True) 
+    TVB_LSNM_RS_EFFICIENCY_L[d] = bct.efficiency_bin(tvb_lsnm_rs_bin[d], local=True) 
+    TVB_LSNM_PV_EFFICIENCY_L[d] = bct.efficiency_bin(tvb_lsnm_pv_bin[d], local=True)
+    TVB_LSNM_DMS_EFFICIENCY_L[d]= bct.efficiency_bin(tvb_lsnm_dms_bin[d], local=True) 
         
     # calculate clustering coefficient vector using Brain Connectivity Toolbox
-    EMP_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(emp_rs_hr_bin[d]))
-    TVB_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(tvb_rs_hr_bin[d]))
-    TVB_LSNM_RS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_rs_hr_bin[d]))
-    TVB_LSNM_PV_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_pv_hr_bin[d]))
-    TVB_LSNM_DMS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_dms_hr_bin[d]))
+    EMP_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(emp_rs_bin[d]))
+    TVB_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(tvb_rs_bin[d]))
+    TVB_LSNM_RS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_rs_bin[d]))
+    TVB_LSNM_PV_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_pv_bin[d]))
+    TVB_LSNM_DMS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_dms_bin[d]))
         
     # calculate modularity using Brain Connectivity Toolbox
-    EMP_RS_MODULARITY[d]       = bct.modularity_und(emp_rs_hr_bin[d], gamma=1, kci=None)[1]
-    TVB_RS_MODULARITY[d]       = bct.modularity_und(tvb_rs_hr_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_RS_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_rs_hr_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_PV_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_pv_hr_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_DMS_MODULARITY[d] = bct.modularity_und(tvb_lsnm_dms_hr_bin[d], gamma=1, kci=None)[1]
+    EMP_RS_MODULARITY[d]       = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)[1]
+    TVB_RS_MODULARITY[d]       = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)[1]
+    TVB_LSNM_RS_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_rs_bin[d], gamma=1, kci=None)[1]
+    TVB_LSNM_PV_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_pv_bin[d], gamma=1, kci=None)[1]
+    TVB_LSNM_DMS_MODULARITY[d] = bct.modularity_und(tvb_lsnm_dms_bin[d], gamma=1, kci=None)[1]
         
     # calculate node degree using BCT
-    EMP_RS_DEGREE[d]          = bct.degrees_und(emp_rs_hr_bin[d])
-    TVB_RS_DEGREE[d]          = bct.degrees_und(tvb_rs_hr_bin[d])
-    TVB_LSNM_RS_DEGREE[d]     = bct.degrees_und(tvb_lsnm_rs_hr_bin[d])
-    TVB_LSNM_PV_DEGREE[d]     = bct.degrees_und(tvb_lsnm_pv_hr_bin[d])
-    TVB_LSNM_DMS_DEGREE[d]    = bct.degrees_und(tvb_lsnm_dms_hr_bin[d])
-        
+    EMP_RS_DEGREE[d]          = bct.degrees_und(emp_rs_bin[d])
+    TVB_RS_DEGREE[d]          = bct.degrees_und(tvb_rs_bin[d])
+    TVB_LSNM_RS_DEGREE[d]     = bct.degrees_und(tvb_lsnm_rs_bin[d])
+    TVB_LSNM_PV_DEGREE[d]     = bct.degrees_und(tvb_lsnm_pv_bin[d])
+    TVB_LSNM_DMS_DEGREE[d]    = bct.degrees_und(tvb_lsnm_dms_bin[d])
+
+    # calculate the node degree differences at each density treshold
+    DMS_RS_DEGREE_DIFF[d] = TVB_LSNM_DMS_DEGREE[d] - TVB_LSNM_RS_DEGREE[d]
+    
     # calculate number of between-module connections...
     # and the number of within-module connections...
     # and use those to calculate the ratio of the avg between- to avg within-module connections
@@ -864,35 +893,35 @@ fig.savefig('empirical_rs_fc.png')
 fig = plt.figure('Mean TVB-only RS FC (binary at 10% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_rs_hr_bin[0], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_rs_bin[0], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_only_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM RS FC (binarized at 10% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_rs_hr_bin[0], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_rs_bin[0], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 10% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_pv_hr_bin[0], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_pv_bin[0], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_pv_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 10% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_dms_hr_bin[0], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_dms_bin[0], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_dms_fc.png')
 
 fig = plt.figure('Empirical RS FC matrix (binarized at 10% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(emp_rs_hr_bin[0], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(emp_rs_bin[0], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_empirical_fc.png')
 
@@ -956,8 +985,9 @@ plt.plot(threshold_array, TVB_RS_EFFICIENCY, label='TVB RS')
 plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY, label='TVB/LSNM RS')
 plt.plot(threshold_array, TVB_LSNM_PV_EFFICIENCY, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_EFFICIENCY, label='TVB/LSNM DMS')
+#plt.plot(threshold_array, RAND_MAT_EFFICIENCY, label='Random')
 plt.xlabel('Threshold')
-plt.ylabel('Mean local Efficiency')
+plt.ylabel('Mean Global Efficiency')
 plt.legend(loc='best')
 fig.savefig('efficiency_across_thresholds.png')
 
@@ -968,7 +998,7 @@ plt.plot(threshold_array, TVB_RS_CLUSTERING, label='TVB RS')
 plt.plot(threshold_array, TVB_LSNM_RS_CLUSTERING, label='TVB/LSNM RS')
 plt.plot(threshold_array, TVB_LSNM_PV_CLUSTERING, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_CLUSTERING, label='TVB/LSNM DMS')
-#plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Empirical')
+#plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Random')
 plt.xlabel('Threshold')
 plt.ylabel('Mean Clustering')
 plt.legend(loc='best')
@@ -981,7 +1011,7 @@ plt.plot(threshold_array, TVB_RS_MODULARITY, label='TVB RS')
 plt.plot(threshold_array, TVB_LSNM_RS_MODULARITY, label='TVB/LSNM RS')
 plt.plot(threshold_array, TVB_LSNM_PV_MODULARITY, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_MODULARITY, label='TVB/LSNM DMS')
-#plt.plot(threshold_array, RAND_MAT_MODULARITY, label='Empirical')
+#plt.plot(threshold_array, RAND_MAT_MODULARITY, label='Random')
 plt.xlabel('Threshold')
 plt.ylabel('Modularity Index')
 plt.legend(loc='best')
@@ -1320,6 +1350,8 @@ for d in range(0, num_of_densities):
     r_array_RS_v_DMS[d] = np.corrcoef(TVB_LSNM_RS_DEGREE[d], TVB_LSNM_DMS_DEGREE[d])[1,0]
     r_array_PV_v_DMS[d] = np.corrcoef(TVB_LSNM_PV_DEGREE[d], TVB_LSNM_DMS_DEGREE[d])[1,0]
 
+print 'Each node degree array is of the following size: ', TVB_LSNM_RS_DEGREE[d].shape
+
 plt.plot(threshold_array, r_array_RS_v_PV,  label='TVB/LSNM RS v PV')
 plt.plot(threshold_array, r_array_RS_v_DMS, label='TVB/LSNM RS v DMS')
 plt.plot(threshold_array, r_array_PV_v_DMS, label='TVB/LSNM PV v DMS')
@@ -1358,6 +1390,17 @@ plt.plot(TVB_LSNM_RS_DEGREE[-1], m*TVB_LSNM_RS_DEGREE[-1] + b, '-', color='red')
 # calculate correlation coefficient and display it on plot
 r = np.corrcoef(TVB_LSNM_RS_DEGREE[-1], TVB_LSNM_DMS_DEGREE[-1])[1,0]
 plt.text(1, 22, 'r=' + '{:.2f}'.format(r))
+
+#############################################################################
+# Plot node degree difference as bar graphs
+#############################################################################
+# initialize new figure for node degree differences bar chart
+fig=plt.figure('Node degree differences between RS and DMS FC networks')
+bar_pos = np.arange(len(labels))
+plt.bar(bar_pos, DMS_RS_DEGREE_DIFF[1], align='center', alpha=0.5)
+plt.xticks(bar_pos, labels, rotation='vertical')
+plt.ylabel('Node degree difference')
+plt.xlabel('ROI')
 
 
 ###################################################################################################
@@ -1411,6 +1454,26 @@ plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
 # calculate correlation coefficient and display it on plot
 r = np.corrcoef(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)[1,0]
 plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+
+###########################################################################
+# Plot empirical structural connectivity matrices (lo-res and hi-res) that
+# was used for simulations
+###########################################################################
+fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (66 ROIs)')
+ax = fig.add_subplot(111)
+cmap = CM.get_cmap('jet', 10)
+cax = ax.imshow(empirical_sc_lowres, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+fig.savefig('empirical_sc_lores.png')
+
+fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (998 ROIs)')
+ax = fig.add_subplot(111)
+cmap = CM.get_cmap('jet', 10)
+cax = ax.imshow(empirical_sc_hires, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+fig.savefig('empirical_sc_hires.png')
 
 # Show the plots on the screen
 plt.show()
