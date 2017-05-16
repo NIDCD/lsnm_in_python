@@ -73,7 +73,7 @@ d1 = [43, 29, 21]
 d2 = [42, 39, 2]
 fr = [29, 25, 40]
 
-# Create numpy array of auditory brain areas in Tailarach coordinates
+# Create numpy array of visual brain areas in Tailarach coordinates
 vis_tal = np.array([v1, v4, it, fs, d1, d2, fr])
 
 # convert those visual brain areas from Tailarach to MNI

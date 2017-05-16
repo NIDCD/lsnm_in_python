@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on March 10 2017
+#   Last updated by Antonio Ulloa on April 24 2017
 #
 # **************************************************************************/
 #
@@ -61,6 +61,9 @@ from matplotlib import cm as CM
 from scipy.stats import itemfreq
 
 from sklearn.metrics import mean_squared_error
+
+from mpl_toolkits.mplot3d import Axes3D
+
 
 # define name of input file where Hagmann empirical data is stored (matlab file given to us
 # by Olaf Sporns and Chris Honey
@@ -364,6 +367,7 @@ ax.set_yticklabels(['.0042', '.0142', '.0242', '.0342', '.0442',
 plt.xlabel('Conduction speed')
 plt.ylabel('Global coupling strength')
 color_bar=plt.colorbar(cax)
+fig.savefig('corrs_empirical_vs_simulated_rs_fc.png')
 
 # initialize figure to plot FC
 fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
@@ -441,6 +445,26 @@ plt.plot(flat_emp_fc, m*flat_emp_fc + b, '-', color='red')
 # calculate correlation coefficient and display it on plot
 cc = np.corrcoef(flat_emp_fc, flat_sim_fc)[1,0]
 plt.text(0.5, -0.1, 'r=' + '{:.2f}'.format(cc))
+fig.savefig('best_corr_emp_vs_sim_rs_fc.png')
+
+#################################################################
+# scatter plot of lo-res (66 ROI) empirical SC vs best matched simulated FC 
+# initialize figure to plot correlations between empirical and simulated FC
+fig=plt.figure('Structural SC vs Simulated FC (66 ROIs)')
+flat_sc_m = np.ma.array(hagmann_sc_lowres, mask=sc_mask)   # mask where struct. connections absent
+flat_sc = np.ma.compressed(flat_sc_m)                      # remove masked elements
+plt.scatter(flat_sc, flat_sim_fc)
+plt.xlabel('Empirical FC')
+plt.ylabel('Empirical SC')
+
+# fit scatter plot with np.polyfit
+m, b = np.polyfit(flat_sc, flat_sim_fc, 1)
+plt.plot(flat_sc, m*flat_sc + b, '-', color='red')
+
+# calculate correlation coefficient and display it on plot
+cc = np.corrcoef(flat_sc, flat_sim_fc)[1,0]
+plt.text(0.5, -0.1, 'r=' + '{:.2f}'.format(cc))
+fig.savefig('sc_vs_sim_rs_fc.png')
 
 
 # finally, show all figures!

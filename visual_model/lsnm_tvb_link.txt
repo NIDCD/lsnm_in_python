@@ -16,5 +16,5 @@ efd1 74
 ifd1 74
 efd2 41
 ifd2 41
-exfr 125
-infr 125
+exfr 111
+infr 111

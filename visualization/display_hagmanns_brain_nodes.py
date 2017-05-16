@@ -101,10 +101,6 @@ fr_loc = range(125, 131)
 # calculate the size of each ROI (all have same size so take one)
 ROI_size = len(v1_loc)
 
-#fs = [46, 33, 10] ALTERNATE LOCATION
-#d2 = [42, 22, 18] ALTERNATE LOCATION
-#fr = [38, 19, 32] ALTERNATE LOCATION
-
 # Define the hypothetical Talairach locations of each LSNM auditory modules
 a1 = [51,-24,8]
 a2 = [61,-36,12]

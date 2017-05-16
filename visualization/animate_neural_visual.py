@@ -33,13 +33,13 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (movie.py) was created on December January 22, 2015.
+#   This file (animate_neural_visual.py) was created on December January 22, 2017.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on January 22 2015  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 13 2017  
 # **************************************************************************/
 
-# movie.py
+# animate_neural_visual.py
 #
 # Plays a movie using output data files of visual delay-match-to-sample simulation
 
