@@ -36,7 +36,7 @@
 #   This file (display_Hagmanns_brain_connectivity.py) was created on July 18, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 15, 2017
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 18, 2017
 #   Based on: display_sensor_locations.py by Paula Sanz-Leon (TVB team)
 # **************************************************************************/
 
@@ -44,6 +44,11 @@
 #
 # Displays Hagmann's brain's 998-nodes plus LSNM nodes, along with the connections
 # between Hagmann's nodes and LSNM nodes.
+#
+# The LSNM nodes to display can be defined in the code itself using Tailarach coordinates
+# and can be motor, visual, or auditory. Perhaps in the future I will make this an option
+# you can select from at run-time?
+#
 
 from tvb.simulator.lab import *
 from tvb.simulator.plot.tools import mlab
@@ -51,13 +56,13 @@ from tvb.simulator.plot.tools import mlab
 # build an array of TVB nodes that you want to look at closely to visualize what is
 # connected to what
 # Below are the node numbers for the TVB nodes where visual LSNM modules are embedded
-#nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 125]
-nodes_to_be_examined = [663]
+nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 125]
+#nodes_to_be_examined = [663]
 # Below are the node numbers for the TVB nodes where auditory LSNM modules are embedded
 #nodes_to_be_examined =[474, 470, 477,44]
 
 # Define the hypothetical Talairach locations of each LSNM visual modules
-m1_lsnm = [-43, -7, 56]
+#m1_lsnm = [-43, -7, 56]
 #v1_lsnm = [18,-88,8]
 #v4_lsnm = [30,-72,-12]
 #it_lsnm = [28,-36,-8]
@@ -69,15 +74,17 @@ m1_lsnm = [-43, -7, 56]
 #st_lsnm = [59,-17,4]
 #apf_lsnm= [56,21,5]
 
+# now, define the TVB nodes that are closest to the motor LSNM module location above
+#m1 = [-40, -9, 59]
+
 # now, define the TVB nodes that are closest to the visual LSNM module locations above
-m1 = [-40, -9, 59]
-#v1 = [14, -86, 7]
-#v4 = [33, -70, -7]
-#it = [31, -39, -6]
-#fs = [47, 19, 9]
-#d1 = [43, 29, 21]
-#d2 = [42, 39, 2]
-#fr = [29, 25, 40] 
+v1 = [14, -86, 7]
+v4 = [33, -70, -7]
+it = [31, -39, -6]
+fs = [47, 19, 9]
+d1 = [43, 29, 21]
+d2 = [42, 39, 2]
+fr = [29, 25, 40] 
 
 # now, define the TVB nodes that are closest to the auditory LSNM module locations above
 #a1 = [51,-24,8]
@@ -98,38 +105,31 @@ plot_surface(CORTEX, op=0.08)
 # weight or ignore it
 weight_threshold = 0.0
 
-# Plot the 998 nodes of Hagmann's brain
-#region_centres = mlab.points3d(centres[:, 0], 
-#                               centres[:, 1], 
-#                               centres[:, 2],
-#                               color=(0.5, 0.5, 0.5),
-#                               scale_factor = 1.)
-
 # Now plot the hypothetical locations of LSNM visual modules
 
 # M1 node is green
-m1_module = mlab.points3d(m1[0],m1[1],m1[2], color=(0,0,1), scale_factor=5.)
+#m1_module = mlab.points3d(m1[0],m1[1],m1[2], color=(0,0,1), scale_factor=5.)
 
 # V1 node is yellow
-#v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 10.)
+v1_module = mlab.points3d(v1[0],v1[1],v1[2],color=(1, 1, 0),scale_factor = 5.)
 
 # V4 node is green
-#v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 10.)
+v4_module = mlab.points3d(v4[0],v4[1],v4[2],color=(0, 1, 0),scale_factor = 5.)
 
 # IT node is blue
-#it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 10.)
+it_module = mlab.points3d(it[0],it[1],it[2],color=(0, 0, 1),scale_factor = 5.)
 
 # FS node is orange
-#fs_module = mlab.points3d(fs[0],fs[1],fs[2],color=(1, 0.5, 0),scale_factor = 10.)
+fs_module = mlab.points3d(fs[0],fs[1],fs[2],color=(1, 0.5, 0),scale_factor = 5.)
 
 # D1 node is red
-#d1_module = mlab.points3d(d1[0],d1[1],d1[2],color=(1, 0, 0),scale_factor = 10.)
+d1_module = mlab.points3d(d1[0],d1[1],d1[2],color=(1, 0, 0),scale_factor = 5.)
 
 # D2 node is magenta (or is it pink?)
-#d2_module = mlab.points3d(d2[0],d2[1],d2[2],color=(1, 0, 1),scale_factor = 10.)
+d2_module = mlab.points3d(d2[0],d2[1],d2[2],color=(1, 0, 1),scale_factor = 5.)
 
 # FR node is purple
-#fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 10.)
+fr_module = mlab.points3d(fr[0],fr[1],fr[2],color=(0.5, 0, 0.5),scale_factor = 5.)
 
 # ..., or plot the hypothetical locations of auditory LSNM modules
 #a1_module = mlab.points3d(a1[0],a1[1],a1[2],color=(1, 1, 0),scale_factor = 8.)
@@ -172,8 +172,8 @@ for tvb_node in nodes_to_be_examined:
         connected = centres[connected_node]
 
         connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2],
-                                  color = (1, 0, 0),
-                                  tube_radius=0.5)
+                                  color = (1, 1, 1),
+                                  tube_radius=0.1)
         
         connected = mlab.points3d(connected[0], connected[1], connected[2],
                                 color=(0.75, 0.75, 0.75),

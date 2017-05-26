@@ -50,8 +50,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # specify indexes of tvb nodes with direct connections to M1
-m1_connected = [655,658,659,660,661,662,664,665,666,667,668,669,718,720,721,722,723,725,727,
-                728,729,730,732,733,734,735,760,763,764,767,768,791,792,795]
+#m1_connected = [655,658,659,660,661,662,664,665,666,667,668,669,718,720,721,722,723,725,727,
+#                728,729,730,732,733,734,735,760,763,764,767,768,791,792,795]
+m1_connected = [662]
+
+
 
 print m1_connected[0:len(m1_connected)]
 

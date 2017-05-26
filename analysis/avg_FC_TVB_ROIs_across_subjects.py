@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 29 2017
+#   Last updated by Antonio Ulloa on May 25 2017
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 #   Also based on Python2.7 tutorials
@@ -455,6 +455,14 @@ tvb_lsnm_rs_lowres_Z_mean = np.mean(tvb_lsnm_rs_lowres_Z, axis=0)
 tvb_lsnm_pv_lowres_Z_mean = np.mean(tvb_lsnm_pv_lowres_Z, axis=0)
 tvb_lsnm_dms_lowres_Z_mean = np.mean(tvb_lsnm_dms_lowres_Z, axis=0)
 
+############################################################################
+# Calculate differences between RS and PV and RS and DMS mean FC matrices
+############################################################################
+print 'Calculating differences between RS and Task matrices...'
+
+pv_minus_rs_Z =  tvb_lsnm_pv_lowres_Z_mean  - tvb_lsnm_rs_lowres_Z_mean
+dms_minus_rs_Z = tvb_lsnm_dms_lowres_Z_mean - tvb_lsnm_rs_lowres_Z_mean
+dms_minus_pv_Z = tvb_lsnm_dms_lowres_Z_mean - tvb_lsnm_pv_lowres_Z_mean
 
 # calculate the standard error of the mean of correlation coefficients across subjects
 #fc_rs_z_std = np.std(fc_rs_z, axis=0)
@@ -528,6 +536,11 @@ tvb_rs_mean  = np.tanh(tvb_rs_z_mean)
 tvb_lsnm_rs_mean  = np.tanh(tvb_lsnm_rs_z_mean)
 tvb_lsnm_pv_mean  = np.tanh(tvb_lsnm_pv_z_mean)
 tvb_lsnm_dms_mean  = np.tanh(tvb_lsnm_dms_z_mean)
+
+# also convert matrices of differences to R correlation coefficients 
+pv_minus_rs  = np.tanh(pv_minus_rs_Z)
+dms_minus_rs = np.tanh(dms_minus_rs_Z)
+dms_minus_pv = np.tanh(dms_minus_pv_Z)
 
 
 
@@ -914,7 +927,7 @@ fig = plt.figure('Mean TVB-only RS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_rs_mean, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_rs_lowres_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_only_rs_fc.png')
@@ -923,7 +936,7 @@ fig = plt.figure('Mean TVB/LSNM RS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_rs_mean, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_rs_fc.png')
@@ -932,7 +945,7 @@ fig = plt.figure('Mean TVB/LSNM PV FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_pv_mean, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_pv_fc.png')
@@ -941,7 +954,7 @@ fig = plt.figure('Mean TVB/LSNM DMS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_dms_mean, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_dms_fc.png')
@@ -950,7 +963,7 @@ fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
 ax = fig.add_subplot(111)
 cmap = CM.get_cmap('jet', 10)
 empirical_fc_hires = np.asarray(empirical_fc_hires)
-cax = ax.imshow(empirical_fc_hires, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(empirical_fc_lowres, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('empirical_rs_fc.png')
@@ -958,39 +971,97 @@ fig.savefig('empirical_rs_fc.png')
 fig = plt.figure('Mean TVB-only RS FC (binary at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_rs_bin[9], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_rs_bin[34], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_only_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM RS FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_rs_bin[9], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_rs_bin[34], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_pv_bin[9], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_pv_bin[34], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_pv_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_dms_bin[9], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_dms_bin[34], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_dms_fc.png')
 
 fig = plt.figure('Empirical RS FC matrix (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(emp_rs_bin[9], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(emp_rs_bin[34], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_empirical_fc.png')
 
+####################################################################################
+# Display heatmaps showing differences between PV and RS, DMS and RS
+####################################################################################
+fig = plt.figure('TVB/LSNM PV - TVB/LSNM RS')
+ax = fig.add_subplot(111)
+# plot correlation matrix as a heatmap
+cmap = CM.get_cmap('jet', 10)
+cax = ax.imshow(pv_minus_rs, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+fig.savefig('pv_minus_rs.png')
 
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
+# Turn off all the ticks
+ax = plt.gca()
+
+for t in ax.xaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
+for t in ax.yaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
+
+fig = plt.figure('TVB/LSNM DMS - TVB/LSNM RS')
+ax = fig.add_subplot(111)
+# plot correlation matrix as a heatmap
+cmap = CM.get_cmap('jet', 10)
+cax = ax.imshow(dms_minus_rs, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+fig.savefig('dms_minus_rs.png')
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
+# Turn off all the ticks
+ax = plt.gca()
+
+for t in ax.xaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
+for t in ax.yaxis.get_major_ticks():
+    t.tick1On = False
+    t.tick2On = False
 
 #################################################################################
 # Plot correlation coefficients for using designated seeds found in RS literature
