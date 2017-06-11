@@ -36,7 +36,7 @@
 #   This file (sim.py) was created on February 5, 2015.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on December 6 2016
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on March 16 2017
 #
 #   Based on computer code originally developed by Malle Tagamets and
 #   Barry Horwitz (Tagamets and Horwitz, 1998)

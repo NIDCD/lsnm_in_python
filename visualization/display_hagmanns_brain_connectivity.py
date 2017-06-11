@@ -63,10 +63,10 @@ nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 125]
 
 # Define the hypothetical Talairach locations of each LSNM visual modules
 #m1_lsnm = [-43, -7, 56]
-#v1_lsnm = [18,-88,8]
-#v4_lsnm = [30,-72,-12]
-#it_lsnm = [28,-36,-8]
-#vpf_lsnm = [42,26,20]
+v1_lsnm = [18,-88,8]
+v4_lsnm = [30,-72,-12]
+it_lsnm = [28,-36,-8]
+vpf_lsnm = [42,26,20]
 
 # define the hypothetical Talairach locations of each LSNM auditory module
 #a1_lsnm = [48,-26,10]
@@ -75,7 +75,7 @@ nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 125]
 #apf_lsnm= [56,21,5]
 
 # now, define the TVB nodes that are closest to the motor LSNM module location above
-#m1 = [-40, -9, 59]
+m1 = [-40, -9, 59]
 
 # now, define the TVB nodes that are closest to the visual LSNM module locations above
 v1 = [14, -86, 7]

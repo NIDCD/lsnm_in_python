@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on May 25 2017
+#   Last updated by Antonio Ulloa on June 4 2017
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 #   Also based on Python2.7 tutorials
@@ -141,8 +141,14 @@ subjects = np.arange(10)
 # by Olaf Sporns and Chris Honey
 hagmann_data = 'DSI_release2_2011.mat'
 
-# define output file where means, standard deviations, and variances will be stored
-RS_FC_avg_file = 'tvb_only_rs_fc_avg.npy'
+# define output file where Functional connectivity averages will be stored
+EMP_RS_FC_file = 'emp_rs_fc.npy'
+TVB_RS_FC_avg_file = 'tvb_rs_fc_avg.npy'
+TVB_LSNM_RS_FC_avg_file = 'tvb_lsnm_rs_fc_avg.npy'
+TVB_LSNM_PV_FC_avg_file = 'tvb_lsnm_pv_fc_avg.npy'
+TVB_LSNM_DMS_FC_avg_file= 'tvb_lsnm_dms_fc_avg.npy'
+PV_minus_RS_file = 'pv_minus_rs.npy'
+DMS_minus_RS_file = 'dms_minus_rs.npy'
 TB_FC_avg_file = 'tb_fc_avg.npy'
 
 # declare ROI labels
@@ -231,38 +237,38 @@ TVB_RS_subj8  = 'subject_tvb/output.RestingState_08/xcorr_matrix_998_regions.npy
 TVB_RS_subj9  = 'subject_tvb/output.RestingState_09/xcorr_matrix_998_regions.npy'
 TVB_RS_subj10 = 'subject_tvb/output.RestingState_10/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_RS_subj1  = 'subject_11/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj2  = 'subject_12/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj3  = 'subject_13/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj4  = 'subject_14/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj5  = 'subject_15/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj6  = 'subject_16/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj7  = 'subject_17/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj8  = 'subject_18/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj9  = 'subject_19/output.RestingState/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj10 = 'subject_20/output.RestingState/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_PV_subj1  = 'subject_11/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj3  = 'subject_13/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj4  = 'subject_14/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj5  = 'subject_15/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj6  = 'subject_16/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj7  = 'subject_17/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj8  = 'subject_18/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj9  = 'subject_19/output.PassiveViewing/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj10 = 'subject_20/output.PassiveViewing/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj1  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj3  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj4  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj5  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj6  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj7  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj8  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj9  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj10 = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_DMS_subj1  = 'subject_11/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj3  = 'subject_13/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj4  = 'subject_14/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj5  = 'subject_15/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj6  = 'subject_16/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj7  = 'subject_17/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj8  = 'subject_18/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj9  = 'subject_19/output.DMSTask/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj10 = 'subject_20/output.DMSTask/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
 # number of randomly generated functional connectiviy matrices to be generated. These FC matrices
 # will be used to compare against actual FC matrices. Used 20 found in the graph theory literature.
@@ -276,6 +282,8 @@ print 'Loading TVB structural connectivity used for simulations'
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
 empirical_sc_hires = np.asarray(white_matter.weights)[0:hires_ROIs, 0:hires_ROIs]
 
+# switch to a prettier color palette
+#plt.style.use('ggplot')
 
 ##################################################################################
 # Open input files containing both empirical and simulated functional connectivity
@@ -354,6 +362,7 @@ num_of_sub = len(tvb_rs)
 
 # num_of_density thresholds to be used
 num_of_densities = 35
+#num_of_densities = 100
 
 ############################################################################
 # compress 998x998 mean simulated FC matrix to 66x66 FC matrix by averaging
@@ -542,7 +551,59 @@ pv_minus_rs  = np.tanh(pv_minus_rs_Z)
 dms_minus_rs = np.tanh(dms_minus_rs_Z)
 dms_minus_pv = np.tanh(dms_minus_pv_Z)
 
+# fill diagonals of all matrices with zeros
+np.fill_diagonal(empirical_fc_lowres, 0)
+np.fill_diagonal(tvb_rs_lowres_mean, 0)
+np.fill_diagonal(tvb_lsnm_lowres_rs_mean, 0)
+np.fill_diagonal(tvb_lsnm_lowres_pv_mean, 0)
+np.fill_diagonal(tvb_lsnm_lowres_dms_mean, 0)
+np.fill_diagonal(tvb_rs_mean, 0)
+np.fill_diagonal(tvb_lsnm_rs_mean, 0)
+np.fill_diagonal(tvb_lsnm_pv_mean, 0)
+np.fill_diagonal(tvb_lsnm_dms_mean, 0)
+np.fill_diagonal(pv_minus_rs, 0)
+np.fill_diagonal(dms_minus_rs, 0)
+np.fill_diagonal(dms_minus_pv, 0)
 
+# calculate the max and min of FC matrices and store in variables for later use
+FC_max = max([np.amax(tvb_rs_lowres_mean),
+              np.amax(tvb_lsnm_lowres_rs_mean),
+              np.amax(tvb_lsnm_lowres_pv_mean),
+              np.amax(tvb_lsnm_lowres_dms_mean)])
+FC_diff_max = max([np.amax(pv_minus_rs),
+                   np.amax(dms_minus_rs),
+                   np.amax(dms_minus_pv)])
+FC_emp_max = np.amax(empirical_fc_lowres)
+FC_min = min([np.amin(tvb_rs_lowres_mean),
+              np.amin(tvb_lsnm_lowres_rs_mean),
+              np.amin(tvb_lsnm_lowres_pv_mean),
+              np.amin(tvb_lsnm_lowres_dms_mean)])
+FC_diff_min = max([np.amin(pv_minus_rs),
+                   np.amin(dms_minus_rs),
+                   np.amin(dms_minus_pv)])
+FC_emp_min = np.amin(empirical_fc_lowres)
+FC_max_diff_pv_rs  = np.sum(np.absolute(pv_minus_rs), axis=1)
+FC_max_diff_dms_rs = np.sum(np.absolute(dms_minus_rs), axis=1)
+FC_max_diff_idx_pv_rs  = np.where(FC_max_diff_pv_rs  == np.amax(FC_max_diff_pv_rs))
+FC_max_diff_idx_dms_rs = np.where(FC_max_diff_dms_rs == np.amax(FC_max_diff_dms_rs))
+print 'Minimum correlation coefficient in FC matrices was: ', FC_min
+print 'Maximum correlation coefficient in FC matrices was: ', FC_max
+print 'Minumum correlation coefficient in FC diff matrices: ', FC_diff_min
+print 'Maximum correlation coefficient in FC diff matrices" ', FC_diff_max
+print 'Minimum correlation coefficient in Empirical FC matrices: ', FC_emp_min
+print 'Maximum correlation coefficient in Empirical FC matrices: ', FC_emp_max
+print 'Maximum cummulative (DMS - RS) abs. difference is at row ', FC_max_diff_idx_dms_rs[0], ', ROI: ', labels[FC_max_diff_idx_dms_rs[0]] 
+print 'Maximum cummulative ( PV - RS) abs. difference is at row ', FC_max_diff_idx_pv_rs[0], ',  ROI: ', labels[FC_max_diff_idx_pv_rs[0]] 
+
+# save FC matrices to outputfiles
+print 'Saving FC matrices for later use...'
+np.save(EMP_RS_FC_file, empirical_fc_lowres)
+np.save(TVB_RS_FC_avg_file, tvb_rs_lowres_mean)
+np.save(TVB_LSNM_RS_FC_avg_file, tvb_lsnm_lowres_rs_mean)
+np.save(TVB_LSNM_PV_FC_avg_file, tvb_lsnm_lowres_pv_mean)
+np.save(TVB_LSNM_DMS_FC_avg_file, tvb_lsnm_lowres_dms_mean)
+np.save(PV_minus_RS_file,  pv_minus_rs )
+np.save(DMS_minus_RS_file, dms_minus_rs)
 
 ##################################################################################
 # Compute graph theoretical metrics on randomly generated matices and on
@@ -556,6 +617,9 @@ dms_minus_pv = np.tanh(dms_minus_pv_Z)
 # the strongest weights, then binarize the matrix
 min_sparsity = 0.06
 max_sparsity = 0.4
+#min_sparsity = 0.01
+#max_sparsity = 1.0
+
 num_sparsity = num_of_densities
 EMP_RS_EFFICIENCY_G   = np.zeros(num_sparsity)
 EMP_RS_EFFICIENCY_L = np.zeros(num_sparsity)
@@ -772,11 +836,23 @@ for d in range(num_of_densities):
 
     
     # calculate modularity using Brain Connectivity Toolbox
-    EMP_RS_MODULARITY[d]       = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)[1]
-    TVB_RS_MODULARITY[d]       = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_RS_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_rs_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_PV_MODULARITY[d]  = bct.modularity_und(tvb_lsnm_pv_bin[d], gamma=1, kci=None)[1]
-    TVB_LSNM_DMS_MODULARITY[d] = bct.modularity_und(tvb_lsnm_dms_bin[d], gamma=1, kci=None)[1]
+    emp_modularity             = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)
+    tvb_rs_modularity          = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)
+    tvb_lsnm_rs_modularity     = bct.modularity_und(tvb_lsnm_rs_bin[d], gamma=1, kci=None)
+    tvb_lsnm_pv_modularity     = bct.modularity_und(tvb_lsnm_pv_bin[d], gamma=1, kci=None)
+    tvb_lsnm_dms_modularity    = bct.modularity_und(tvb_lsnm_dms_bin[d], gamma=1, kci=None)
+    EMP_RS_MODULARITY[d]       = emp_modularity[1]
+    TVB_RS_MODULARITY[d]       = tvb_rs_modularity[1]
+    TVB_LSNM_RS_MODULARITY[d]  = tvb_lsnm_rs_modularity[1]
+    TVB_LSNM_PV_MODULARITY[d]  = tvb_lsnm_pv_modularity[1]
+    TVB_LSNM_DMS_MODULARITY[d] = tvb_lsnm_dms_modularity[1]
+
+    # print the modules resulting from the modularity calculation above
+#    print "Empirical RS modules: ", emp_modularity[0]
+#    print "TVB RS modules: ", tvb_rs_modularity[0]
+#    print "TVB/LSNM RS modules: ", tvb_lsnm_rs_modularity[0]
+#    print "TVB/LSNM PV modules: ", tvb_lsnm_pv_modularity[0]
+#    print "TVB/LSNM DMS modules: ", tvb_lsnm_dms_modularity[0]
         
     # calculate node degree using BCT
 #    EMP_RS_DEGREE[d]          = bct.degrees_und(emp_rs_bin[d])
@@ -927,7 +1003,7 @@ fig = plt.figure('Mean TVB-only RS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_rs_lowres_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_rs_lowres_mean, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_only_rs_fc.png')
@@ -935,8 +1011,7 @@ fig.savefig('mean_tvb_only_rs_fc.png')
 fig = plt.figure('Mean TVB/LSNM RS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_rs_fc.png')
@@ -944,8 +1019,7 @@ fig.savefig('mean_tvb_lsnm_rs_fc.png')
 fig = plt.figure('Mean TVB/LSNM PV FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-0.6, vmax=0.6, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_pv_fc.png')
@@ -953,17 +1027,15 @@ fig.savefig('mean_tvb_lsnm_pv_fc.png')
 fig = plt.figure('Mean TVB/LSNM DMS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-0.6, vmax=0.6, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('mean_tvb_lsnm_dms_fc.png')
 
 fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
 ax = fig.add_subplot(111)
-cmap = CM.get_cmap('jet', 10)
 empirical_fc_hires = np.asarray(empirical_fc_hires)
-cax = ax.imshow(empirical_fc_lowres, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+cax = ax.imshow(empirical_fc_lowres, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('empirical_rs_fc.png')
@@ -971,35 +1043,35 @@ fig.savefig('empirical_rs_fc.png')
 fig = plt.figure('Mean TVB-only RS FC (binary at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_rs_bin[34], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_rs_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_only_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM RS FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_rs_bin[34], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_rs_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_pv_bin[34], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_pv_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_pv_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_dms_bin[34], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(tvb_lsnm_dms_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_tvb_lsnm_dms_fc.png')
 
 fig = plt.figure('Empirical RS FC matrix (binarized at 35% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(emp_rs_bin[34], interpolation='nearest', cmap='Greys')
+cax = ax.imshow(emp_rs_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
 fig.savefig('binary_empirical_fc.png')
 
@@ -1009,8 +1081,8 @@ fig.savefig('binary_empirical_fc.png')
 fig = plt.figure('TVB/LSNM PV - TVB/LSNM RS')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(pv_minus_rs, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+#cax = ax.imshow(pv_minus_rs, vmin=FC_min, vmax=FC_max, interpolation='nearest', cmap='OrRd')
+cax = ax.imshow(pv_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('pv_minus_rs.png')
@@ -1020,7 +1092,7 @@ plt.xticks(np.arange(0, len(labels)))
 plt.yticks(np.arange(0, len(labels)))
 
 # decrease font size
-plt.rcParams.update({'font.size': 9})
+#plt.rcParams.update({'font.size': 9})
 
 # display labels for brain regions
 ax.set_xticklabels(labels, rotation=90)
@@ -1039,8 +1111,8 @@ for t in ax.yaxis.get_major_ticks():
 fig = plt.figure('TVB/LSNM DMS - TVB/LSNM RS')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(dms_minus_rs, vmin=-.1, vmax=1., interpolation='nearest', cmap=cmap)
+#cax = ax.imshow(dms_minus_rs, vmin=FC_min, vmax=FC_max, interpolation='nearest', cmap='OrRd')
+cax = ax.imshow(dms_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
 fig.savefig('dms_minus_rs.png')
@@ -1212,7 +1284,7 @@ fig.savefig('emp_sim_small_worldness_across_thresholds.png')
 ####################################################################################
 fig = plt.figure('Global Efficiency')
 cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_G, label='TVB/LSNM RS')
+plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_G, label='TVB/LSNM PF')
 plt.plot(threshold_array, TVB_LSNM_PV_EFFICIENCY_G, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_EFFICIENCY_G, label='TVB/LSNM DMS')
 #plt.plot(threshold_array, RAND_MAT_EFFICIENCY, label='Random')
@@ -1233,7 +1305,7 @@ fig.savefig('rs_pv_dms_mean_local_efficiencies_across_densities.png')
 
 fig = plt.figure('Mean Clustering Coefficient')
 cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_CLUSTERING, label='TVB/LSNM RS')
+plt.plot(threshold_array, TVB_LSNM_RS_CLUSTERING, label='TVB/LSNM PF')
 plt.plot(threshold_array, TVB_LSNM_PV_CLUSTERING, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_CLUSTERING, label='TVB/LSNM DMS')
 #plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Random')
@@ -1244,7 +1316,7 @@ fig.savefig('rs_pv_dms_clustering_across_thresholds.png')
 
 fig = plt.figure('Modularity')
 cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_MODULARITY, label='TVB/LSNM RS')
+plt.plot(threshold_array, TVB_LSNM_RS_MODULARITY, label='TVB/LSNM PF')
 plt.plot(threshold_array, TVB_LSNM_PV_MODULARITY, label='TVB/LSNM PV')
 plt.plot(threshold_array, TVB_LSNM_DMS_MODULARITY, label='TVB/LSNM DMS')
 #plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Random')
@@ -1709,14 +1781,68 @@ fig.savefig('rs_pv_dms_small_worldness_across_thresholds.png')
 
 
 ######################################################################
-# Plot correlations between empirical and simulated FC
+# Plot correlations between simulated TVB/LSNM RS and TVB/LSNM PV
+# and between simulated TVB/LSNM RS abd TVB/LSNM DMS
+######################################################################
+# apply mask to get rid of upper triangle, including main diagonal
+mask = np.tri(tvb_lsnm_lowres_rs_mean.shape[0], k=0)
+mask = np.transpose(mask)
+new_TVB_LSNM_RS_FC = np.ma.array(tvb_lsnm_lowres_rs_mean, mask=mask)    # mask out upper triangle
+new_TVB_LSNM_PV_FC = np.ma.array(tvb_lsnm_lowres_pv_mean, mask=mask)    # mask out upper triangle
+new_TVB_LSNM_DMS_FC= np.ma.array(tvb_lsnm_lowres_dms_mean,mask=mask)    # mask out upper triangle
+
+# flatten the numpy cross-correlation matrices
+corr_mat_TVB_LSNM_RS_FC  = np.ma.ravel(new_TVB_LSNM_RS_FC)
+corr_mat_TVB_LSNM_PV_FC  = np.ma.ravel(new_TVB_LSNM_PV_FC)
+corr_mat_TVB_LSNM_DMS_FC = np.ma.ravel(new_TVB_LSNM_DMS_FC)
+
+# remove masked elements from cross-correlation matrix
+corr_mat_TVB_LSNM_RS_FC = np.ma.compressed(corr_mat_TVB_LSNM_RS_FC)
+corr_mat_TVB_LSNM_PV_FC = np.ma.compressed(corr_mat_TVB_LSNM_PV_FC)
+corr_mat_TVB_LSNM_DMS_FC= np.ma.compressed(corr_mat_TVB_LSNM_DMS_FC)
+
+# scatter plot: RS vs PV
+fig=plt.figure('Correlation between TVB/LSNM RS and TVB/LSNM PV')
+plt.scatter(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_PV_FC)
+plt.xlabel('TVB/LSNM RS FC')
+plt.ylabel('TVB/LSNM PV FC')
+
+# fit scatter plot with np.polyfit
+m, b = np.polyfit(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_PV_FC, 1)
+plt.plot(corr_mat_TVB_LSNM_RS_FC, m*corr_mat_TVB_LSNM_RS_FC + b, '-', color='red')
+
+# calculate correlation coefficient and display it on plot
+r = np.corrcoef(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_PV_FC)[1,0]
+plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+
+fig.savefig('corr_rs_vs_pv.png')
+
+# scatter plot: RS vs DMS
+fig=plt.figure('Correlation between TVB/LSNM RS and TVB/LSNM DMS')
+plt.scatter(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_DMS_FC)
+plt.xlabel('TVB/LSNM RS FC')
+plt.ylabel('TVB/LSNM DMS FC')
+
+# fit scatter plot with np.polyfit
+m, b = np.polyfit(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_DMS_FC, 1)
+plt.plot(corr_mat_TVB_LSNM_RS_FC, m*corr_mat_TVB_LSNM_RS_FC + b, '-', color='red')
+
+# calculate correlation coefficient and display it on plot
+r = np.corrcoef(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_DMS_FC)[1,0]
+plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+
+fig.savefig('corr_rs_vs_dms.png')
+
+
+######################################################################
+# Plot correlations between empirical and simulated RS FC
 #####################################################################
-fig=plt.figure('Empirical vs Simulated FC')
+fig=plt.figure('Empirical vs TVB RS FC')
 
 # apply mask to get rid of upper triangle, including main diagonal
 mask = np.tri(tvb_rs_lowres_mean.shape[0], k=0)
 mask = np.transpose(mask)
-new_TVB_RS_FC = np.ma.array(tvb_rs_lowres_mean, mask=mask)    # mask out upper triangle
+new_TVB_RS_FC = np.ma.array(tvb_rs_lowres_mean, mask=mask)           # mask out upper triangle
 empirical_fc_lowres = np.ma.array(empirical_fc_lowres, mask=mask)    # mask out upper triangle
 
 # flatten the numpy cross-correlation matrix
@@ -1727,10 +1853,10 @@ corr_mat_emp_FC = np.ma.ravel(empirical_fc_lowres)
 corr_mat_sim_TVB_RS_FC = np.ma.compressed(corr_mat_sim_TVB_RS_FC)
 corr_mat_emp_FC = np.ma.compressed(corr_mat_emp_FC)
 
-# scatter plot
+# scatter plot Empirical vs TVB RS
 plt.scatter(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)
 plt.xlabel('Empirical FC')
-plt.ylabel('Model FC')
+plt.ylabel('TVB RS FC')
 
 # fit scatter plot with np.polyfit
 m, b = np.polyfit(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC, 1)
@@ -1738,6 +1864,20 @@ plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
 
 # calculate correlation coefficient and display it on plot
 r = np.corrcoef(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)[1,0]
+plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+
+# scatter plot Empirical vs TVB/LSNM RS
+fig=plt.figure('Empirical vs TVB/LSNM RS FC')
+plt.scatter(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)
+plt.xlabel('Empirical FC')
+plt.ylabel('TVB/LSNM RS FC')
+
+# fit scatter plot with np.polyfit
+m, b = np.polyfit(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC, 1)
+plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
+
+# calculate correlation coefficient and display it on plot
+r = np.corrcoef(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)[1,0]
 plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
 
 ###########################################################################
