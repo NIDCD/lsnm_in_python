@@ -56,7 +56,7 @@ from tvb.simulator.plot.tools import mlab
 # build an array of TVB nodes that you want to look at closely to visualize what is
 # connected to what
 # Below are the node numbers for the TVB nodes where visual LSNM modules are embedded
-nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 125]
+nodes_to_be_examined = [345, 393, 413, 47, 74, 41, 111]
 #nodes_to_be_examined = [663]
 # Below are the node numbers for the TVB nodes where auditory LSNM modules are embedded
 #nodes_to_be_examined =[474, 470, 477,44]
@@ -84,7 +84,7 @@ it = [31, -39, -6]
 fs = [47, 19, 9]
 d1 = [43, 29, 21]
 d2 = [42, 39, 2]
-fr = [29, 25, 40] 
+fr = [8, 6, 50] 
 
 # now, define the TVB nodes that are closest to the auditory LSNM module locations above
 #a1 = [51,-24,8]
@@ -99,7 +99,7 @@ centres = white_matter.centres
 # Load one of the cortex 3d surface from TVB data files
 CORTEX = surfaces.Cortex.from_file("cortex_80k/surface_80k.zip")
 
-plot_surface(CORTEX, op=0.08)
+plot_surface(CORTEX, op=0.01)
 
 # Threshold that will tell the visualization script whether to plot a given connection
 # weight or ignore it
@@ -144,7 +144,7 @@ print ' '
 region_centres = mlab.points3d(centres[:, 0], 
                                centres[:, 1], 
                                centres[:, 2],
-                               color=(0.4, 0.4, 0.4),
+                               color=(0.75, 0.75, 0.75),
                                scale_factor = 2.)
 
 
@@ -172,8 +172,8 @@ for tvb_node in nodes_to_be_examined:
         connected = centres[connected_node]
 
         connections = mlab.plot3d(cxn[:, 0], cxn[:, 1], cxn[:, 2],
-                                  color = (1, 1, 1),
-                                  tube_radius=0.1)
+                                  color = (0, 0, 0),
+                                  tube_radius=0.2)
         
         connected = mlab.points3d(connected[0], connected[1], connected[2],
                                 color=(0.75, 0.75, 0.75),

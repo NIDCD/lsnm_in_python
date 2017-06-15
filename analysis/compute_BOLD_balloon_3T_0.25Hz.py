@@ -33,34 +33,31 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (compute_BOLD_balloon_998_regions.py) was created on March 8 2017.
+#   This file (compute_BOLD_balloon_3T_0.25Hz.py) was created on June 15 2017.
 #
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on April 28 2017
+#   Last updated by Antonio Ulloa on June 15 2017
 #
 # **************************************************************************/
 
-# compute_BOLD_balloon_998_regions.py
+# compute_BOLD_balloon_3T_0.25Hz.py
 #
 # Calculate and plot fMRI BOLD signal, using the
 # Balloon model, as described by Stephan et al (2007)
 # and Friston et al (2000), and
 # the BOLD signal model, as described by Stephan et al (2007) and
 # Friston et al (2000).
-# Parameters for both were taken from Friston et al (2000) and they were
-# estimated using a 2T scanner, with a TR of 2 seconds, 
+#
+# Parameters for both are for a 3T scanner (references below), 
 # 
-# ... using data from visual delay-match-to-sample simulation, 998 ROIs from
-# Hagmann's connectome.
-# It also saves the BOLD timeseries for each and all ROIs in a python data file
+# It saves the BOLD timeseries for each and all ROIs in a python data file
 # (*.npy)
 #
 # Finally, the functional connectivity matrix is displayed and saved in a python data file.
-# ... and we also display a histogram of frequencies of correlations. And we calculate
-# and print Fisher's kurtosis and skewness of cross-correlation coefficients.
 #
+# BOLD parameters courtesy of Paul Corbitt
 
 import numpy as np
 
@@ -78,52 +75,49 @@ from matplotlib import cm as CM
 SYN_file  = 'synaptic_in_998_ROIs.npy'
 
 # define the name of the output file where the BOLD timeseries will be stored
-BOLD_file = 'bold_balloon_998_regions.npy'
+BOLD_file = 'bold_balloon_998_regions_3T_0.25Hz.npy'
 
 # define the name of the output file where the cross-correlation matrix will
 # be stored
-xcorr_file = 'xcorr_matrix_998_regions.npy'
+xcorr_file = 'xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-# define balloon model parameters...
-tau_s = 1.5           # rate constant of vasodilatory signal decay in seconds
-                      # from Friston et al, 2000
+# define physiological balloon model parameters...
+tau_s = 1.54           # rate constant of vasodilatory signal decay in seconds
+                      # from Heinzle 2016, p 559 (table 1)
 
-tau_f = 4.5           # Time of flow-dependent elimination or feedback regulation
-                      # in seconds, from Friston et al, 2000
+tau_f = 2.44           # Time of flow-dependent elimination or feedback regulation
+                      # in seconds, from Heinzle 2016, p 559 (text)
 
-alpha = 0.2           # Grubb's vessel stiffness exponent, from Friston et al, 2000
+alpha = 0.32           # Grubb's vessel stiffness exponent, from Heinzle 2016, (text)
 
-tau_0 = 1.0           # Hemodynamic transit time in seconds
-                      # from Friston et al, 2000
+tau_0 = 2.0           # Hemodynamic transit time in seconds
+                      # from Havlisek 2015, p 357 (table 1A)
+                      # also Obata 2004, p 146 (text)
 
 epsilon = 0.1         # efficacy of synaptic activity to induce the signal,
                       # from Friston et al, 2000
-                      
-# define BOLD model parameters for 1.5T
-r_0 = 25.0            # Slope of intravascular relaxation rate (Hz)
-                      # (Obata et al, 2004)
 
-nu_0 = 40.3           # Frequency offset at the outer surface of magnetized
+E_0 = 0.34             # Resting oxygen extraction fraction
+                       # from Heinzle 2016, p 559 (text)
+                       
+
+V_0 = 0.02            # Resting blood volume fraction, from Obata 2004 p 146 (text)
+
+                      
+# define BOLD model parameters for 3T
+r_0 = 108.0            # Slope of intravascular relaxation rate (Hz)
+                      # from Havlicek 2015 p 360 (table 1B)
+
+nu_0 = 80.6           # Frequency offset at the outer surface of magnetized
                       # vessels (Hz) (Obata et al, 2004)
 
-e = 1.43        # Ratio of intra- and extravascular BOLD signal at rest
-                       # (Obata et al, 2004)
+e = 0.47        # Ratio of intra- and extravascular BOLD signal at rest
+                       # from Heinzle 2016 p 569 (text)
 
-V_0 = 0.02            # Resting blood volume fraction, from Friston et al, 2000
-
-E_0 = 0.8             # Resting oxygen extraction fraction (Friston et al, 2000)
-
-TE = 0.040            # Echo time for a 1.5T scanner (Friston et al, 2000)
-
-# calculate ratio of intra- and extravascular BOLD signal at rest
-#mu_epsilon = 1.0
-#nu_epsilon = 
-#epsilon = mu_epsilon * exp(nu_epsilon)
+TE = 0.030            # Echo time for a 3T scanner
+                      # Heinzle 2016 p 569 (text)
 
 # calculate BOLD model coefficients, from Friston et al (2000)
-#k1 = 7.0 * E_0
-#k2 = 2.0
-#k3 = 2.0 * E_0 - 0.2 
 k1 = 4.3 * nu_0 * E_0 * TE
 k2 = e * r_0 * E_0 * TE
 k3 = 1.0 - epsilon

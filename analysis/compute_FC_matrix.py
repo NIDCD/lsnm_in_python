@@ -54,24 +54,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define the name of the input file where the BOLD timeseries are stored
-BOLD_file = 'subject_12/output.DMSTask_incl_PreSMA/bold_balloon_998_regions.npy'
+BOLD_file = 'subject_12/output.Fixation_incl_PreSMA/bold_balloon_998_regions.npy'
 
 # define the name of the labels corresponding to Yeo's 7-network parcellation
 labels_file = 'hagmann_Yeo_parc_labels.npy'
 
 # define the name of the output file where the cross-correlation matrix will
 # be stored
-fc_file = 'fc_matrix_998_regions_Yeo__parc.npy'
+fc_file = 'fc_matrix_998_regions_Yeo_parc.npy'
 
 # define Yeo parcellation networks
 Yeo_parc_networks = [7,       # DMN
                      0,       # medial wall 
                      5,       # limbic
                      4,       # ventral attention
-                     6,       # frontoparietal
+                     6,       # frontoparietal control
                      3,       # dorsal attention
                      2,       # somatomotor
                      1]       # visual
+
+# define names of Yeo networks
+Yeo_parc_names = ['Medial wall',
+                  'Visual',
+                  'Somatomotor',
+                  'Dorsal att',
+                  'Ventral att',
+                  'Limbic',
+                  'Frontoparietal',
+                  'Default']
 
 
 # open both files, timeseries and labels
@@ -110,6 +120,7 @@ fc_matrix = np.corrcoef(final_bold)
 print 'Number of ROIs: ', final_bold.shape
 print 'Shape of correlation matrix: ', fc_matrix.shape
 
+
 # fill diagonals of FC matrix with zeros
 np.fill_diagonal(fc_matrix, 0)
 
@@ -118,6 +129,41 @@ np.save(fc_file, fc_matrix)
 
 print 'Max correlation is: ', np.amax(fc_matrix)
 print 'Min correlation is: ', np.amin(fc_matrix)
+
+# compute average BOLD within each one of Yeo's brain networks
+ts_length = final_bold.shape[1]
+BOLD_avg = np.zeros([len(Yeo_parc_networks), ts_length])
+PSC = np.zeros([len(Yeo_parc_networks), ts_length])
+current_psc = np.zeros(ts_length)
+for idx in range(1, len(Yeo_parc_networks)):
+
+    print 'Compute average BOLD for each one of Yeos networks'
+
+    network_loc = np.where(final_labels==idx)
+    network_size = network_loc[0].size
+
+    print 'Network ', idx, ' (', Yeo_parc_names[idx], ') contains ', network_size, ' nodes'
+
+    BOLD_avg[idx] = np.mean(final_bold[network_loc[0]], axis=0)   # average bold signal across nodes within network
+
+    timecourse_mean = np.mean(BOLD_avg[idx])                      # compute timecourse mean
+    PSC[idx] = BOLD_avg[idx] / timecourse_mean * 100. - 100.      # convert bold to percent signal change
+
+    current_psc = PSC[idx]
+
+    psc_mean = 0
+    for timepoint in current_psc:
+        psc_mean = psc_mean + timepoint
+    psc_mean = psc_mean / float(len(current_psc))
+    
+    print 'Mean PSC of ', Yeo_parc_names[idx], ' is ', psc_mean
+
+
+# plot PSC of each one of Yeo's networks
+fig = plt.figure('PSC')
+ax = fig.add_subplot(111)
+for idx in range(1, len(Yeo_parc_networks)):
+    cax = ax.plot(PSC[idx])
 
 # plot FC matrix as a heatmap
 fig = plt.figure('FC matrix')
