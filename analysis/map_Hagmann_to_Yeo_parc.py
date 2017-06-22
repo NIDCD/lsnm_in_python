@@ -104,6 +104,14 @@ annot_path_lh = pjoin(subjects_dir, subject_id, 'label', 'lh.Yeo2011_7Networks_N
 labels_rh, ctab_rh, names_rh = nib.freesurfer.read_annot(annot_path_rh)
 labels_lh, ctab_lh, names_lh = nib.freesurfer.read_annot(annot_path_lh)
 
+# get rid of all vertices with label zero (medial wall) as we are not interested in finding membership
+# of hagmann nodes to the "median wall"
+rh_vert = rh_vert[labels_rh != 0]           # get rid of vertices labeled as zero (RH)
+labels_rh = labels_rh[labels_rh != 0]     # get rid of zero labels from labels array (RH)
+lh_vert = lh_vert[labels_lh != 0]           # get rid of vertices labeled as zero (LH) 
+labels_lh = labels_lh[labels_lh != 0]       # get rid of zero labels from labels array (LH)
+
+
 print 'Size of labels array (RH) is: ', labels_rh.shape
 print 'ctab (RH): ', ctab_rh
 print 'Names (RH): ', names_rh

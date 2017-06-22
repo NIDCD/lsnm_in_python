@@ -54,7 +54,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define the name of the input file where the BOLD timeseries are stored
-BOLD_file = 'subject_12/output.Fixation_incl_PreSMA/bold_balloon_998_regions.npy'
+BOLD_file = 'subject_12/output.DMSTask_incl_PreSMA/bold_balloon_998_regions_3T_0.25Hz.npy'
 
 # define the name of the labels corresponding to Yeo's 7-network parcellation
 labels_file = 'hagmann_Yeo_parc_labels.npy'
@@ -156,14 +156,12 @@ for idx in range(1, len(Yeo_parc_networks)):
         psc_mean = psc_mean + timepoint
     psc_mean = psc_mean / float(len(current_psc))
     
-    print 'Mean PSC of ', Yeo_parc_names[idx], ' is ', psc_mean
 
-
-# plot PSC of each one of Yeo's networks
+# plot averaged BOLD fMRI of each one of Yeo's networks
 fig = plt.figure('PSC')
 ax = fig.add_subplot(111)
 for idx in range(1, len(Yeo_parc_networks)):
-    cax = ax.plot(PSC[idx])
+    cax = ax.plot(BOLD_avg[idx])
 
 # plot FC matrix as a heatmap
 fig = plt.figure('FC matrix')

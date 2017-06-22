@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on June 4 2017
+#   Last updated by Antonio Ulloa on June 17 2017
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 #   Also based on Python2.7 tutorials
@@ -237,38 +237,38 @@ TVB_RS_subj8  = 'subject_tvb/output.RestingState_08/xcorr_matrix_998_regions.npy
 TVB_RS_subj9  = 'subject_tvb/output.RestingState_09/xcorr_matrix_998_regions.npy'
 TVB_RS_subj10 = 'subject_tvb/output.RestingState_10/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-TVB_LSNM_PV_subj1  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj3  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj4  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj5  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj6  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj7  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj8  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj9  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_PV_subj10 = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj1  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj3  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj4  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj5  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj6  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj7  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj8  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj9  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj10 = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
-TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
 # number of randomly generated functional connectiviy matrices to be generated. These FC matrices
 # will be used to compare against actual FC matrices. Used 20 found in the graph theory literature.
@@ -778,22 +778,22 @@ for d in range(num_of_densities):
     tvb_lsnm_dms_hr_bin[d] = bct.binarize(tvb_lsnm_dms_p, copy=True)
 
     # calculate global efficiency for each condition using Brain Connectivity Toolbox
-    EMP_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(emp_rs_bin[d])  
-    TVB_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(tvb_rs_bin[d]) 
+#    EMP_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(emp_rs_bin[d])  
+#    TVB_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(tvb_rs_bin[d]) 
     TVB_LSNM_RS_EFFICIENCY_G[d] = bct.efficiency_bin(tvb_lsnm_rs_bin[d]) 
     TVB_LSNM_PV_EFFICIENCY_G[d] = bct.efficiency_bin(tvb_lsnm_pv_bin[d])
     TVB_LSNM_DMS_EFFICIENCY_G[d]= bct.efficiency_bin(tvb_lsnm_dms_bin[d]) 
 
     # calculate mean local efficiency for each condition using Brain Connectivity Toolbox
-    EMP_RS_EFFICIENCY_L[d]      = np.mean(bct.efficiency_bin(emp_rs_bin[d], local=True))  
-    TVB_RS_EFFICIENCY_L[d]      = np.mean(bct.efficiency_bin(tvb_rs_bin[d], local=True)) 
-    TVB_LSNM_RS_EFFICIENCY_L[d] = np.mean(bct.efficiency_bin(tvb_lsnm_rs_bin[d], local=True)) 
-    TVB_LSNM_PV_EFFICIENCY_L[d] = np.mean(bct.efficiency_bin(tvb_lsnm_pv_bin[d], local=True))
-    TVB_LSNM_DMS_EFFICIENCY_L[d]= np.mean(bct.efficiency_bin(tvb_lsnm_dms_bin[d], local=True)) 
+#    EMP_RS_EFFICIENCY_L[d]      = np.mean(bct.efficiency_bin(emp_rs_bin[d], local=True))  
+#    TVB_RS_EFFICIENCY_L[d]      = np.mean(bct.efficiency_bin(tvb_rs_bin[d], local=True)) 
+#    TVB_LSNM_RS_EFFICIENCY_L[d] = np.mean(bct.efficiency_bin(tvb_lsnm_rs_bin[d], local=True)) 
+#    TVB_LSNM_PV_EFFICIENCY_L[d] = np.mean(bct.efficiency_bin(tvb_lsnm_pv_bin[d], local=True))
+#    TVB_LSNM_DMS_EFFICIENCY_L[d]= np.mean(bct.efficiency_bin(tvb_lsnm_dms_bin[d], local=True)) 
         
     # calculate mean clustering coefficient using Brain Connectivity Toolbox
-    EMP_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(emp_rs_bin[d]))
-    TVB_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(tvb_rs_bin[d]))
+#    EMP_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(emp_rs_bin[d]))
+#    TVB_RS_CLUSTERING[d]      = np.mean(bct.clustering_coef_bu(tvb_rs_bin[d]))
     TVB_LSNM_RS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_rs_bin[d]))
     TVB_LSNM_PV_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_pv_bin[d]))
     TVB_LSNM_DMS_CLUSTERING[d] = np.mean(bct.clustering_coef_bu(tvb_lsnm_dms_bin[d]))
@@ -805,44 +805,44 @@ for d in range(num_of_densities):
 #    tvb_lsnm_rs_bin_dist  = bct.distance_bin(tvb_lsnm_rs_bin[d])
 #    tvb_lsnm_pv_bin_dist  = bct.distance_bin(tvb_lsnm_pv_bin[d])
 #    tvb_lsnm_dms_bin_dist = bct.distance_bin(tvb_lsnm_dms_bin[d])
-    EMP_RS_CHARPATH[d]       = 1. / EMP_RS_EFFICIENCY_G[d]              #bct.charpath(emp_rs_bin_dist)[0]
-    TVB_RS_CHARPATH[d]       = 1. / TVB_RS_EFFICIENCY_G[d]              #bct.charpath(tvb_rs_bin_dist)[0]
-    TVB_LSNM_RS_CHARPATH[d]  = 1. / TVB_LSNM_RS_EFFICIENCY_G[d]         #bct.charpath(tvb_lsnm_rs_bin_dist)[0]
-    TVB_LSNM_PV_CHARPATH[d]  = 1. / TVB_LSNM_PV_EFFICIENCY_G[d]         #bct.charpath(tvb_lsnm_pv_bin_dist)[0]
-    TVB_LSNM_DMS_CHARPATH[d] = 1. / TVB_LSNM_DMS_EFFICIENCY_G[d]        #bct.charpath(tvb_lsnm_dms_bin_dist)[0]
+#    EMP_RS_CHARPATH[d]       = 1. / EMP_RS_EFFICIENCY_G[d]              #bct.charpath(emp_rs_bin_dist)[0]
+#    TVB_RS_CHARPATH[d]       = 1. / TVB_RS_EFFICIENCY_G[d]              #bct.charpath(tvb_rs_bin_dist)[0]
+#    TVB_LSNM_RS_CHARPATH[d]  = 1. / TVB_LSNM_RS_EFFICIENCY_G[d]         #bct.charpath(tvb_lsnm_rs_bin_dist)[0]
+#    TVB_LSNM_PV_CHARPATH[d]  = 1. / TVB_LSNM_PV_EFFICIENCY_G[d]         #bct.charpath(tvb_lsnm_pv_bin_dist)[0]
+#    TVB_LSNM_DMS_CHARPATH[d] = 1. / TVB_LSNM_DMS_EFFICIENCY_G[d]        #bct.charpath(tvb_lsnm_dms_bin_dist)[0]
     
     # calculate average eigenvector centrality using Brain Connectivity Toolbox
-    EMP_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(emp_rs_bin[d]))
-    TVB_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(tvb_rs_bin[d]))
-    TVB_LSNM_RS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_rs_bin[d]))
-    TVB_LSNM_PV_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_pv_bin[d]))
-    TVB_LSNM_DMS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_dms_bin[d]))
+#    EMP_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(emp_rs_bin[d]))
+#    TVB_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(tvb_rs_bin[d]))
+#    TVB_LSNM_RS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_rs_bin[d]))
+#    TVB_LSNM_PV_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_pv_bin[d]))
+#    TVB_LSNM_DMS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_dms_bin[d]))
 
     # calculate average betweennes centrality using Brain Connectivity Toolbox
     # Note that we normalize the betweennes centrality prior to averaging
-    EMP_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(emp_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
-    TVB_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(tvb_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
-    TVB_LSNM_RS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
-    TVB_LSNM_PV_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_pv_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
-    TVB_LSNM_DMS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_dms_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
+#    EMP_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(emp_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
+#    TVB_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(tvb_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
+#    TVB_LSNM_RS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
+#    TVB_LSNM_PV_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_pv_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
+#    TVB_LSNM_DMS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_bin(tvb_lsnm_dms_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
 
     # calculate average participation coefficient using Brain Connectivity Toolbox
-    EMP_RS_PARTICIPATION[d]      = np.mean(bct.participation_coef(emp_rs_bin[d], CI, degree='undirected'))
-    TVB_RS_PARTICIPATION[d]      = np.mean(bct.participation_coef(tvb_rs_bin[d], CI, degree='undirected'))
-    TVB_LSNM_RS_PARTICIPATION[d] = np.mean(bct.participation_coef(tvb_lsnm_rs_bin[d], CI, degree='undirected'))
-    TVB_LSNM_PV_PARTICIPATION[d] = np.mean(bct.participation_coef(tvb_lsnm_pv_bin[d], CI, degree='undirected'))
-    TVB_LSNM_DMS_PARTICIPATION[d]= np.mean(bct.participation_coef(tvb_lsnm_dms_bin[d], CI, degree='undirected'))
+#    EMP_RS_PARTICIPATION[d]      = np.mean(bct.participation_coef(emp_rs_bin[d], CI, degree='undirected'))
+#    TVB_RS_PARTICIPATION[d]      = np.mean(bct.participation_coef(tvb_rs_bin[d], CI, degree='undirected'))
+#    TVB_LSNM_RS_PARTICIPATION[d] = np.mean(bct.participation_coef(tvb_lsnm_rs_bin[d], CI, degree='undirected'))
+#    TVB_LSNM_PV_PARTICIPATION[d] = np.mean(bct.participation_coef(tvb_lsnm_pv_bin[d], CI, degree='undirected'))
+#    TVB_LSNM_DMS_PARTICIPATION[d]= np.mean(bct.participation_coef(tvb_lsnm_dms_bin[d], CI, degree='undirected'))
 
 
     
     # calculate modularity using Brain Connectivity Toolbox
-    emp_modularity             = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)
-    tvb_rs_modularity          = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)
+#    emp_modularity             = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)
+#    tvb_rs_modularity          = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)
     tvb_lsnm_rs_modularity     = bct.modularity_und(tvb_lsnm_rs_bin[d], gamma=1, kci=None)
     tvb_lsnm_pv_modularity     = bct.modularity_und(tvb_lsnm_pv_bin[d], gamma=1, kci=None)
     tvb_lsnm_dms_modularity    = bct.modularity_und(tvb_lsnm_dms_bin[d], gamma=1, kci=None)
-    EMP_RS_MODULARITY[d]       = emp_modularity[1]
-    TVB_RS_MODULARITY[d]       = tvb_rs_modularity[1]
+#    EMP_RS_MODULARITY[d]       = emp_modularity[1]
+#    TVB_RS_MODULARITY[d]       = tvb_rs_modularity[1]
     TVB_LSNM_RS_MODULARITY[d]  = tvb_lsnm_rs_modularity[1]
     TVB_LSNM_PV_MODULARITY[d]  = tvb_lsnm_pv_modularity[1]
     TVB_LSNM_DMS_MODULARITY[d] = tvb_lsnm_dms_modularity[1]
@@ -936,39 +936,43 @@ for d in range(num_of_densities):
 # generate a number of random matrices corresponding to each density threshold, to be used
 # to normalize network metrics. The randomized matrices have same number of nodes and edges
 # as the corresponding matrices in each density threshold.
-rnd_clustering = np.zeros((num_random, num_of_densities))
-rnd_eff_G   = np.zeros((num_random, num_of_densities))
+#rnd_clustering = np.zeros((num_random, num_of_densities))
+#rnd_eff_G   = np.zeros((num_random, num_of_densities))
 
 print '\n Finished calculating graph metrics...'
 
-rand_mat = np.random.rand(num_random, lores_ROIs, lores_ROIs)
-for r in range(0, num_random):
-
-    rand_symm = (rand_mat[r] + rand_mat[r].T) / 2         # make it symmetrical
-    np.fill_diagonal(rand_symm, 1.0)                      # fill diagonal with 1's
-
-    for d in range(0, num_of_densities):
-
-        rand_p=bct.threshold_proportional(rand_symm, threshold_array[d], copy=True) # threshold random matrix
-        rand_bin=bct.binarize(rand_p, copy=True)                                    # binarize random matrix
-        
-        rnd_clustering[r, d] = np.mean(bct.clustering_coef_bu(rand_bin))
-        rnd_eff_G[r, d] = bct.efficiency_bin(rand_bin)
-
+#rand_mat = np.random.rand(num_random, hires_ROIs, hires_ROIs)
+#for r in range(0, num_random):
+#
+#    rand_symm = (rand_mat[r] + rand_mat[r].T) / 2         # make it symmetrical
+#    np.fill_diagonal(rand_symm, 1.0)                      # fill diagonal with 1's
+#
+#    for d in range(0, num_of_densities):
+#
+#        rand_p=bct.threshold_proportional(rand_symm, threshold_array[d], copy=True) # threshold random matrix
+#        rand_bin=bct.binarize(rand_p, copy=True)                                    # binarize random matrix
+#        
+#        rnd_clustering[r, d] = np.mean(bct.clustering_coef_bu(rand_bin))
+#        rnd_eff_G[r, d] = bct.efficiency_bin(rand_bin)
+#
 # calculate the average network metric for each density threshold across all random matrices
-clustering_mean = np.mean(rnd_clustering, axis=0)
-eff_G_mean_R = np.mean(rnd_eff_G, axis=0)
+#clustering_mean = np.mean(rnd_clustering, axis=0)
+#eff_G_mean_R = np.mean(rnd_eff_G, axis=0)
 # normalize the network metrics that depend on density
 # number of nodes and connections and same node distribution
-for d in range(0, num_of_densities):
-
+#for d in range(0, num_of_densities):
+#
     # calculate small-worldness (ratio between normalized clustering coefficient and
     # normalized characteristic path length)
-    EMP_RS_SMALL_WORLDNESS[d] = (EMP_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / EMP_RS_EFFICIENCY_G[d])
-    TVB_RS_SMALL_WORLDNESS[d] = (TVB_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_RS_EFFICIENCY_G[d]) 
-    TVB_LSNM_RS_SMALL_WORLDNESS[d] = (TVB_LSNM_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_RS_EFFICIENCY_G[d])
-    TVB_LSNM_PV_SMALL_WORLDNESS[d] = (TVB_LSNM_PV_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_PV_EFFICIENCY_G[d])
-    TVB_LSNM_DMS_SMALL_WORLDNESS[d] = (TVB_LSNM_DMS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_DMS_EFFICIENCY_G[d])
+#    EMP_RS_SMALL_WORLDNESS[d] = (EMP_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / EMP_RS_EFFICIENCY_G[d])
+#    TVB_RS_SMALL_WORLDNESS[d] = (TVB_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_RS_EFFICIENCY_G[d]) 
+#    TVB_LSNM_RS_SMALL_WORLDNESS[d] = (TVB_LSNM_RS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_RS_EFFICIENCY_G[d])
+#    TVB_LSNM_PV_SMALL_WORLDNESS[d] = (TVB_LSNM_PV_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_PV_EFFICIENCY_G[d])
+#    TVB_LSNM_DMS_SMALL_WORLDNESS[d] = (TVB_LSNM_DMS_CLUSTERING[d] /clustering_mean[d]) / (eff_G_mean_R[d] / TVB_LSNM_DMS_EFFICIENCY_G[d])
+#
+#    TVB_LSNM_RS_EFFICIENCY_G[d] = TVB_LSNM_RS_EFFICIENCY_G[d] / eff_G_mean_R[d]
+#    TVB_LSNM_PV_EFFICIENCY_G[d] = TVB_LSNM_PV_EFFICIENCY_G[d] / eff_G_mean_R[d]
+#    TVB_LSNM_DMS_EFFICIENCY_G[d] = TVB_LSNM_DMS_EFFICIENCY_G[d] / eff_G_mean_R[d]
 
     
 # calculate nodal degree using BCT
@@ -999,141 +1003,141 @@ for d in range(0, num_of_densities):
 # Display heatmaps of all low-res FC matrices, weighted and binarized,
 # empirical and simulated for all conditions
 ###############################################################################
-fig = plt.figure('Mean TVB-only RS FC')
-ax = fig.add_subplot(111)
+#fig = plt.figure('Mean TVB-only RS FC')
+#ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(tvb_rs_lowres_mean, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('mean_tvb_only_rs_fc.png')
+#cmap = CM.get_cmap('jet', 10)
+#cax = ax.imshow(tvb_rs_lowres_mean, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('mean_tvb_only_rs_fc.png')
 
 fig = plt.figure('Mean TVB/LSNM RS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
+cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
-fig.savefig('mean_tvb_lsnm_rs_fc.png')
+fig.savefig('mean_tvb_lsnm_rs_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-0.6, vmax=0.6, interpolation='nearest', cmap='bwr')
+cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
-fig.savefig('mean_tvb_lsnm_pv_fc.png')
+fig.savefig('mean_tvb_lsnm_pv_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-0.6, vmax=0.6, interpolation='nearest', cmap='bwr')
+cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
-fig.savefig('mean_tvb_lsnm_dms_fc.png')
+fig.savefig('mean_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 
-fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
-ax = fig.add_subplot(111)
-empirical_fc_hires = np.asarray(empirical_fc_hires)
-cax = ax.imshow(empirical_fc_lowres, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('empirical_rs_fc.png')
+#fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
+#ax = fig.add_subplot(111)
+#empirical_fc_hires = np.asarray(empirical_fc_hires)
+#cax = ax.imshow(empirical_fc_lowres, vmin=-0.5, vmax=0.5, interpolation='nearest', cmap='bwr')
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('empirical_rs_fc.png')
 
-fig = plt.figure('Mean TVB-only RS FC (binary at 35% sparsity)')
-ax = fig.add_subplot(111)
+#fig = plt.figure('Mean TVB-only RS FC (binary at 40% sparsity)')
+#ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(tvb_rs_bin[-1], interpolation='nearest', cmap='Greys')
-ax.grid(False)
-fig.savefig('binary_tvb_only_rs_fc.png')
+#cax = ax.imshow(tvb_rs_bin[-1], interpolation='nearest', cmap='Greys')
+#ax.grid(False)
+#fig.savefig('binary_tvb_only_rs_fc.png')
 
-fig = plt.figure('Mean TVB/LSNM RS FC (binarized at 35% sparsity)')
+fig = plt.figure('Mean TVB/LSNM RS FC (binarized at 40% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_rs_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
-fig.savefig('binary_tvb_lsnm_rs_fc.png')
+fig.savefig('binary_tvb_lsnm_rs_fc_incl_PreSMA_Fixation.png')
 
-fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 35% sparsity)')
+fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 40% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_pv_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
-fig.savefig('binary_tvb_lsnm_pv_fc.png')
+fig.savefig('binary_tvb_lsnm_pv_fc_incl_PreSMA_Fixation.png')
 
-fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 35% sparsity)')
+fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 40% sparsity)')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_dms_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
-fig.savefig('binary_tvb_lsnm_dms_fc.png')
+fig.savefig('binary_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 
-fig = plt.figure('Empirical RS FC matrix (binarized at 35% sparsity)')
-ax = fig.add_subplot(111)
+#fig = plt.figure('Empirical RS FC matrix (binarized at 40% sparsity)')
+#ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
-cax = ax.imshow(emp_rs_bin[-1], interpolation='nearest', cmap='Greys')
-ax.grid(False)
-fig.savefig('binary_empirical_fc.png')
+#cax = ax.imshow(emp_rs_bin[-1], interpolation='nearest', cmap='Greys')
+#ax.grid(False)
+#fig.savefig('binary_empirical_fc.png')
 
 ####################################################################################
 # Display heatmaps showing differences between PV and RS, DMS and RS
 ####################################################################################
-fig = plt.figure('TVB/LSNM PV - TVB/LSNM RS')
-ax = fig.add_subplot(111)
+#fig = plt.figure('TVB/LSNM PV - TVB/LSNM RS')
+#ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 #cax = ax.imshow(pv_minus_rs, vmin=FC_min, vmax=FC_max, interpolation='nearest', cmap='OrRd')
-cax = ax.imshow(pv_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('pv_minus_rs.png')
-
+#cax = ax.imshow(pv_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('pv_minus_rs.png')
+#
 # change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
-
+#plt.xticks(np.arange(0, len(labels)))
+#plt.yticks(np.arange(0, len(labels)))
+#
 # decrease font size
 #plt.rcParams.update({'font.size': 9})
-
+#
 # display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
-
+#ax.set_xticklabels(labels, rotation=90)
+#ax.set_yticklabels(labels)
+#
 # Turn off all the ticks
-ax = plt.gca()
-
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-
-fig = plt.figure('TVB/LSNM DMS - TVB/LSNM RS')
-ax = fig.add_subplot(111)
+#ax = plt.gca()
+#
+#for t in ax.xaxis.get_major_ticks():
+#    t.tick1On = False
+#    t.tick2On = False
+#for t in ax.yaxis.get_major_ticks():
+#    t.tick1On = False
+#    t.tick2On = False
+#
+#fig = plt.figure('TVB/LSNM DMS - TVB/LSNM RS')
+#ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 #cax = ax.imshow(dms_minus_rs, vmin=FC_min, vmax=FC_max, interpolation='nearest', cmap='OrRd')
-cax = ax.imshow(dms_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('dms_minus_rs.png')
-
+#cax = ax.imshow(dms_minus_rs, vmin=-0.26, vmax=0.26, interpolation='nearest', cmap='bwr')
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('dms_minus_rs.png')
+#
 # change frequency of ticks to match number of ROI labels
-plt.xticks(np.arange(0, len(labels)))
-plt.yticks(np.arange(0, len(labels)))
-
+#plt.xticks(np.arange(0, len(labels)))
+#plt.yticks(np.arange(0, len(labels)))
+#
 # display labels for brain regions
-ax.set_xticklabels(labels, rotation=90)
-ax.set_yticklabels(labels)
-
+#ax.set_xticklabels(labels, rotation=90)
+#ax.set_yticklabels(labels)
+#
 # Turn off all the ticks
-ax = plt.gca()
-
-for t in ax.xaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
-for t in ax.yaxis.get_major_ticks():
-    t.tick1On = False
-    t.tick2On = False
+#ax = plt.gca()
+#
+#for t in ax.xaxis.get_major_ticks():
+#    t.tick1On = False
+#    t.tick2On = False
+#for t in ax.yaxis.get_major_ticks():
+#    t.tick1On = False
+#    t.tick2On = False
 
 #################################################################################
 # Plot correlation coefficients for using designated seeds found in RS literature
@@ -1186,98 +1190,98 @@ for t in ax.yaxis.get_major_ticks():
 ####################################################################################
 # Display graph theory metrics of RS empirical vs simulated all sparsity thresholds
 ####################################################################################
-fig = plt.figure('Global Efficiency during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_EFFICIENCY_G, label='Empirical')
-plt.plot(threshold_array, TVB_RS_EFFICIENCY_G, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_G, label='TVB/LSNM RS')
+#fig = plt.figure('Global Efficiency during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_EFFICIENCY_G, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_EFFICIENCY_G, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_G, label='TVB/LSNM RS')
 #plt.plot(threshold_array, RAND_MAT_EFFICIENCY, label='Random')
-plt.xlabel('Threshold')
-plt.ylabel('Mean Global Efficiency')
-plt.legend(loc='best')
-fig.savefig('emp_sim_global_efficiency_across_thresholds.png')
+#plt.xlabel('Threshold')
+#plt.ylabel('Mean Global Efficiency')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_global_efficiency_across_thresholds.png')
 
-fig = plt.figure('Mean Local Efficiency during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_EFFICIENCY_L, label='Empirical')
-plt.plot(threshold_array, TVB_RS_EFFICIENCY_L, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_L, label='TVB/LSNM RS')
-plt.xlabel('Density threshold')
-plt.ylabel('Mean Local Efficiency')
-plt.legend(loc='best')
-fig.savefig('emp_sim_mean_local_efficiencies_across_densities.png')
+#fig = plt.figure('Mean Local Efficiency during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_EFFICIENCY_L, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_EFFICIENCY_L, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_L, label='TVB/LSNM RS')
+#plt.xlabel('Density threshold')
+#plt.ylabel('Mean Local Efficiency')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_mean_local_efficiencies_across_densities.png')
 
-fig = plt.figure('Mean Clustering Coefficient during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_CLUSTERING, label='Empirical')
-plt.plot(threshold_array, TVB_RS_CLUSTERING, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_CLUSTERING, label='TVB/LSNM RS')
+#fig = plt.figure('Mean Clustering Coefficient during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_CLUSTERING, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_CLUSTERING, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_CLUSTERING, label='TVB/LSNM RS')
 #plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Random')
-plt.xlabel('Threshold')
-plt.ylabel('Mean Clustering')
-plt.legend(loc='best')
-fig.savefig('emp_sim_clustering_across_thresholds.png')
+#plt.xlabel('Threshold')
+#plt.ylabel('Mean Clustering')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_clustering_across_thresholds.png')
 
-fig = plt.figure('Modularity during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_MODULARITY, label='Empirical')
-plt.plot(threshold_array, TVB_RS_MODULARITY, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_MODULARITY, label='TVB/LSNM RS')
+#fig = plt.figure('Modularity during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_MODULARITY, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_MODULARITY, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_MODULARITY, label='TVB/LSNM RS')
 #plt.plot(threshold_array, RAND_MAT_CLUSTERING, label='Random')
-plt.xlabel('Density threshold')
-plt.ylabel('Modularity')
-plt.legend(loc='best')
-fig.savefig('emp_sim_modularity_across_thresholds.png')
+#plt.xlabel('Density threshold')
+#plt.ylabel('Modularity')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_modularity_across_thresholds.png')
 
-fig = plt.figure('Characteristic path length during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_CHARPATH, label='Empirical')
-plt.plot(threshold_array, TVB_RS_CHARPATH, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_CHARPATH, label='TVB/LSNM RS')
-plt.xlabel('Threshold')
-plt.ylabel('Characteristic Path Length')
-plt.legend(loc='best')
-fig.savefig('emp_sim_charpath_across_thresholds.png')
+#fig = plt.figure('Characteristic path length during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_CHARPATH, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_CHARPATH, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_CHARPATH, label='TVB/LSNM RS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Characteristic Path Length')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_charpath_across_thresholds.png')
 
-fig = plt.figure('Average Eigenvector Centrality during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_EIGEN_CENTRALITY, label='Empirical')
-plt.plot(threshold_array, TVB_RS_EIGEN_CENTRALITY, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_EIGEN_CENTRALITY, label='TVB/LSNM RS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Eigenvector Centrality')
-plt.legend(loc='best')
-fig.savefig('emp_sim_eigen_centrality_across_thresholds.png')
+#fig = plt.figure('Average Eigenvector Centrality during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_EIGEN_CENTRALITY, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_EIGEN_CENTRALITY, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_EIGEN_CENTRALITY, label='TVB/LSNM RS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Eigenvector Centrality')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_eigen_centrality_across_thresholds.png')
 
-fig = plt.figure('Average Betweennes Centrality during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_BTW_CENTRALITY, label='Empirical')
-plt.plot(threshold_array, TVB_RS_BTW_CENTRALITY, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_BTW_CENTRALITY, label='TVB/LSNM RS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Betweennes Centrality')
-plt.legend(loc='best')
-fig.savefig('emp_sim_btwn_centrality_across_thresholds.png')
+#fig = plt.figure('Average Betweennes Centrality during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_BTW_CENTRALITY, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_BTW_CENTRALITY, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_BTW_CENTRALITY, label='TVB/LSNM RS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Betweennes Centrality')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_btwn_centrality_across_thresholds.png')
 
-fig = plt.figure('Average Participation Coefficient during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_PARTICIPATION, label='Empirical')
-plt.plot(threshold_array, TVB_RS_PARTICIPATION, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_PARTICIPATION, label='TVB/LSNM RS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Participation Coefficient')
-plt.legend(loc='best')
-fig.savefig('emp_sim_participation_across_thresholds.png')
+#fig = plt.figure('Average Participation Coefficient during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_PARTICIPATION, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_PARTICIPATION, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_PARTICIPATION, label='TVB/LSNM RS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Participation Coefficient')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_participation_across_thresholds.png')
 
-fig = plt.figure('Small Worldness during RS')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, EMP_RS_SMALL_WORLDNESS, label='Empirical')
-plt.plot(threshold_array, TVB_RS_SMALL_WORLDNESS, label='TVB RS')
-plt.plot(threshold_array, TVB_LSNM_RS_SMALL_WORLDNESS, label='TVB/LSNM RS')
-plt.xlabel('Threshold')
-plt.ylabel('Small Worldness')
-plt.legend(loc='best')
-fig.savefig('emp_sim_small_worldness_across_thresholds.png')
+#fig = plt.figure('Small Worldness during RS')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, EMP_RS_SMALL_WORLDNESS, label='Empirical')
+#plt.plot(threshold_array, TVB_RS_SMALL_WORLDNESS, label='TVB RS')
+#plt.plot(threshold_array, TVB_LSNM_RS_SMALL_WORLDNESS, label='TVB/LSNM RS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Small Worldness')
+#plt.legend(loc='best')
+#fig.savefig('emp_sim_small_worldness_across_thresholds.png')
 
 ####################################################################################
 # Display graph theory metrics of RS, PV, DMS for all sparsity thresholds
@@ -1293,15 +1297,15 @@ plt.ylabel('Mean Global Efficiency')
 plt.legend(loc='best')
 fig.savefig('rs_pv_dms_global_efficiency_across_thresholds.png')
 
-fig = plt.figure('Mean Local Efficiency')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_L, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_EFFICIENCY_L, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_EFFICIENCY_L, label='TVB/LSNM DMS')
-plt.xlabel('Density threshold')
-plt.ylabel('Mean Local Efficiency')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_mean_local_efficiencies_across_densities.png')
+#fig = plt.figure('Mean Local Efficiency')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_EFFICIENCY_L, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_EFFICIENCY_L, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_EFFICIENCY_L, label='TVB/LSNM DMS')
+#plt.xlabel('Density threshold')
+#plt.ylabel('Mean Local Efficiency')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_mean_local_efficiencies_across_densities.png')
 
 fig = plt.figure('Mean Clustering Coefficient')
 cax = fig.add_subplot(111)
@@ -1336,55 +1340,55 @@ fig.savefig('rs_pv_dms_modularity_across_thresholds.png')
 #plt.legend(loc='best')
 #fig.savefig('rs_pv_dms_bw_ratio_across_thresholds.png')
 
-fig = plt.figure('Characteristic path length of a range of densities')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_CHARPATH, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_CHARPATH, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_CHARPATH, label='TVB/LSNM DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Characteristic Path Length')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_charpath_across_thresholds.png')
+#fig = plt.figure('Characteristic path length of a range of densities')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_CHARPATH, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_CHARPATH, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_CHARPATH, label='TVB/LSNM DMS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Characteristic Path Length')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_charpath_across_thresholds.png')
 
-fig = plt.figure('Average Eigenvector Centrality for a range of densities')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_EIGEN_CENTRALITY, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_EIGEN_CENTRALITY, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_EIGEN_CENTRALITY, label='TVB/LSNM DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Eigenvector Centrality')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_eigen_centrality_across_thresholds.png')
+#fig = plt.figure('Average Eigenvector Centrality for a range of densities')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_EIGEN_CENTRALITY, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_EIGEN_CENTRALITY, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_EIGEN_CENTRALITY, label='TVB/LSNM DMS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Eigenvector Centrality')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_eigen_centrality_across_thresholds.png')
 
-fig = plt.figure('Average Betweennes Centrality for a range of densities')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_BTW_CENTRALITY, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_BTW_CENTRALITY, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_BTW_CENTRALITY, label='TVB/LSNM DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Betweennes Centrality')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_btwn_centrality_across_thresholds.png')
+#fig = plt.figure('Average Betweennes Centrality for a range of densities')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_BTW_CENTRALITY, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_BTW_CENTRALITY, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_BTW_CENTRALITY, label='TVB/LSNM DMS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Betweennes Centrality')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_btwn_centrality_across_thresholds.png')
 
-fig = plt.figure('Average Participation Coefficient')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_PARTICIPATION, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_PARTICIPATION, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_PARTICIPATION, label='TVB/LSNM DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Average Participation Coefficient')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_participation_across_thresholds.png')
+#fig = plt.figure('Average Participation Coefficient')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_PARTICIPATION, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_PARTICIPATION, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_PARTICIPATION, label='TVB/LSNM DMS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Average Participation Coefficient')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_participation_across_thresholds.png')
 
-fig = plt.figure('Small Worldness')
-cax = fig.add_subplot(111)
-plt.plot(threshold_array, TVB_LSNM_RS_SMALL_WORLDNESS, label='TVB/LSNM RS')
-plt.plot(threshold_array, TVB_LSNM_PV_SMALL_WORLDNESS, label='TVB/LSNM PV')
-plt.plot(threshold_array, TVB_LSNM_DMS_SMALL_WORLDNESS, label='TVB/LSNM DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Small Worldness')
-plt.legend(loc='best')
-fig.savefig('rs_pv_dms_small_worldness_across_thresholds.png')
+#fig = plt.figure('Small Worldness')
+#cax = fig.add_subplot(111)
+#plt.plot(threshold_array, TVB_LSNM_RS_SMALL_WORLDNESS, label='TVB/LSNM RS')
+#plt.plot(threshold_array, TVB_LSNM_PV_SMALL_WORLDNESS, label='TVB/LSNM PV')
+#plt.plot(threshold_array, TVB_LSNM_DMS_SMALL_WORLDNESS, label='TVB/LSNM DMS')
+#plt.xlabel('Threshold')
+#plt.ylabel('Small Worldness')
+#plt.legend(loc='best')
+#fig.savefig('rs_pv_dms_small_worldness_across_thresholds.png')
 
 
 ######################## TESTING 3D PLOT OF ADJACENCY MATRIX (NEEDS MAYAVI)
@@ -1804,7 +1808,7 @@ corr_mat_TVB_LSNM_DMS_FC= np.ma.compressed(corr_mat_TVB_LSNM_DMS_FC)
 # scatter plot: RS vs PV
 fig=plt.figure('Correlation between TVB/LSNM RS and TVB/LSNM PV')
 plt.scatter(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_PV_FC)
-plt.xlabel('TVB/LSNM RS FC')
+plt.xlabel('TVB/LSNM PF FC')
 plt.ylabel('TVB/LSNM PV FC')
 
 # fit scatter plot with np.polyfit
@@ -1815,12 +1819,14 @@ plt.plot(corr_mat_TVB_LSNM_RS_FC, m*corr_mat_TVB_LSNM_RS_FC + b, '-', color='red
 r = np.corrcoef(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_PV_FC)[1,0]
 plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
 
+print 'Correlation between PF and PV is: ', r
+
 fig.savefig('corr_rs_vs_pv.png')
 
 # scatter plot: RS vs DMS
 fig=plt.figure('Correlation between TVB/LSNM RS and TVB/LSNM DMS')
 plt.scatter(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_DMS_FC)
-plt.xlabel('TVB/LSNM RS FC')
+plt.xlabel('TVB/LSNM PF FC')
 plt.ylabel('TVB/LSNM DMS FC')
 
 # fit scatter plot with np.polyfit
@@ -1831,74 +1837,76 @@ plt.plot(corr_mat_TVB_LSNM_RS_FC, m*corr_mat_TVB_LSNM_RS_FC + b, '-', color='red
 r = np.corrcoef(corr_mat_TVB_LSNM_RS_FC, corr_mat_TVB_LSNM_DMS_FC)[1,0]
 plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
 
+print 'Correlation between PF and DMS is: ', r
+
 fig.savefig('corr_rs_vs_dms.png')
 
 
 ######################################################################
 # Plot correlations between empirical and simulated RS FC
 #####################################################################
-fig=plt.figure('Empirical vs TVB RS FC')
+#fig=plt.figure('Empirical vs TVB RS FC')
 
 # apply mask to get rid of upper triangle, including main diagonal
-mask = np.tri(tvb_rs_lowres_mean.shape[0], k=0)
-mask = np.transpose(mask)
-new_TVB_RS_FC = np.ma.array(tvb_rs_lowres_mean, mask=mask)           # mask out upper triangle
-empirical_fc_lowres = np.ma.array(empirical_fc_lowres, mask=mask)    # mask out upper triangle
+#mask = np.tri(tvb_rs_lowres_mean.shape[0], k=0)
+#mask = np.transpose(mask)
+#new_TVB_RS_FC = np.ma.array(tvb_rs_lowres_mean, mask=mask)           # mask out upper triangle
+#empirical_fc_lowres = np.ma.array(empirical_fc_lowres, mask=mask)    # mask out upper triangle
 
 # flatten the numpy cross-correlation matrix
-corr_mat_sim_TVB_RS_FC = np.ma.ravel(new_TVB_RS_FC)
-corr_mat_emp_FC = np.ma.ravel(empirical_fc_lowres)
+#corr_mat_sim_TVB_RS_FC = np.ma.ravel(new_TVB_RS_FC)
+#corr_mat_emp_FC = np.ma.ravel(empirical_fc_lowres)
 
 # remove masked elements from cross-correlation matrix
-corr_mat_sim_TVB_RS_FC = np.ma.compressed(corr_mat_sim_TVB_RS_FC)
-corr_mat_emp_FC = np.ma.compressed(corr_mat_emp_FC)
+#corr_mat_sim_TVB_RS_FC = np.ma.compressed(corr_mat_sim_TVB_RS_FC)
+#corr_mat_emp_FC = np.ma.compressed(corr_mat_emp_FC)
 
 # scatter plot Empirical vs TVB RS
-plt.scatter(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)
-plt.xlabel('Empirical FC')
-plt.ylabel('TVB RS FC')
+#plt.scatter(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)
+#plt.xlabel('Empirical FC')
+#plt.ylabel('TVB RS FC')
 
 # fit scatter plot with np.polyfit
-m, b = np.polyfit(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC, 1)
-plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
+#m, b = np.polyfit(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC, 1)
+#plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
 
 # calculate correlation coefficient and display it on plot
-r = np.corrcoef(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)[1,0]
-plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+#r = np.corrcoef(corr_mat_emp_FC, corr_mat_sim_TVB_RS_FC)[1,0]
+#plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
 
 # scatter plot Empirical vs TVB/LSNM RS
-fig=plt.figure('Empirical vs TVB/LSNM RS FC')
-plt.scatter(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)
-plt.xlabel('Empirical FC')
-plt.ylabel('TVB/LSNM RS FC')
+#fig=plt.figure('Empirical vs TVB/LSNM RS FC')
+#plt.scatter(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)
+#plt.xlabel('Empirical FC')
+#plt.ylabel('TVB/LSNM RS FC')
 
 # fit scatter plot with np.polyfit
-m, b = np.polyfit(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC, 1)
-plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
+#m, b = np.polyfit(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC, 1)
+#plt.plot(corr_mat_emp_FC, m*corr_mat_emp_FC + b, '-', color='red')
 
 # calculate correlation coefficient and display it on plot
-r = np.corrcoef(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)[1,0]
-plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
+#r = np.corrcoef(corr_mat_emp_FC, corr_mat_TVB_LSNM_RS_FC)[1,0]
+#plt.text(0.5, -0.04, 'r=' + '{:.2f}'.format(r))
 
 ###########################################################################
 # Plot empirical structural connectivity matrices (lo-res and hi-res) that
 # was used for simulations
 ###########################################################################
-fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (66 ROIs)')
-ax = fig.add_subplot(111)
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(empirical_sc_lowres, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('empirical_sc_lores.png')
-
-fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (998 ROIs)')
-ax = fig.add_subplot(111)
-cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(empirical_sc_hires, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
-ax.grid(False)
-color_bar=plt.colorbar(cax)
-fig.savefig('empirical_sc_hires.png')
+#fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (66 ROIs)')
+#ax = fig.add_subplot(111)
+#cmap = CM.get_cmap('jet', 10)
+#cax = ax.imshow(empirical_sc_lowres, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('empirical_sc_lores.png')
+#
+#fig=plt.figure('TVB/Hagmann Structural Connectivity Matrix (998 ROIs)')
+#ax = fig.add_subplot(111)
+#cmap = CM.get_cmap('jet', 10)
+#cax = ax.imshow(empirical_sc_hires, vmin=0, vmax=1, interpolation='nearest', cmap=cmap)
+#ax.grid(False)
+#color_bar=plt.colorbar(cax)
+#fig.savefig('empirical_sc_hires.png')
 
 # Show the plots on the screen
 plt.show()

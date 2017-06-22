@@ -71,6 +71,8 @@ from scipy.stats import skew
 
 from matplotlib import cm as CM
 
+from scipy.signal import butter, lfilter, freqz
+
 # define the name of the input file where the synaptic activities are stored
 SYN_file  = 'synaptic_in_998_ROIs.npy'
 
@@ -122,6 +124,7 @@ k1 = 4.3 * nu_0 * E_0 * TE
 k2 = e * r_0 * E_0 * TE
 k3 = 1.0 - epsilon
 
+
 def balloon_function(y, t, syn):
     ''' 
     Balloon model of hemodynamic change
@@ -134,7 +137,7 @@ def balloon_function(y, t, syn):
     v = y[2]
     q = y[3]
 
-    x = syn[np.floor(t * synaptic_timesteps / T)]
+    x = syn[np.floor(t * float(synaptic_timesteps) / T)]
 
     # the balloon model equations
     ds = epsilon * x - (1. / tau_s) * s - (1. / tau_f) * (f - 1)
@@ -145,13 +148,32 @@ def balloon_function(y, t, syn):
 
     return [ds, df, dv, dq]
 
+
+# low-pass filter parameters
+order = 5
+fs = 20.0       # sample rate, Hz
+cutoff = 0.25   #  cutoff frequency of the filter, Hz
+
+# the following two functions implement a low-pass filter
+def butter_lowpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
+
+def lowpass_filter(data, cutoff, fs, order=5):
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    y = lfilter(b, a, data)
+    return y
+
+
 # define neural synaptic time interval in seconds. The simulation data is collected
 # one data point at synaptic intervals (10 simulation timesteps). Every simulation
 # timestep is equivalent to 5 ms.
 Ti = 0.005 * 10
 
 # Total time of scanning experiment in seconds (timesteps X 5)
-T = 198
+T = 198.
 
 # the scanning happened every Tr interval below (in milliseconds). This
 # is the time needed to sample hemodynamic activity to produce
@@ -171,8 +193,8 @@ print 'Dimensions of synaptic file: ', syn.shape
 print 'LENGTH OF SYNAPTIC TIME-SERIES: ', syn[0].size
 print 'Number of ROIs: ', ROIs
 
-# Throw away first value of each synaptic array (it is always zero)
-syn = syn[:, 1:]
+# First value of each synaptic array is always zero. So make it equal to second value
+syn[:, 0] = syn[:, 1]
 
 # normalize synaptic activities (needed prior to BOLD estimation)
 for idx, roi in enumerate(syn):
@@ -184,10 +206,9 @@ print 'Size of synaptic arrays: ', synaptic_timesteps
 
 # Given neural synaptic time interval and total time of scanning experiment,
 # construct a numpy array of time points (data points provided in data files)
-# Note that we subtract 1 from simulation time bc we threw away first timepoint for
-# the integrated synaptic activity
 time_in_seconds = np.arange(0, T, Ti)
-time_in_seconds = time_in_seconds[:-1]
+
+print 'Numer of timepoints: ', time_in_seconds.size
 
 # Hard coded initial conditions
 s_0 = 0   # s, blood flow
@@ -245,6 +266,10 @@ for idx in range(0, ROIs):
 # ... and divide by 1000 to convert to seconds
 #t = np.linspace(0, 659*50./1000., num=660)
 t = np.linspace(0, synaptic_timesteps+1 * 50.0 / 1000., num=synaptic_timesteps+1)
+
+# prior to downsampling, we apply a low-pass filter (<0.25Hz) to each time-series
+for idx in range(0, ROIs):
+    BOLD[idx] = lowpass_filter(BOLD[idx], cutoff, fs, order)
 
 # downsample the BOLD signal arrays to produce scan rate of 2 per second
 scanning_timescale = np.linspace(0, synaptic_timesteps-1, num=T/Tr)
