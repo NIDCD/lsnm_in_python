@@ -33,7 +33,7 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (avg_FC_TVB_ROIs_across_subjects.py) was created on November 30 2016.
+#   This file (compare_PF_PV_DMS.py) was created on July 10 2017.
 #
 #
 #   Author: Antonio Ulloa
@@ -50,7 +50,7 @@
 
 # **************************************************************************/
 #
-# avg_FC_TVB_ROIs_across_subjects.py
+# compare_PF_PV_DMS.py
 #
 # Reads the correlation coefficients (functional connectivity matrix) from
 # several python (*.npy) data files, each
@@ -102,12 +102,14 @@ import scipy.io
 
 from matplotlib import cm as CM
 
-#from mne.viz import circular_layout, plot_connectivity_circle
+from mne.viz import circular_layout, plot_connectivity_circle
 
 import bct as bct
 
 import csv
 
+from nipy.modalities.fmri.glm import GeneralLinearModel
+from nipy.modalities.fmri.design_matrix import make_dmtx
 
 # The following converts from adjacency matrix to edge list
 # Adapted from code by: Jermaine Kaminski
@@ -152,7 +154,7 @@ DMS_minus_RS_file = 'dms_minus_rs.npy'
 TB_FC_avg_file = 'tb_fc_avg.npy'
 
 # declare ROI labels
-labels =  [' rLOF',     
+labels =  [' rLOF',
            'rPORB',         
            '  rFP',          
            ' rMOF',          
@@ -218,7 +220,86 @@ labels =  [' rLOF',
            'lBSTS',
            '  lST',
            '  lTT'
-]            
+]
+
+# the following ranges define the location of the nodes within a given ROI in Hagmann's brain.
+# They were taken from the excel document:
+#       "Location of visual LSNM modules within Connectome.xlsx"
+# Extracted from The Virtual Brain Demo Data Sets
+
+roi_dict = {
+    'rLOF'  : range(  0,  19),    
+    'rPORB' : range( 19,  25),          
+    'rFP'   : range( 25,  27),          
+    'rMOF'  : range( 27,  39),          
+    'rPTRI' : range( 39,  47),          
+    'rPOPE' : range( 47,  57),          
+    'rRMF'  : range( 57,  79),          
+    'rSF'   : range( 79, 125),          
+    'rCMF'  : range(125, 138),          
+    'rPREC' : range(138, 174),          
+    'rPARC' : range(174, 186),          
+    'rRAC'  : range(186, 190),          
+    'rCAC'  : range(190, 194),          
+    'rPC'   : range(194, 201),          
+    'rISTC' : range(201, 209),          
+    'rPSTC' : range(209, 240),          
+    'rSMAR' : range(240, 256),          
+    'rSP'   : range(256, 283),          
+    'rIP'   : range(283, 311),          
+    'rPCUN' : range(311, 334),          
+    'rCUN'  : range(334, 344),          
+    'rPCAL' : range(344, 354),          
+    'rLOCC' : range(354, 373),          
+    'rLING' : range(373, 390),          
+    'rFUS'  : range(390, 412),          
+    'rPARH' : range(412, 418),          
+    'rENT'  : range(418, 420),          
+    'rTP'   : range(420, 423),          
+    'rIT'   : range(423, 442),          
+    'rMT'   : range(442, 462),          
+    'rBSTS' : range(462, 469),          
+    'rST'   : range(469, 497),          
+    'rTT'   : range(497, 500),
+    'lLOF'  : range(500, 520),
+    'lPORB' : range(520, 526),
+    'lFP'   : range(526, 528),
+    'lMOF'  : range(528, 540),
+    'lPTRI' : range(540, 547),
+    'lPOPE' : range(547, 558),
+    'LRMF'  : range(558, 577),
+    'lSF'   : range(577, 627),
+    'lCMF'  : range(627, 640),
+    'lPREC' : range(640, 676),
+    'lPARC' : range(676, 687),
+    'lRAC'  : range(687, 691),
+    'lCAC'  : range(691, 695),
+    'lPC'   : range(695, 702),
+    'lISTC' : range(702, 710),
+    'lPSTC' : range(710, 740),
+    'lSMAR' : range(740, 759),
+    'lSP'   : range(759, 786),
+    'lIP'   : range(786, 811),
+    'lPCUN' : range(811, 834),
+    'lCUN'  : range(834, 842),
+    'lPCAL' : range(842, 851),
+    'lLOC'  : range(851, 873),
+    'lLING' : range(873, 889),
+    'lFUS'  : range(889, 911),
+    'lPARH' : range(911, 917),
+    'lENT'  : range(917, 920),
+    'lTP'   : range(920, 924),
+    'lIT'   : range(924, 941),
+    'lMT'   : range(941, 960),
+    'lBSTS' : range(960, 965),
+    'lST'   : range(965, 994),
+    'lTT'   : range(994, 998)
+}
+
+# declares the indexes of those brain regions in the low resolutio ROI array that have direct connections
+# with the embedded LSNM nodes
+connected=[0,1,4,5,6,7,8,9,10,12,13,15,16,17,18,19,20,21,22,23,24,25,28,29,30,31,40,43,45,46,53,54,56]
+
 
 # declares membership of each one of the 66 areas above in one of six modules as defined by Hagmann et al (2008)
 # See Table S2 from Supplementary material from Lee et al, 2016, Neuroimage
@@ -377,39 +458,31 @@ num_of_densities = 35
 #num_of_densities = 100
 
 ############################################################################
-# compress BOLD timeseries of 998 nodes into corresponding 66 nodes
-# still working on this code July 8 2017, 9:01am
+# compress BOLD timeseries of 998 nodes for each condition into corresponding
+# 66 nodes arrays
 ############################################################################
-#print 'Compressing hi-res 998-node BOLD timeseries into 66-node BOLD timeseries...'
-#
-# compute average BOLD within each one of Yeo's brain networks
-#ts_length = tvb_lsnm_pf_bold.shape[1]
-#BOLD_avg = np.zeros([lores_ROIs, ts_length])
-#PSC = np.zeros([len(Yeo_parc_networks), ts_length])
-#current_psc = np.zeros(ts_length)
-#for idx in range(1, len(Yeo_parc_networks)):
-#
-#    print 'Compute average BOLD for each one of Yeos networks'
-#
-#    network_loc = np.where(final_labels==idx)
-#    network_size = network_loc[0].size
-#
-#    print 'Network ', idx, ' (', Yeo_parc_names[idx], ') contains ', network_size, ' nodes'
-#
-#    BOLD_avg[idx] = np.mean(final_bold[network_loc[0]], axis=0)   # average bold signal across nodes within network
-#
-#    timecourse_mean = np.mean(BOLD_avg[idx])                      # compute timecourse mean
-#    PSC[idx] = BOLD_avg[idx] / timecourse_mean * 100. - 100.      # convert bold to percent signal change
-#
-#    current_psc = PSC[idx]
-#
-#    psc_mean = 0
-#    for timepoint in current_psc:
-#        psc_mean = psc_mean + timepoint
-#    psc_mean = psc_mean / float(len(current_psc))
-    
+print 'Compressing hi-res 998-node BOLD timeseries into 66-node BOLD timeseries...'
 
+# extract length of BOLD timeseries from one of the BOLD arrays
+ts_length = tvb_lsnm_pf_bold.shape[1]
+t_steps = np.arange(ts_length)
 
+# create a numpy array of BOLD time-series, with a number of elements defined
+# by the number of ROIs in the low resolution scheme (i.e., 66) and the number
+# of time points in each synaptic time-series
+tvb_lsnm_pf_bold_lowres  = np.zeros([len(roi_dict), tvb_lsnm_pf_bold.shape[1]])
+tvb_lsnm_pv_bold_lowres  = np.zeros([len(roi_dict), tvb_lsnm_pv_bold.shape[1]])
+tvb_lsnm_dms_bold_lowres = np.zeros([len(roi_dict), tvb_lsnm_dms_bold.shape[1]])
+
+idx=0
+for roi in roi_dict:
+    for t in t_steps:
+        tvb_lsnm_pf_bold_lowres[idx, t]  = np.mean(tvb_lsnm_pf_bold[roi_dict[roi], t])
+        tvb_lsnm_pv_bold_lowres[idx, t]  = np.mean(tvb_lsnm_pv_bold[roi_dict[roi], t])
+        tvb_lsnm_dms_bold_lowres[idx, t] = np.mean(tvb_lsnm_dms_bold[roi_dict[roi], t])
+    idx = idx + 1                         
+
+print 'Low resolution BOLD array have the following dimensions: ', tvb_lsnm_pf_bold_lowres.shape
 
 ############################################################################
 # compress 998x998 mean simulated FC matrix to 66x66 FC matrix by averaging
@@ -1059,12 +1132,24 @@ print '\n Finished calculating graph metrics...'
 #color_bar=plt.colorbar(cax)
 #fig.savefig('mean_tvb_only_rs_fc.png')
 
-fig = plt.figure('Mean TVB/LSNM RS FC')
+fig = plt.figure('Mean TVB/LSNM PF FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_lowres_rs_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('mean_tvb_lsnm_rs_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC')
@@ -1073,6 +1158,18 @@ ax = fig.add_subplot(111)
 cax = ax.imshow(tvb_lsnm_lowres_pv_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('mean_tvb_lsnm_pv_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC')
@@ -1081,6 +1178,18 @@ ax = fig.add_subplot(111)
 cax = ax.imshow(tvb_lsnm_lowres_dms_mean, vmin=-0.53, vmax=0.53, interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('mean_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 
 #fig=plt.figure('Functional Connectivity Matrix of empirical BOLD (66 ROIs)')
@@ -1103,6 +1212,18 @@ ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_rs_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('binary_tvb_lsnm_rs_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM PV FC (binarized at 40% sparsity)')
@@ -1110,6 +1231,18 @@ ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_pv_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('binary_tvb_lsnm_pv_fc_incl_PreSMA_Fixation.png')
 
 fig = plt.figure('Mean TVB/LSNM DMS FC (binarized at 40% sparsity)')
@@ -1117,6 +1250,18 @@ ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_dms_bin[-1], interpolation='nearest', cmap='Greys')
 ax.grid(False)
+
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, len(labels)))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(labels, rotation=90)
+ax.set_yticklabels(labels)
+
 fig.savefig('binary_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 
 #fig = plt.figure('Empirical RS FC matrix (binarized at 40% sparsity)')
@@ -1190,7 +1335,7 @@ fig.savefig('binary_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 # Plot correlation coefficients for using designated seeds found in RS literature
 #################################################################################
 # plot the correlation coefficients for empirical rPC
-#fig = plt.figure('Empirical orrelation coefficients using rPC as seed')
+#fig = plt.figure('Empirical correlation coefficients using rPC as seed')
 #ax = fig.add_subplot(111)
 #rPC_loc   = labels.index('  rPC')
 #y_pos = np.arange(len(labels))
@@ -1217,7 +1362,7 @@ fig.savefig('binary_tvb_lsnm_dms_fc_incl_PreSMA_Fixation.png')
 #ax = fig.add_subplot(111)
 #rPC_loc   = labels.index('  rPC')
 #y_pos = np.arange(len(labels))
-#ax.barh(y_pos, tvb_rs_lowres_mean[rPC_loc])
+#ax.barh(y_pos, tvb_lsnm_lowres_rs_mean[rPC_loc])
 #ax.set_yticks(y_pos)
 #ax.set_yticklabels(labels)
 #ax.invert_yaxis()
@@ -1830,7 +1975,6 @@ fig.savefig('rs_pv_dms_modularity_across_thresholds.png')
 #        emp_j = np.where(hagmann_empirical['anat_lbls'] == label_j)[0][0]
 #        new_TVB_RS_FC[emp_i, emp_j] = tvb_rs_mean[i, j]
 
-
 ######################################################################
 # Plot correlations between simulated TVB/LSNM RS and TVB/LSNM PV
 # and between simulated TVB/LSNM RS abd TVB/LSNM DMS
@@ -1888,6 +2032,182 @@ print 'Correlation between PF and DMS is: ', r
 
 fig.savefig('corr_rs_vs_dms.png')
 
+
+######################################################################
+# Find and display the 10 highest correlations in each condition
+#(PF, PV, DMS) using circular graphs
+######################################################################
+# First, dump contents of matrix into an array that includes origin, destination,
+# and weight of each functional connection
+PF_FC_list = np.zeros([lores_ROIs*lores_ROIs, 3])
+PV_FC_list = np.zeros([lores_ROIs*lores_ROIs, 3])
+DMS_FC_list= np.zeros([lores_ROIs*lores_ROIs, 3])
+x=0
+for i in range(0, tvb_lsnm_lowres_rs_mean.shape[0]):
+    for j in range(0, tvb_lsnm_lowres_rs_mean.shape[1]):
+        PF_FC_list[x, 0]  = i
+        PF_FC_list[x, 1]  = j
+        PF_FC_list[x, 2]  = tvb_lsnm_lowres_rs_mean[i, j]
+        PV_FC_list[x, 0]  = i
+        PV_FC_list[x, 1]  = j
+        PV_FC_list[x, 2]  = tvb_lsnm_lowres_pv_mean[i, j]
+        DMS_FC_list[x, 0] = i
+        DMS_FC_list[x, 1] = j
+        DMS_FC_list[x, 2] = tvb_lsnm_lowres_dms_mean[i, j]
+
+        x = x + 1
+
+# now we need to sort the lists in ascending order
+PF_FC_list_sorted = np.argsort(PF_FC_list[:,2])
+PV_FC_list_sorted = np.argsort(PV_FC_list[:,2])
+DMS_FC_list_sorted= np.argsort(DMS_FC_list[:,2])
+
+# store the 10 highest functional connections (start from last item)
+# one look at every other item bc we have a symetrical matrix
+print 'PF Top Ten FCs: '
+for i in range(lores_ROIs*lores_ROIs-20,lores_ROIs*lores_ROIs, 2):
+    idx = PF_FC_list_sorted[i]
+    largest = PF_FC_list[idx, 2]
+    source  = labels[int(PF_FC_list[idx, 0])]
+    dest    = labels[int(PF_FC_list[idx, 1])]
+    print '(', source, ',', dest, ',', format(largest, '.2f'), ')'
+
+print 'PV Top Ten FCs: '
+for i in range(lores_ROIs*lores_ROIs-20,lores_ROIs*lores_ROIs, 2):
+    idx = PV_FC_list_sorted[i]
+    largest = PV_FC_list[idx, 2]
+    source  = labels[int(PV_FC_list[idx, 0])]
+    dest    = labels[int(PV_FC_list[idx, 1])]
+    print '(', source, ',', dest, ',', format(largest, '.2f'), ')'
+
+print 'DMS Top Ten FCs: '
+for i in range(lores_ROIs*lores_ROIs-20,lores_ROIs*lores_ROIs, 2):
+    idx = DMS_FC_list_sorted[i]
+    largest = DMS_FC_list[idx, 2]
+    source  = labels[int(DMS_FC_list[idx, 0])]
+    dest    = labels[int(DMS_FC_list[idx, 1])]
+    print '(', source, ',', dest, ',', format(largest, '.2f'), ')'
+
+label_names = labels
+node_order = labels
+node_angles = circular_layout(label_names, node_order, start_pos=90,
+                              group_boundaries=[0, len(label_names) / 2])
+
+# We only show the strongest connections.
+fig = plt.figure('PF FC strongest functional connections')
+fig.patch.set_facecolor('black')
+ax = fig.add_subplot(111)
+plot_connectivity_circle(tvb_lsnm_lowres_rs_mean, label_names, n_lines=10,
+                         node_angles=node_angles, 
+                         title='Strongest functional connections during PF',
+                         vmin=-1, vmax=1, colormap='hot', fig=fig)
+fig.savefig('circle_strongest_pf_fc.png', facecolor='black')
+
+fig = plt.figure('PV FC strongest functional connections')
+fig.patch.set_facecolor('black')
+ax = fig.add_subplot(111)
+plot_connectivity_circle(tvb_lsnm_lowres_pv_mean, label_names, n_lines=10,
+                         node_angles=node_angles, 
+                         title='Strongest functional connections during PV',
+                         vmin=-1, vmax=1, colormap='hot', fig=fig)
+fig.savefig('circle_strongest_pv_fc.png', facecolor='black')
+
+fig = plt.figure('TVB/LSNM PV FC')
+fig.patch.set_facecolor('black')
+ax = fig.add_subplot(111)
+plot_connectivity_circle(tvb_lsnm_lowres_dms_mean, label_names, n_lines=10,
+                         node_angles=node_angles, 
+                         title='Strongest functional connections during DMS',
+                         vmin=-1, vmax=1, colormap='hot', fig=fig)
+fig.savefig('circle_strongest_dms_fc.png', facecolor='black')
+
+
+###########################################################################
+# plot PSC of average BOLD for all hires ROIs for each condition separately
+###########################################################################
+fig=plt.figure('High resolution fMRI BOLD timeseries - PF vs PV vs DMS')
+t_secs = t_steps*2        # convert MR scans to seconds
+avg_pf_bold = np.mean(tvb_lsnm_pf_bold, axis=0)
+timecourse_mean_pf = np.mean(avg_pf_bold)
+psc_pf = avg_pf_bold / timecourse_mean_pf * 100. - 100.
+plt.plot(t_secs, psc_pf, label='PF')
+plt.axvspan( 1, 15.5, facecolor='gray', alpha=0.2)
+plt.axvspan(35, 49.5, facecolor='gray', alpha=0.2)
+plt.axvspan(69, 83.5, facecolor='gray', alpha=0.2)
+plt.axvspan(103, 117.5, facecolor='gray', alpha=0.2)
+plt.axvspan(137, 151.5, facecolor='gray', alpha=0.2)
+plt.axvspan(171, 185.5, facecolor='gray', alpha=0.2)
+
+avg_pv_bold = np.mean(tvb_lsnm_pv_bold, axis=0)
+timecourse_mean_pv = np.mean(avg_pv_bold)
+psc_pv = avg_pv_bold / timecourse_mean_pv * 100. - 100.
+plt.plot(t_secs, psc_pv, label='PV')
+
+avg_dms_bold = np.mean(tvb_lsnm_dms_bold, axis=0)
+timecourse_mean_dms = np.mean(avg_dms_bold)
+psc_dms = avg_dms_bold / timecourse_mean_dms * 100. - 100.
+plt.plot(t_secs, psc_dms, label='DMS')
+
+plt.legend(loc='best')
+
+###########################################################################
+# plot z-scores of average BOLD for all low-res ROIs for each condition
+###########################################################################
+X = np.array([[1,1,1,1,1,1,1,      # design matrix
+               0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,      
+               0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,      
+               0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,      
+               0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,      
+               0,0,0,0,0,0,0,0,0,
+               1,1,1,1,1,1,1,
+               0,0,0,0],
+              [1,1,1,1,1,1,1,      
+               1,1,1,1,1,1,1,1,1,
+               1,1,1,1,1,1,1,     
+               1,1,1,1,1,1,1,1,1,
+               1,1,1,1,1,1,1,     
+               1,1,1,1,1,1,1,1,1,
+               1,1,1,1,1,1,1,      
+               1,1,1,1,1,1,1,1,1,
+               1,1,1,1,1,1,1,     
+               1,1,1,1,1,1,1,1,1,
+               1,1,1,1,1,1,1,
+               1,1,1,1]])
+X = X.T
+print 'Shape of design matrix: ', X.shape
+Y1 = tvb_lsnm_pv_bold_lowres.T          # observations matrix
+Y2 = tvb_lsnm_dms_bold_lowres.T          # observations matrix
+cval = np.array([1,0])              # contrast
+print 'Shape of cval: ', cval.shape 
+model1 = GeneralLinearModel(X)
+model2 = GeneralLinearModel(X)
+model1.fit(Y1)
+model2.fit(Y2)
+z_vals_1 = model1.contrast(cval).z_score() # z-transformed statistics
+z_vals_2 = model2.contrast(cval).z_score() # z-transformed statistics
+
+z_vals = np.vstack((z_vals_1, z_vals_2))
+
+fig = plt.figure('z-values')
+ax = fig.add_subplot(111)
+# plot z-values as a heatmap
+cax = ax.imshow(z_vals.T, interpolation='nearest', cmap='bwr', aspect='auto')
+ax.grid(False)
+color_bar=plt.colorbar(cax)
+# change frequency of ticks to match number of ROI labels
+plt.xticks(np.arange(0, 2))
+plt.yticks(np.arange(0, len(labels)))
+
+# decrease font size
+plt.rcParams.update({'font.size': 9})
+
+# display labels for brain regions
+ax.set_xticklabels(['PV', 'DMS'])
+ax.set_yticklabels(labels)
 
 ######################################################################
 # Plot correlations between empirical and simulated RS FC
