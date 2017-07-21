@@ -33,65 +33,61 @@
 #   National Institute on Deafness and Other Communication Disorders
 #   National Institutes of Health
 #
-#   This file (plot_synaptic_motor.py) was created on May 15, 2017.
+#   This file (plot_neural_motor.py) was created on July 20, 2017.
 #
 #
 #   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 21 2017  
 # **************************************************************************/
 
-# plot_synaptic_motor.py
+# plot_neural_motor.py
 #
-# Plot synaptic activity data from motor model
+# Plot output data files of motor simulation
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Load M1 synaptic activity data files into a numpy array
-exm1 = np.loadtxt('exm1_abs_syn.out')
-inm1 = np.loadtxt('inm1_abs_syn.out')
+from scipy import signal
 
-# Extract number of timesteps from one of the matrices
-timesteps = exm1.shape[0]
-print timesteps
+# Load data files
+eml23= np.loadtxt('eml23.out')
+eml5 = np.loadtxt('eml5.out')
+etms = np.loadtxt('etms.out')
 
-# the following variable defines the timesteps we will see in the resulting plot
-# we also convert the number of timesteps to seconds by multiplying by 50 and dividng by 1000
-ts_to_plot = 600
-x_lim = ts_to_plot * 50. / 1000.
+print 'Shape of timeseries: ', eml5.shape
 
-# Construct a numpy array of timesteps (data points provided in data file)
-# to convert from timesteps to time in seconds we do the following:
-# Each simulation time-step equals 5 milliseconds
-# However, we are recording only once every 10 time-steps
-# Therefore, each data point in the output files represents 50 milliseconds.
-# Thus, we need to multiply the datapoint times 50 ms...
-# ... and divide by 1000 to convert to seconds
-t = np.linspace(0, (ts_to_plot-1) * 50.0 / 1000., num=ts_to_plot)
+avg_m = np.mean(eml5, axis=1)
 
-# add all units within each region (V1, IT, and D1) together across space to calculate
-# synaptic activity in each brain region
-m1 = np.sum(exm1 + inm1, axis = 1)
-
-# Set up plot
-plt.figure(1)
-
-#plt.suptitle('SIMULATED SYNAPTIC ACTIVITY')
+# Set up plot to display average neural of all excitatory M1 activity 
+fig1=plt.figure('Average M1 Layer 5 Pyramidal neuronal activity')
 
 # increase font size
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 15})
 
-ax1=plt.subplot()
+# Plot M1 module and TMS pulse
+plt.plot(avg_m, color='r')
+plt.plot(etms, color='b')
 
-ax1.set_ylim([75, 92])
+# Set up plot to display neural population activity of each unit (heatmap)
+fig = plt.figure('Neural activity across M1 Layer 2/3 Pyramidal neurons')
+ax = fig.add_subplot(111)
+# plot correlation matrix as a heatmap
+cax = ax.imshow(eml23.T,
+                #vmin=-0.53, vmax=0.53,
+                interpolation='nearest', cmap='bwr')
+ax.grid(False)
+color_bar=plt.colorbar(cax, orientation='horizontal')
 
-# Plot M1 module
-plt.plot(t, m1[0:ts_to_plot], color='yellow', linewidth=2)
+# Set up plot to display neural population activity of each unit (heatmap)
+fig = plt.figure('Neural activity across M1 Layer 5 Pyramidal neurons')
+ax = fig.add_subplot(111)
+# plot correlation matrix as a heatmap
+cax = ax.imshow(eml5.T,
+                #vmin=-0.53, vmax=0.53,
+                interpolation='nearest', cmap='bwr')
+ax.grid(False)
+color_bar=plt.colorbar(cax, orientation='horizontal')
 
-plt.gca().set_axis_bgcolor('black')
 
-plt.xlabel('Time (s)')
-
-plt.tight_layout()
 
 # Show the plot on the screen
 plt.show()
