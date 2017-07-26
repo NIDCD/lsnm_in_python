@@ -36,7 +36,7 @@
 #   This file (plot_neural_motor.py) was created on July 20, 2017.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 21 2017  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 23 2017  
 # **************************************************************************/
 
 # plot_neural_motor.py
@@ -49,45 +49,80 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 # Load data files
-eml23= np.loadtxt('eml23.out')
-eml5 = np.loadtxt('eml5.out')
-etms = np.loadtxt('etms.out')
-
-print 'Shape of timeseries: ', eml5.shape
+eml23 = np.loadtxt('eml23.out')
+im    = np.loadtxt('im.out')
+eml5  = np.loadtxt('eml5.out')
 
 avg_m = np.mean(eml5, axis=1)
 
-# Set up plot to display average neural of all excitatory M1 activity 
-fig1=plt.figure('Average M1 Layer 5 Pyramidal neuronal activity')
+print 'Number of timesteps: ', avg_m.shape[0]
+print 'Number of neuronal units: ', eml5.shape[1]
+
+time=np.linspace(0, int(avg_m.shape[0]*0.1), 5)
+
+print 'Time array: ', time
+
+
+# Set up plot to display average neural of M1 Layer 5 activity 
+fig1 = plt.figure('Average M1 Layer 5 Pyramidal neuronal activity')
+ax= fig1.add_subplot(111)
 
 # increase font size
-plt.rcParams.update({'font.size': 15})
+#plt.rcParams.update({'font.size': 15})
 
 # Plot M1 module and TMS pulse
-plt.plot(avg_m, color='r')
-plt.plot(etms, color='b')
+ax.plot(avg_m, color='r')
+ax.set_ylim(0, 0.3)
+ax.axvline(x=30, color='black')
 
-# Set up plot to display neural population activity of each unit (heatmap)
-fig = plt.figure('Neural activity across M1 Layer 2/3 Pyramidal neurons')
+# Two subplots, the axes array is 1-d
+f, axarr = plt.subplots(3, sharex=True)
+axarr[0].set_title('Neural population activity')
+axarr[0].imshow(eml23.T, vmin=0., vmax=0.6, interpolation='nearest', cmap='hot')
+axarr[0].axvline(x=30, color='black')
+axarr[0].set_yticklabels([])
+axarr[0].set_ylabel('L2/3 (E)')
+axarr[1].imshow(im.T, vmin=0., vmax=0.6, interpolation='nearest', cmap='hot')
+axarr[1].axvline(x=30, color='black')
+axarr[1].set_yticklabels([])
+axarr[1].set_ylabel('(I)')
+axarr[2].imshow(eml5.T, vmin=0., vmax=0.6, interpolation='nearest', cmap='hot')
+axarr[2].axvline(x=30, color='black')
+axarr[2].set_yticklabels([])
+axarr[2].set_ylabel('L5 (E)')
+
+
+# Set up plot to display neural population activity of each unit in Layer 2/3 (heatmap)
+fig = plt.figure('Neural excitatory activity across M1 Layer 2/3 Pyramidal neurons')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(eml23.T,
-                #vmin=-0.53, vmax=0.53,
-                interpolation='nearest', cmap='bwr')
+                vmin=0., vmax=0.6,
+                interpolation='nearest', cmap='hot')
+plt.axvline(x=30, color='black')
 ax.grid(False)
 color_bar=plt.colorbar(cax, orientation='horizontal')
 
-# Set up plot to display neural population activity of each unit (heatmap)
-fig = plt.figure('Neural activity across M1 Layer 5 Pyramidal neurons')
+# Set up plot to display neural population activity of each unit in Layer 5 (heatmap)
+fig = plt.figure('Neural excitatory activity across M1 Layer 5 Pyramidal neurons')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(eml5.T,
-                #vmin=-0.53, vmax=0.53,
-                interpolation='nearest', cmap='bwr')
-ax.grid(False)
+                vmin=0., vmax=0.6,
+                interpolation='nearest', cmap='hot')
+plt.axvline(x=30, color='black')
+# Set up plot to display neural population activity of each unit in Layer 2/3 (heatmap)
 color_bar=plt.colorbar(cax, orientation='horizontal')
 
-
+fig = plt.figure('Neural inhibitory activity')
+ax = fig.add_subplot(111)
+# plot correlation matrix as a heatmap
+cax = ax.imshow(im.T,
+                vmin=-0., vmax=0.6,
+                interpolation='nearest', cmap='hot')
+plt.axvline(x=30, color='black')
+ax.grid(False)
+color_bar=plt.colorbar(cax, orientation='horizontal')
 
 # Show the plot on the screen
 plt.show()

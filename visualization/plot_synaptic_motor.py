@@ -36,7 +36,7 @@
 #   This file (plot_synaptic_motor.py) was created on May 15, 2017.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 21 2017  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on July 23 2017  
 # **************************************************************************/
 
 # plot_synaptic_motor.py
@@ -47,11 +47,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load M1 synaptic activity data files into a numpy array
-exm1 = np.loadtxt('exm1_abs_syn.out')
-inm1 = np.loadtxt('inm1_abs_syn.out')
+eml5 = np.loadtxt('eml5_abs_syn.out')
+iml5 = np.loadtxt('iml5_abs_syn.out')
 
 # Extract number of timesteps from one of the matrices
-timesteps = exm1.shape[0]
+timesteps = eml5.shape[0]
 print timesteps
 
 # the following variable defines the timesteps we will see in the resulting plot
@@ -70,7 +70,7 @@ t = np.linspace(0, (ts_to_plot-1) * 50.0 / 1000., num=ts_to_plot)
 
 # add all units within each region (V1, IT, and D1) together across space to calculate
 # synaptic activity in each brain region
-m1 = np.sum(exm1 + inm1, axis = 1)
+m1 = np.sum(eml5 + iml5, axis = 1)
 
 # Set up plot
 plt.figure(1)

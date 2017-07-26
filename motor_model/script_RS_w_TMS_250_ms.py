@@ -14,7 +14,7 @@
 #
 # define the simulation time in total number of timesteps
 # Each timestep is roughly equivalent to 5ms
-LSNM_simulation_time = 200
+LSNM_simulation_time = 50
 
 script_params = [0.0, 1.0]
 
@@ -41,7 +41,7 @@ def tms_off(modules, script_params):
 # a specific simulation timestep
 simulation_events = {
 
-    '20' : tms_on,
+    '20': tms_on,
     '25': tms_off,
 
 }

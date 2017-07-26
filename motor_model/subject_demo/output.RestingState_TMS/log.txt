@@ -1,9 +1,9 @@
-* Simulation Start Time: Fri Jul 21 14:02:31 2017
-* Simulation End Time: Fri Jul 21 14:02:32 2017
+* Simulation Start Time: Mon Jul 24 14:23:39 2017
+* Simulation End Time: Mon Jul 24 14:23:39 2017
 * Simulation duration (timesteps): 200
 * Model description used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/motor_model/model.txt
 * Weights list used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/motor_model/subject_demo/weightslist.txt
 * Neural net used: 
-* Simulation script used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/motor_model/script_RS_w_TMS_1_second.py
+* Simulation script used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/motor_model/script_RS_w_TMS_20_ms.py
 * Were weights changed to generate a new subject? NO
 * Was TVB Connectome used in the simulation? NO
