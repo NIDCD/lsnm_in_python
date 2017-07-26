@@ -31,24 +31,24 @@ Voice, Speech and Language Branch
 National Institute on Deafness and Other Communication Disorders
 National Institutes of Health
 
-This README file was last modified on August 9, 2015.
+This README file was last modified on July 26, 2017.
 
 ================================================================
 
 Python version of LSNM (Large-Scale Neural Modeling software).
 This repository contains the following directories:
 
-   * stimuli_creation: Scripts to create stimuli for simulation
+   * stimuli_creation: Scripts to create stimuli (visual and auditory) for simulation
    
-   * simulation: Scripts to simulate neural models
+   * simulation: LSNM Simulator source code
    
-   * analysis: Scripts to analyze simulated
+   * analysis: Scripts to analyze simulated neuronal and neuroimaging timeseries
    
-   * visualization: Scripts to visualize simulated data
+   * visualization: Scripts to visualize simulated neuronal and neuroimaging data
 
-   * auditory_model: Husain et al (2004)'s auditory model
+   * auditory_model: Husain et al (2004)'s auditory model implemented using LSNM in python
 
-   * visual_model: Tagamets and Horwitz (1998)'s visual model
+   * visual_model: New version of Tagamets and Horwitz (1998)'s visual model using Ulloa and Horwitz (2016) framework
 
 
 To execute this software you will need to
