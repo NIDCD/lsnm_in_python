@@ -36,7 +36,7 @@
 #   This file (animate_neural_visual.py) was created on December January 22, 2017.
 #
 #
-#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on May 13 2017  
+#   Author: Antonio Ulloa. Last updated by Antonio Ulloa on September 12 2017  
 # **************************************************************************/
 
 # animate_neural_visual.py
@@ -88,67 +88,67 @@ plt.rcParams.update({'font.size': 30})
 
 # Render LGN array in a colormap
 plt.subplot(3,4,1)
-plt.imshow(lgn[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(lgn[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('LGN')
 plt.axis('off')
 
 # Render EV1h array in a colormap
 plt.subplot(3,4,5)
-plt.imshow(v1h[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(v1h[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('V1h')
 plt.axis('off')
 
 # Render EV1v array in a colormap
 plt.subplot(3,4,9)
-plt.imshow(v1v[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(v1v[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('V1v')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,2)
-plt.imshow(v4h[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(v4h[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('V4h')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,6)
-plt.imshow(v4c[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(v4c[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('V4c')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,10)
-plt.imshow(v4v[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(v4v[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('V4v')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,3)
-plt.imshow(ss[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(ss[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('IT')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,7)
-plt.imshow(fs[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(fs[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('FS')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,11)
-plt.imshow(fd1[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(fd1[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('FD1')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,4)
-plt.imshow(fd2[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(fd2[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('FD2')
 plt.axis('off')
 
 # Render array in a colormap
 plt.subplot(3,4,8)
-plt.imshow(fr[0,:,:], vmin=0, vmax=1, cmap='hot')
+plt.imshow(fr[0,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
 plt.title('FR')
 plt.axis('off')
 
@@ -169,37 +169,37 @@ def update(val):
     timesteps = stimesteps.val
 
     plt.subplot(3,4,1)
-    plt.imshow(lgn[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(lgn[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,5)
-    plt.imshow(v1h[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(v1h[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,9)
-    plt.imshow(v1v[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(v1v[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,2)
-    plt.imshow(v4h[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(v4h[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,6)
-    plt.imshow(v4c[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(v4c[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,10)
-    plt.imshow(v4v[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(v4v[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,3)
-    plt.imshow(ss[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(ss[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,7)
-    plt.imshow(fs[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(fs[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,11)
-    plt.imshow(fd1[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(fd1[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,4)
-    plt.imshow(fd2[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(fd2[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
     plt.subplot(3,4,8)
-    plt.imshow(fr[timesteps,:,:], vmin=0, vmax=1, cmap='hot')
+    plt.imshow(fr[timesteps,:,:], vmin=0, vmax=1, cmap='hot', interpolation='none')
     
 stimesteps.on_changed(update)
 

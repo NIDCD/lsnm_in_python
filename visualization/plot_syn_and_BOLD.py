@@ -132,7 +132,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot IT syn time-series in blue
 ax = plt.subplot(7,1,3)
-ax.plot(lsnm_syn[2,1:], linewidth=3.0, color='blue')
+ax.plot(lsnm_syn[2,1:], linewidth=3.0, color='cyan')
 ax.set_yticks([])
 ax.set_xticks([])
 
@@ -168,7 +168,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot FR syn time-series in purple
 ax = plt.subplot(7,1,7)
-ax.plot(lsnm_syn[6,1:], linewidth=3.0, color='darkorchid')
+ax.plot(lsnm_syn[6,1:], linewidth=3.0, color='cyan')
 ax.set_yticks([])
 
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
@@ -186,7 +186,7 @@ ax = plt.subplot(7,1,1)
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
-ax.plot(BOLD_timescale, lsnm_BOLD[0], linewidth=3.0, color='yellow')
+ax.plot(BOLD_timescale, lsnm_BOLD[0], linewidth=4.0, color='yellow')
 
 # display gray bands in figure area to show where control blocks are located
 ax.axvspan(17.5, 34.0, facecolor='gray', alpha=0.6)
@@ -200,7 +200,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot V4 BOLD time-series in green
 ax = plt.subplot(7,1,2)
-ax.plot(BOLD_timescale, lsnm_BOLD[1], linewidth=3.0, color='lime')
+ax.plot(BOLD_timescale, lsnm_BOLD[1], linewidth=4.0, color='lime')
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
@@ -217,7 +217,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot IT BOLD time-series in blue
 ax = plt.subplot(7,1,3)
-ax.plot(BOLD_timescale, lsnm_BOLD[2], linewidth=3.0, color='blue')
+ax.plot(BOLD_timescale, lsnm_BOLD[2], linewidth=4.0, color='cyan')
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
@@ -234,7 +234,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot FS BOLD time-series in orange
 ax = plt.subplot(7,1,4)
-ax.plot(BOLD_timescale, lsnm_BOLD[3], linewidth=3.0, color='orange')
+ax.plot(BOLD_timescale, lsnm_BOLD[3], linewidth=4.0, color='orange')
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
@@ -251,7 +251,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot D1 BOLD time-series in red
 ax = plt.subplot(7,1,5)
-ax.plot(BOLD_timescale, lsnm_BOLD[4], linewidth=3.0, color='red')
+ax.plot(BOLD_timescale, lsnm_BOLD[4], linewidth=4.0, color='red')
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
@@ -268,7 +268,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot D2 BOLD time-series in pink
 ax = plt.subplot(7,1,6)
-ax.plot(BOLD_timescale, lsnm_BOLD[5], linewidth=3.0, color='pink')
+ax.plot(BOLD_timescale, lsnm_BOLD[5], linewidth=4.0, color='pink')
 ax.set_yticks([])
 ax.set_xticks([])
 ax.set_xlim(0,200)
@@ -285,7 +285,7 @@ plt.gca().set_axis_bgcolor('black')
 
 # plot FR BOLD time-series in purple
 ax = plt.subplot(7,1,7)
-ax.plot(BOLD_timescale, lsnm_BOLD[6], linewidth=3.0, color='darkorchid')
+ax.plot(BOLD_timescale, lsnm_BOLD[6], linewidth=4.0, color='cyan')
 ax.set_yticks([])
 ax.set_xlim(0,200)
 

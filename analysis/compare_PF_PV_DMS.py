@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on July 20 2017
+#   Last updated by Antonio Ulloa on August 31 2017
 #
 #   Based on computer code originally developed by Barry Horwitz et al
 #   Also based on Python2.7 tutorials
@@ -318,38 +318,38 @@ TVB_RS_subj8  = 'subject_tvb/output.RestingState_08/xcorr_matrix_998_regions.npy
 TVB_RS_subj9  = 'subject_tvb/output.RestingState_09/xcorr_matrix_998_regions.npy'
 TVB_RS_subj10 = 'subject_tvb/output.RestingState_10/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
+TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_PV_subj1  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj3  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj4  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj5  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj6  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj7  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj8  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj9  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_PV_subj10 = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
+TVB_LSNM_PV_subj1  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj2  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj3  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj4  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj5  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj6  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj7  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj8  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj9  = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_PV_subj10 = 'subject_12/output.PassiveViewing_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
-TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
-TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions_syn.npy'
+TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
+TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA/xcorr_matrix_998_regions.npy'
 
 # upload fMRI BOLD time series for all subject and conditions
 TVB_LSNM_PF_BOLD = 'subject_12/output.Fixation_incl_PreSMA/bold_balloon_998_regions_3T_0.25Hz.npy'

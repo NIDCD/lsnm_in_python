@@ -54,7 +54,7 @@ from matplotlib.widgets import Slider
 # Load one of the cortex 3d surface from TVB data files
 #CORTEX = surfaces.Cortex.from_file("cortex_80k/surface_80k.zip")
 
-#plot_surface(CORTEX, op=0.05)
+#plot_surface(CORTEX, op=0.5)
 
 # Load connectivity from Hagmann's brain
 #white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -65,7 +65,8 @@ from matplotlib.widgets import Slider
 #region_centres = mlab.points3d(centres[:, 0], 
 #                               centres[:, 1], 
 #                               centres[:, 2],
-#                               scale_factor=2.)
+#                               scale_factor=2.,
+#                               color=(0.2,0.4,0.5))
 # retrieve current figure and scene's ID
 
 #f0=mlab.gcf()
@@ -87,7 +88,7 @@ from matplotlib.widgets import Slider
 #scene0.render()
 
 # save figure to a file
-#mlab.savefig('transparent_brain.png')
+#mlab.savefig('brain.png')
 
 
 
@@ -105,10 +106,10 @@ exfs = np.loadtxt('exfs.out')
 exss = np.loadtxt('exss.out')
 
 # open background image
-bg_img = plt.imread('transparent_brain_cropped.png')
+bg_img = plt.imread('brain_hi_res_cropped.png')
 
 # trial duration in number of timesteps
-t_s = 445        # trial starts just after this timestep
+t_s = 450        # trial starts just after this timestep
 t_f = 450        # trial ends just after this timestep
 t_d = t_f - t_s  # trial duration 
 
