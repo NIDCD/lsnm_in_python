@@ -1,0 +1,9 @@
+* Simulation Start Time: Thu Sep 14 14:32:56 2017
+* Simulation End Time: Thu Sep 14 14:33:51 2017
+* Simulation duration (timesteps): 2200
+* Model description used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model_with_forgetting/model.txt
+* Weights list used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model_with_forgetting/subject_12_with_forgetting/weightslist.txt
+* Neural net used: 
+* Simulation script used: /Users/Antonio/Documents/NEURALBYTES/NIHPROJECT2/lsnm_in_python/visual_model_with_forgetting/script_DMS_with_long_ITI.py
+* Were weights changed to generate a new subject? NO
+* Was TVB Connectome used in the simulation? NO
