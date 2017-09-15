@@ -119,6 +119,7 @@ except:
 ax.plot(t, ev1h[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 #ax.set_title('SIMULATED ELECTRICAL ACTIVITY, V1 and V4')
 plt.ylabel('V1h', rotation='horizontal', horizontalalignment='right')
@@ -131,6 +132,7 @@ except:
 ax.plot(t, ev1v[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V1v', rotation='horizontal', horizontalalignment='right')
 
@@ -143,6 +145,7 @@ except:
 ax.plot(t, ev4h[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4h', rotation='horizontal', horizontalalignment='right')
 
@@ -154,6 +157,7 @@ except:
 ax.plot(t, ev4c[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4c', rotation='horizontal', horizontalalignment='right')
 
@@ -165,6 +169,7 @@ except:
 ax.plot(t, ev4v[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('V4v', rotation='horizontal', horizontalalignment='right')
 
@@ -180,6 +185,7 @@ ax.plot(t, exss[0:ts_to_plot], color='r')
 ax.set_yticks([])
 #ax.set_title('SIMULATED ELECTRICAL ACTIVITY, IT and PFC')
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('IT', rotation='horizontal', horizontalalignment='right')
 
@@ -192,6 +198,7 @@ except:
 ax.plot(t, exfs[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('FS', rotation='horizontal', horizontalalignment='right')
 
@@ -203,6 +210,7 @@ except:
 ax.plot(t, efd1[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('D1', rotation='horizontal', horizontalalignment='right')
 
@@ -214,6 +222,7 @@ except:
 ax.plot(t, efd2[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.ylabel('D2', rotation='horizontal', horizontalalignment='right')
 
@@ -226,6 +235,7 @@ except:
 ax.plot(t, exfr[0:ts_to_plot], color='r')
 ax.set_yticks([])
 ax.set_xlim(0,x_lim)
+ax.set_ylim(0.,1.)
 plt.ylabel('FR', rotation='horizontal', horizontalalignment='right')
 
 plt.xlabel('Time (s)')

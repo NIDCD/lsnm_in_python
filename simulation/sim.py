@@ -86,7 +86,8 @@ import importlib as il
 import sys
 
 # import 'PyQt4' modules, which give you access to GUI functions
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui, QtCore    
+
 
 # create a class that will allow us to print output to our GUI widget
 class MyStream(QtCore.QObject):
@@ -297,7 +298,7 @@ class LSNM(QtGui.QWidget):
         # simulation
         if state == QtCore.Qt.Checked:
             learning = True
-            print '\rUsing Hebbian learning...'
+            print '\rUsing Hebbian learning... (Note: learning only available without [Use TVB Connectome] option and from V4 to IT)'
             learning_file = QtGui.QFileDialog.getOpenFileName(self, 'Select file that contains learning modules', '.')
 
             # display contents of file with names of modules whose weights will undergo hebbian learning
@@ -363,7 +364,7 @@ class TaskThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
 
     notifyProgress = QtCore.pyqtSignal(int)
-    
+
     def run(self):
 
         start_time = time_module.asctime(time_module.localtime(time_module.time()))
@@ -712,17 +713,6 @@ class TaskThread(QtCore.QThread):
         with open(script) as s:
             experiment_script = s.read()
 
-        # open a file where we will dump the whole data structure (model and weights) in case it needs
-        # to be used later, for inpection and/or visualization of neural network. We chose to use JSON
-        # for this, due to its interoperability with other computer languages and other operating
-        # systems. 
-        nn_file = open(neural_network, 'w')
-        print '\rSaving neural network to file...'
-        try:
-            json.dump(modules, nn_file)
-        finally:
-            nn_file.close()
-            
         # initialize timestep counter for LSNM timesteps
         t = 0
 
@@ -1080,6 +1070,26 @@ class TaskThread(QtCore.QThread):
                                 # and it is used to compute fMRI and MEG.
                                 modules[dest_module][8][x_dest][y_dest][1] += value_x_weight
 
+                                # If The Hebbian Learning option has been chosen then modify the current weight
+                                # using learning rate, neural activity of origin and destination units, and
+                                # Pre and Post - synaptic thresholds. Only do the following for weights from
+                                # V4 to IT
+                                if learning and (m == 'ev4v' or m == 'ev4c' or m == 'ev4h') and dest_module == 'exss':
+
+                                    # extract value of destination unit
+                                    dest_unit = modules[dest_module][8][x][y][0]
+                                    # calculate new weight using hebbian rule (see appendix B of Tagamets and Horwitz, 1998)
+                                    threshold_1 = 0.0
+                                    if origin_unit - 0.7 > 0.0:
+                                        threshold_1 = origin_unit
+                                    threshold_2 = 0.0
+                                    if dest_unit - 0.7 > 0.0:
+                                        threshold_2 = dest_unit
+                                    
+                                    weight = weight + 0.000005 * threshold_1 * threshold_2
+                                    # update weight in network structure appropriately
+                                    w[3] = weight
+
                             
                 # the following variable will keep track of total number of units in the network
                 unit_count = 0
@@ -1177,6 +1187,17 @@ class TaskThread(QtCore.QThread):
             numpy.save("tvb_neuronal.npy", TVB_elec)
             numpy.save("tvb_abs_syn.npy", TVB_abs_syna)
             numpy.save("tvb_signed_syn.npy", TVB_signed_syna)
+            
+        # open a file where we will dump the whole data structure (model and weights) in case it needs
+        # to be used later, for inpection and/or visualization of neural network. We chose to use JSON
+        # for this, due to its interoperability with other computer languages and other operating
+        # systems. 
+        nn_file = open(neural_network, 'w')
+        print '\rSaving neural network to file...'
+        try:
+            json.dump(modules, nn_file)
+        finally:
+            nn_file.close()
             
         end_time = time_module.asctime(time_module.localtime(time_module.time()))
         
