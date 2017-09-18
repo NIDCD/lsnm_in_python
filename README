@@ -31,7 +31,7 @@ Voice, Speech and Language Branch
 National Institute on Deafness and Other Communication Disorders
 National Institutes of Health
 
-This README file was last modified on July 26, 2017.
+This README file was last modified on September 18, 2017.
 
 ================================================================
 
@@ -49,6 +49,9 @@ This repository contains the following directories:
    * auditory_model: Husain et al (2004)'s auditory model implemented using LSNM in python
 
    * visual_model: New version of Tagamets and Horwitz (1998)'s visual model using Ulloa and Horwitz (2016) framework
+   
+   * visual_model_with_forgetting: Slightly different version of "visual_model" above to allow decay in short-term 
+     memory modules during a visual Delayed match-to-sample task
 
 
 To execute this software you will need to
