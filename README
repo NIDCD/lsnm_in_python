@@ -50,7 +50,8 @@ This repository contains the following directories:
 
    * visual_model: New version of Tagamets and Horwitz (1998)'s visual model using Ulloa and Horwitz (2016) framework
    
-   * visual_model_with_forgetting: Slightly different version of "visual_model" above to allow decay in short-term memory modules during a visual Delayed match-to-sample task
+   * visual_model_with_forgetting: Slightly different version of "visual_model" above to allow decay in short-term 
+   memory modules during a visual Delayed match-to-sample task
 
 
 To execute this software you will need to
