@@ -1,5 +1,0 @@
-tms1 1 1 clamp 0 0 0 0 0 0
-tms2 1 1 clamp 0 0 0 0 0 0
-eml23 9 9 wilson_cowan 0.32 0.5 0.5 9.0 0.1 0.05
-eml5 9 9 wilson_cowan 0.32 0.5 0.5 9.0 0.1 0.05
-im 9 9 wilson_cowan 0.1 0.5 0.5 20.0 0.1 0.05
