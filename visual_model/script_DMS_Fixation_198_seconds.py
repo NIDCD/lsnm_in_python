@@ -123,6 +123,10 @@ def intertrial_interval(modules, script_params):
 
     # turn attention to 'LO', as the current trial has ended
     modules['atts'][8][0][0][0] = script_params[0]
+
+    # insert a small dot into LGN to use passive fixation during
+    # rest period (ITI)
+    modules['lgns'][8][4][4][0] = 0.2
     
 # define a dictionary of simulation events functions, each associated with
 # a specific simulation timestep

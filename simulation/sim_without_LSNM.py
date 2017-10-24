@@ -123,7 +123,7 @@ synaptic_interval = 10
         
 # white matter transmission speed in mm/ms
 #speed = 4.0
-speed = 1.0
+speed = 3.0
 
 # define length of simulation in ms
 simulation_length = 198000.0
@@ -138,7 +138,7 @@ t = 0
 # define global coupling strength as in Sanz-Leon (2015) Neuroimage paper
 # figure 17 3rd column 3rd row
 #global_coupling_strength = 0.0042
-global_coupling_strength = 0.0542
+global_coupling_strength = 0.15
 
 # Define connectivity to be used (998 ROI matrix from TVB demo set)
 white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
@@ -151,7 +151,10 @@ white_matter_coupling = coupling.Linear(a=global_coupling_strength)
 
 # now, define a pulse train to be used as a stimulus to V1
 white_matter.configure()
-#node_to_be_stimulated = 345 
+node_to_be_stimulated_01 = 345
+node_to_be_stimulated_02 = 393
+node_to_be_stimulated_03 = 413
+node_to_be_stimulated_04 = 47
 #stim_weights = numpy.zeros((white_matter.number_of_regions, 1))
 #stim_weights[node_to_be_stimulated] = numpy.array([1.0])[:, numpy.newaxis]
 #eqn_t = equations.PulseTrain()
@@ -266,7 +269,7 @@ stimulus_pattern = np.concatenate((range(200, 401),
                                ))
 
 # declare random number generator
-random_state = np.random.RandomState()
+random_state = np.random.RandomState(1234)
 
 # Run the simulation
 raw_data = []
@@ -275,8 +278,11 @@ for raw in sim(simulation_length=simulation_length, random_state=random_state.ge
 
     # apply stimulus pattern to given node.
     # uncomment the two lines below if V1 stimulation is desired
-    #if t in stimulus_pattern:
-    #    raw[0][1][0][node_to_be_stimulated] += 0.7
+    if t in stimulus_pattern:
+        raw[0][1][0][node_to_be_stimulated_01] += 0.20
+        raw[0][1][0][node_to_be_stimulated_02] += 0.15
+        raw[0][1][0][node_to_be_stimulated_03] += 0.10
+        raw[0][1][0][node_to_be_stimulated_04] += 0.05
     
     # the following calculates (and integrates) synaptic activity at each TVB node
     # at the current timestep
@@ -297,7 +303,7 @@ for raw in sim(simulation_length=simulation_length, random_state=random_state.ge
         tvb_origin_node = raw[0][1][0][tvb_conn]
         
         # clips node value to edges of interval [0, 1]
-        tvb_origin_node = np.clip(tvb_origin_node, 0, 1)
+        #tvb_origin_node = np.clip(tvb_origin_node, 0, 1)
                 
         # do the following for each white matter connection to current TVB node:
         # multiply all incoming connection weights times the value of the corresponding

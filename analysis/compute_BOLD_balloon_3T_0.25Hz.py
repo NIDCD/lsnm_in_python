@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on June 15 2017
+#   Last updated by Antonio Ulloa on September 25 2017
 #
 # **************************************************************************/
 
@@ -57,7 +57,7 @@
 #
 # Finally, the functional connectivity matrix is displayed and saved in a python data file.
 #
-# BOLD parameters courtesy of Paul Corbitt
+# 3T BOLD parameters courtesy of Paul Corbitt (based on Heinzle 2016, Havlisek 2015)
 
 import numpy as np
 
@@ -332,7 +332,7 @@ ax = fig.add_subplot(111)
 
 # plot correlation matrix as a heatmap
 cmap = CM.get_cmap('jet', 10)
-cax = ax.imshow(corr_mat, vmin=-1, vmax=1.0, interpolation='nearest', cmap=cmap)
+cax = ax.imshow(corr_mat, interpolation='nearest', cmap=cmap)
 ax.grid(False)
 plt.colorbar(cax)
 
