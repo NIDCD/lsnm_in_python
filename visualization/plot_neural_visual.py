@@ -91,7 +91,7 @@ print timesteps
 
 # the following variable defines the timesteps we will see in the resulting plot
 # we also convert the number of timesteps to seconds by multiplying by 50 and dividng by 1000
-ts_to_plot = 220
+ts_to_plot = 3960
 x_lim = ts_to_plot * 50. / 1000.
 
 # Construct a numpy array of timesteps (data points provided in data file)

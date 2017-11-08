@@ -717,7 +717,7 @@ class TaskThread(QtCore.QThread):
         t = 0
 
         # declare random number generator
-        random_state = np.random.RandomState(1234)
+        random_state = np.random.RandomState(1233)
 
         # import the experimental script given by user's script file
         exec(experiment_script)
