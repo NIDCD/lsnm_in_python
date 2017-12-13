@@ -59,10 +59,10 @@ import math as m
 from matplotlib import cm as CM
 
 # declare number of graph metrics
-num_of_graphs = 8
+num_of_graphs = 7
 
 # declare number of density thresholds
-num_of_densities = 35
+num_of_densities = 8
 
 # declare number of subjects
 num_of_subs = 5
@@ -71,29 +71,29 @@ num_of_subs = 5
 num_of_conds = 3
 
 # for ploting purpurses, declares density parameters
-min_sparsity = 0.06
+min_sparsity = 0.05
 max_sparsity = 0.4
 num_sparsity = num_of_densities
 threshold_array = np.linspace(min_sparsity, max_sparsity, num_sparsity)
 
 # define the names of the input files where the correlation coefficients were stored
-TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics.npy',
-               'subject_13/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics.npy',
-               'subject_14/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics.npy',
-               'subject_15/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics.npy']
+TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy']
 
-TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-               'subject_13/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-               'subject_14/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-               'subject_15/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy']
+TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy']
 
-TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-                'subject_13/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-                'subject_14/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy',
-                'subject_15/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics.npy']
+TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy']
 
 #################################################################################
 # Open all of the graph metrics for all subjects and conditions into numpy arrays
@@ -147,11 +147,17 @@ for idx in range(num_of_subs):
         RE[1, idx, idx2] = m.sqrt(np.sum(np.power(tvb_lsnm_dms[idx, idx2] - tvb_lsnm_pf[idx, idx2], 2)) / 
                                   np.sum(np.power(tvb_lsnm_pf[idx, idx2], 2)))
 
-# average relative error across subjects
-avg_RE[0] = np.mean(RE[0], axis=0)
-avg_RE[1] = np.mean(RE[1], axis=0)
-std_RE[0] = np.std(RE[0],  axis=0)
-std_RE[1] = np.std(RE[1],  axis=0)
+# average relative error across subjects and convert to %
+avg_RE[0] = np.mean(RE[0], axis=0) * 100.
+avg_RE[1] = np.mean(RE[1], axis=0) * 100.
+std_RE[0] = np.std(RE[0],  axis=0) * 100.
+std_RE[1] = np.std(RE[1],  axis=0) * 100.
+
+print 'Array of mean differences between PV and PF: ', avg_RE[0]
+print 'Array of stds between PV and PF: ', std_RE[0]
+print 'Array of mean differences between DMS and PF: ', avg_RE[1]
+print 'Array of stds between DMS and PF: ', std_RE[1]
+
 
 ####################################################################################
 # Display graph theory metrics of RS, PV, DMS for all sparsity thresholds
@@ -167,7 +173,7 @@ plt.errorbar(threshold_array, dms_avg[0], dms_std[0], marker='o', label='DMS')
 plt.xlabel('Threshold')
 plt.ylabel('Mean Global Efficiency')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_global_efficiency_across_thresholds.png')
 
 fig = plt.figure('Mean Local Efficiency')
@@ -178,7 +184,7 @@ plt.errorbar(threshold_array, dms_avg[1], dms_std[1], marker='o', label='DMS')
 plt.xlabel('Density threshold')
 plt.ylabel('Mean Local Efficiency')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_mean_local_efficiencies_across_densities.png')
 
 fig = plt.figure('Mean Clustering Coefficient')
@@ -189,7 +195,7 @@ plt.errorbar(threshold_array, dms_avg[2], dms_std[2], marker='o', label='DMS')
 plt.xlabel('Threshold')
 plt.ylabel('Mean Clustering')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_clustering_across_thresholds.png')
 
 fig = plt.figure('Characteristic path length of a range of densities')
@@ -200,7 +206,7 @@ plt.errorbar(threshold_array, dms_avg[3], dms_std[3], marker='o', label='DMS')
 plt.xlabel('Threshold')
 plt.ylabel('Characteristic Path Length')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_charpath_across_thresholds.png')
 
 fig = plt.figure('Average Eigenvector Centrality for a range of densities')
@@ -211,7 +217,7 @@ plt.errorbar(threshold_array, dms_avg[4], dms_std[4], marker='o', label='DMS')
 plt.xlabel('Threshold')
 plt.ylabel('Average Eigenvector Centrality')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_eigen_centrality_across_thresholds.png')
 
 fig = plt.figure('Average Betweennes Centrality for a range of densities')
@@ -222,36 +228,25 @@ plt.errorbar(threshold_array, dms_avg[5], dms_std[5], marker='o', label='DMS')
 plt.xlabel('Threshold')
 plt.ylabel('Average Betweennes Centrality')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
+cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_btwn_centrality_across_thresholds.png')
 
-fig = plt.figure('Modularity')
+fig = plt.figure('Participation Coefficient')
 cax = fig.add_subplot(111)
 plt.errorbar(threshold_array, pf_avg[6],  pf_std[6],  marker='o', label='PF')
 plt.errorbar(threshold_array, pv_avg[6],  pv_std[6],  marker='o', label='PV')
 plt.errorbar(threshold_array, dms_avg[6], dms_std[6], marker='o', label='DMS')
 plt.xlabel('Density threshold')
-plt.ylabel('Modularity')
+plt.ylabel('Participation Coefficient')
 plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
-fig.savefig('avg_pf_pv_dms_modularity_across_thresholds.png')
-
-fig = plt.figure('Small Worldness')
-cax = fig.add_subplot(111)
-plt.errorbar(threshold_array, pf_avg[7],  pf_std[7],  marker='o', label='PF')
-plt.errorbar(threshold_array, pv_avg[7],  pv_std[7],  marker='o', label='PV')
-plt.errorbar(threshold_array, dms_avg[7], dms_std[7], marker='o', label='DMS')
-plt.xlabel('Threshold')
-plt.ylabel('Small Worldness')
-plt.legend(loc='best')
-cax.set_xlim(0.35,0.4)
-fig.savefig('avg_pf_pv_dms_small_worldness_across_thresholds.png')
+cax.set_xlim(min_sparsity, max_sparsity)
+fig.savefig('avg_pf_pv_dms_pc_across_thresholds.png')
 
 ##############################################################################
 # Plot relative error in graph metrics between all conditions and control
 ##############################################################################
 # data to plot
-n_groups = 8
+n_groups = 7
 
 # create plot
 fig, ax = plt.subplots()
@@ -275,7 +270,7 @@ rects2 = plt.bar(index + bar_width, avg_RE[1], bar_width,
  
 plt.xlabel('Graph metric')
 plt.ylabel('Relative Error')
-plt.xticks(index + bar_width, ('GE', 'LE', 'CC', 'CP', 'EC', 'BC', 'M', 'SW'))
+plt.xticks(index + bar_width, ('GE', 'LE', 'CC', 'CP', 'EC', 'BC', 'PC'))
 plt.legend(loc='best')
 plt.tight_layout()
 fig.savefig('avg_RE.png')

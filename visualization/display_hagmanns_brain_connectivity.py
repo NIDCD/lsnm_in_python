@@ -164,7 +164,7 @@ for tvb_node in nodes_to_be_examined:
     
     for connected_node in tvb_conn:
 
-        print connected_node, '(', white_matter.weights[tvb_node, connected_node], '),', 
+        print connected_node, ',', #'(', white_matter.weights[tvb_node, connected_node], '),', 
 
         cxn = numpy.array([centres[connected_node],
                            centres[tvb_node]])
