@@ -66,3 +66,14 @@ target/
 
 # Ignore output data files
 *.out
+
+# ignore images
+*.gif
+*.tiff
+*.tif
+*.png
+*.jpg
+
+# ignore documents
+*.pdf
+*.docx
