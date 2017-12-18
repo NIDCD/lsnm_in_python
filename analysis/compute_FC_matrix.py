@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on June 9 2017
+#   Last updated by Antonio Ulloa on December 15 2017
 #
 # **************************************************************************/
 
@@ -54,7 +54,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define the name of the input file where the BOLD timeseries are stored
-BOLD_file = 'subject_12/output.DMSTask_incl_PreSMA/bold_balloon_998_regions_3T_0.25Hz.npy'
+#BOLD_file = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
+#BOLD_file = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
+BOLD_file = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
 
 # define the name of the labels corresponding to Yeo's 7-network parcellation
 labels_file = 'hagmann_Yeo_parc_labels.npy'
@@ -166,11 +168,15 @@ for idx in range(1, len(Yeo_parc_networks)):
 # plot FC matrix as a heatmap
 fig = plt.figure('FC matrix')
 ax = fig.add_subplot(111)
-cax = ax.imshow(fc_matrix, vmin=-0.9, vmax=0.9, interpolation='nearest', cmap='bwr')
+cax = ax.imshow(fc_matrix,
+                vmin=-0.8,
+                vmax=0.8,
+                interpolation='nearest',
+                cmap='bwr')
 ax.grid(color='black', linestyle='-', linewidth=2)
 plt.xticks([217, 285, 388, 522, 628, 812])              # change frequency of ticks to match beginning of each network
 plt.yticks([217, 285, 388, 522, 628, 812])
-#color_bar=plt.colorbar(cax, orientation='horizontal')
+color_bar=plt.colorbar(cax, orientation='horizontal')
 
 # Show the plots on the screen
 plt.show()

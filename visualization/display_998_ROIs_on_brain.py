@@ -62,22 +62,22 @@ white_matter = connectivity.Connectivity.from_file("connectivity_998.zip")
 centres = white_matter.centres
 
 # Load BOLD fMRI timeseries
-ts = np.load('tvb_neuronal.npy')
+#ts = np.load('tvb_neuronal.npy')
 
 # reshape the obtained array to extract only the timeseries 
-ts = ts[:,0,:,0].T
+#ts = ts[:,0,:,0].T
 
 current_timepoint = 425
 
 # create a colormap that gives hot colors to higher BOLD values and
 # cool colors to lower BOLD values, normalized to the higher value over the
 # whole timeseries contained synaptic input file (duration of a full DMS trial)
-max_ts = np.amax(ts)
-colors=ts[:, current_timepoint]/max_ts
+#max_ts = np.amax(ts)
+#colors=ts[:, current_timepoint]/max_ts
 
 
 
-print 'Dimensions of timeseries array: ', ts.shape
+#print 'Dimensions of timeseries array: ', ts.shape
 
 #plot_surface(CORTEX, op=0.05)
 
@@ -93,9 +93,9 @@ region_centres = mlab.points3d(centres[:, 0],
                                scale_factor=2.)
 
 
-rc = region_centres.mlab_source
-scalars=colors
-rc.set(scalars=scalars)
+#rc = region_centres.mlab_source
+#scalars=colors
+#rc.set(scalars=scalars)
 region_centres.glyph.scale_mode = 'scale_by_vector'
 #region_centres.mlab_source.dataset.point_data.scalars = colors
 
@@ -124,9 +124,9 @@ region_centres = mlab.points3d(centres[:, 0],
                                centres[:, 1], 
                                centres[:, 2],
                                scale_factor=2.)
-rc = region_centres.mlab_source
-scalars=colors
-rc.set(scalars=scalars)
+#rc = region_centres.mlab_source
+#scalars=colors
+#rc.set(scalars=scalars)
 region_centres.glyph.scale_mode = 'scale_by_vector'
 #region_centres.mlab_source.dataset.point_data.scalars = colors
 

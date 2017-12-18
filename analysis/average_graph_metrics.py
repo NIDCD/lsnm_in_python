@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on November 7 2017
+#   Last updated by Antonio Ulloa on December 13 2017
 #
 # **************************************************************************/
 #
@@ -59,7 +59,7 @@ import math as m
 from matplotlib import cm as CM
 
 # declare number of graph metrics
-num_of_graphs = 7
+num_of_graphs = 8
 
 # declare number of density thresholds
 num_of_densities = 8
@@ -77,23 +77,23 @@ num_sparsity = num_of_densities
 threshold_array = np.linspace(min_sparsity, max_sparsity, num_sparsity)
 
 # define the names of the input files where the correlation coefficients were stored
-TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w.npy']
+TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy']
 
-TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy']
+TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy']
 
-TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w.npy']
+TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy']
 
 #################################################################################
 # Open all of the graph metrics for all subjects and conditions into numpy arrays
@@ -242,11 +242,22 @@ plt.legend(loc='best')
 cax.set_xlim(min_sparsity, max_sparsity)
 fig.savefig('avg_pf_pv_dms_pc_across_thresholds.png')
 
+fig = plt.figure('Modularity')
+cax = fig.add_subplot(111)
+plt.errorbar(threshold_array, pf_avg[7],  pf_std[7],  marker='o', label='PF')
+plt.errorbar(threshold_array, pv_avg[7],  pv_std[7],  marker='o', label='PV')
+plt.errorbar(threshold_array, dms_avg[7], dms_std[7], marker='o', label='DMS')
+plt.xlabel('Density threshold')
+plt.ylabel('Modularity')
+plt.legend(loc='best')
+cax.set_xlim(min_sparsity, max_sparsity)
+fig.savefig('avg_pf_pv_dms_mod_across_thresholds.png')
+
 ##############################################################################
 # Plot relative error in graph metrics between all conditions and control
 ##############################################################################
 # data to plot
-n_groups = 7
+n_groups = num_of_graphs
 
 # create plot
 fig, ax = plt.subplots()
@@ -270,7 +281,7 @@ rects2 = plt.bar(index + bar_width, avg_RE[1], bar_width,
  
 plt.xlabel('Graph metric')
 plt.ylabel('Relative Error')
-plt.xticks(index + bar_width, ('GE', 'LE', 'CC', 'CP', 'EC', 'BC', 'PC'))
+plt.xticks(index + bar_width, ('GE', 'LE', 'CC', 'CP', 'EC', 'BC', 'PC', 'M'))
 plt.legend(loc='best')
 plt.tight_layout()
 fig.savefig('avg_RE.png')

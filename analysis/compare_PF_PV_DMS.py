@@ -334,56 +334,56 @@ TVB_RS_subj8  = 'subject_tvb/output.RestingState.198_3_0.15/xcorr_matrix_998_reg
 TVB_RS_subj9  = 'subject_tvb/output.RestingState.198_3_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 TVB_RS_subj10 = 'subject_tvb/output.RestingState.198_3_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-TVB_LSNM_RS_subj1  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj2  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj3  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj4  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj5  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj6  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj7  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj8  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj9  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_RS_subj10 = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj1  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj2  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj3  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj4  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj5  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj6  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj7  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj8  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj9  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_RS_subj10 = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-TVB_LSNM_PV_subj1  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj2  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj3  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj4  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj5  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj6  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj7  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj8  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj9  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_subj10 = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj1  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj2  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj3  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj4  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj5  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj6  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj7  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj8  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj9  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_subj10 = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
-TVB_LSNM_DMS_subj1  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj2  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj3  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj4  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj5  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj6  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj7  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj8  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj9  = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_subj10 = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj1  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj2  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj3  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj4  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj5  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj6  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj7  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj8  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj9  = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_subj10 = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/xcorr_matrix_998_regions_3T_0.25Hz.npy'
 
 # upload fMRI BOLD time series for all subject and conditions
-TVB_LSNM_PF_BOLD = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_PV_BOLD = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
-TVB_LSNM_DMS_BOLD= 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PF_BOLD = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_PV_BOLD = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
+TVB_LSNM_DMS_BOLD= 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/bold_balloon_998_regions_3T_0.25Hz.npy'
 
 
 # define name of output file where Relative Error (RE) values will be stored
-RE_file = 'subject_11/relative_error_PF_PV_DMS.npy'
+RE_file = 'subject_12/relative_error_PF_PV_DMS.npy'
 
 # define name of output files where graph theoretical metrics for a range of thresholds will be stored
-PF_graph_file  = 'subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_mod.npy'
-PV_graph_file  = 'subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_mod.npy'
-DMS_graph_file = 'subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_mod.npy'
+PF_graph_file  = 'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_centrality.npy'
+PV_graph_file  = 'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_centrality.npy'
+DMS_graph_file = 'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_centrality.npy'
 
-PF_csv_file = 'subject_11_tvb_lsnm_pf_graph_w_0.05.csv'
-PV_csv_file = 'subject_11_tvb_lsnm_pv_graph_w_0.05.csv'
-DMS_csv_file= 'subject_11_tvb_lsnm_dms_graph_w_0.05.csv'
+PF_csv_file = 'subject_12_tvb_lsnm_pf_graph_w_0.1_density.csv'
+PV_csv_file = 'subject_12_tvb_lsnm_pv_graph_w_0.1_density.csv'
+DMS_csv_file= 'subject_12_tvb_lsnm_dms_graph_w_0.1_density.csv'
 
 # number of randomly generated functional connectivity matrices to be generated. These FC matrices
 # will be used to compare against actual FC matrices. Used 20 found in the graph theory literature.
@@ -746,9 +746,9 @@ print 'Maximum cummulative ( PV - RS) abs. difference is at row ', FC_max_diff_i
 print 'Saving FC matrices for later use...'
 np.save(EMP_RS_FC_file, empirical_fc_lowres)
 np.save(TVB_RS_FC_avg_file, tvb_rs_lowres_mean)
-np.save(TVB_LSNM_RS_FC_avg_file, tvb_lsnm_lowres_rs_mean)
-np.save(TVB_LSNM_PV_FC_avg_file, tvb_lsnm_lowres_pv_mean)
-np.save(TVB_LSNM_DMS_FC_avg_file, tvb_lsnm_lowres_dms_mean)
+np.save(TVB_LSNM_RS_FC_avg_file, tvb_lsnm_rs_mean)
+np.save(TVB_LSNM_PV_FC_avg_file, tvb_lsnm_pv_mean)
+np.save(TVB_LSNM_DMS_FC_avg_file, tvb_lsnm_dms_mean)
 np.save(PV_minus_RS_file,  pv_minus_rs )
 np.save(DMS_minus_RS_file, dms_minus_rs)
 
@@ -801,7 +801,9 @@ TVB_LSNM_RS_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_RS_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_RS_CHARPATH   = np.zeros(num_sparsity)
 TVB_LSNM_RS_EIGEN_CENTRALITY   = np.zeros(num_sparsity)
+TVB_LSNM_RS_NODAL_EC = np.zeros(hires_ROIs)
 TVB_LSNM_RS_BTW_CENTRALITY = np.zeros(num_sparsity)
+TVB_LSNM_RS_NODAL_BC = np.zeros(hires_ROIs)
 TVB_LSNM_RS_PARTICIPATION = np.zeros(num_sparsity)
 TVB_LSNM_RS_SMALL_WORLDNESS = np.zeros(num_sparsity)
 TVB_LSNM_RS_MODULARITY = np.zeros(num_sparsity)
@@ -813,7 +815,9 @@ TVB_LSNM_PV_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_PV_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_PV_CHARPATH   = np.zeros(num_sparsity)
 TVB_LSNM_PV_EIGEN_CENTRALITY   = np.zeros(num_sparsity)
+TVB_LSNM_PV_NODAL_EC = np.zeros(hires_ROIs)
 TVB_LSNM_PV_BTW_CENTRALITY = np.zeros(num_sparsity)
+TVB_LSNM_PV_NODAL_BC = np.zeros(hires_ROIs)
 TVB_LSNM_PV_PARTICIPATION = np.zeros(num_sparsity)
 TVB_LSNM_PV_SMALL_WORLDNESS = np.zeros(num_sparsity)
 TVB_LSNM_PV_MODULARITY = np.zeros(num_sparsity)
@@ -825,7 +829,9 @@ TVB_LSNM_DMS_EFFICIENCY_L = np.zeros(num_sparsity)
 TVB_LSNM_DMS_CLUSTERING = np.zeros(num_sparsity)
 TVB_LSNM_DMS_CHARPATH   = np.zeros(num_sparsity)
 TVB_LSNM_DMS_EIGEN_CENTRALITY   = np.zeros(num_sparsity)
+TVB_LSNM_DMS_NODAL_EC = np.zeros(hires_ROIs)
 TVB_LSNM_DMS_BTW_CENTRALITY = np.zeros(num_sparsity)
+TVB_LSNM_DMS_NODAL_BC = np.zeros(hires_ROIs)
 TVB_LSNM_DMS_PARTICIPATION = np.zeros(num_sparsity)
 TVB_LSNM_DMS_SMALL_WORLDNESS = np.zeros(num_sparsity)
 TVB_LSNM_DMS_MODULARITY = np.zeros(num_sparsity)
@@ -934,26 +940,6 @@ for d in range(num_of_densities):
     tvb_lsnm_dms_hr_w[d] = tvb_lsnm_dms_p
 #    tvb_lsnm_dms_hr_bin[d] = bct.binarize(tvb_lsnm_dms_p, copy=True)
 
-    # save weighted undirected matrix at the given sparsity level
-    # then, convert the matrix to an edge table and save that as well.
-    # Also save a table w membership of each node to one of six communities defined by Hagmann et al
-    if threshold_array[d] == 0.05:
-        indexes = map(str, range(1, hires_ROIs+1))     # convert list of 1-998 to strings
-        indexes = ['i'+ e for e in indexes]            # append a string to hack it into CSV
-        print 'Saving adjacency and edge tables...'
-        df = pd.DataFrame(tvb_lsnm_rs_hr_w[d], index=indexes, columns=indexes)
-        df.to_csv(PF_csv_file)
-        adj_to_list('subject_11_tvb_lsnm_pf_graph_w_0.05.csv',
-                    'subject_11_tvb_lsnm_pf_edge_table_w_0.05.csv', ',')
-        df = pd.DataFrame(tvb_lsnm_pv_hr_w[d], index=indexes, columns=indexes)
-        df.to_csv(PV_csv_file)
-        adj_to_list('subject_11_tvb_lsnm_pv_graph_w_0.05.csv',
-                    'subject_11_tvb_lsnm_pv_edge_table_w_0.05.csv', ',')
-        df = pd.DataFrame(tvb_lsnm_dms_hr_w[d], index=indexes, columns=indexes)
-        df.to_csv(DMS_csv_file)
-        adj_to_list('subject_11_tvb_lsnm_dms_graph_w_0.05.csv',
-                    'subject_11_tvb_lsnm_dms_edge_table_w_0.05.csv', ',')
-
     
     # calculate global efficiency for each condition using Brain Connectivity Toolbox
 #    EMP_RS_EFFICIENCY_G[d]      = bct.efficiency_bin(emp_rs_bin[d])  
@@ -992,17 +978,23 @@ for d in range(num_of_densities):
     # calculate average eigenvector centrality using Brain Connectivity Toolbox
 #    EMP_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(emp_rs_bin[d]))
 #    TVB_RS_EIGEN_CENTRALITY[d]      = np.mean(bct.eigenvector_centrality_und(tvb_rs_bin[d]))
-#    TVB_LSNM_RS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_rs_hr_w[d]))
-#    TVB_LSNM_PV_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_pv_hr_w[d]))
-#    TVB_LSNM_DMS_EIGEN_CENTRALITY[d] = np.mean(bct.eigenvector_centrality_und(tvb_lsnm_dms_hr_w[d]))
+#    TVB_LSNM_PF_NODAL_EC = bct.eigenvector_centrality_und(tvb_lsnm_rs_hr_w[d])
+#    TVB_LSNM_PV_NODAL_EC = bct.eigenvector_centrality_und(tvb_lsnm_pv_hr_w[d])
+#    TVB_LSNM_DMS_NODAL_EC = bct.eigenvector_centrality_und(tvb_lsnm_dms_hr_w[d])
+#    TVB_LSNM_RS_EIGEN_CENTRALITY[d] = np.mean(TVB_LSNM_PF_NODAL_EC)
+#    TVB_LSNM_PV_EIGEN_CENTRALITY[d] = np.mean(TVB_LSNM_PV_NODAL_EC)
+#    TVB_LSNM_DMS_EIGEN_CENTRALITY[d] = np.mean(TVB_LSNM_DMS_NODAL_EC)
 
     # calculate average betweennes centrality using Brain Connectivity Toolbox
     # Note that we normalize the betweennes centrality prior to averaging
 #    EMP_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(emp_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
 #    TVB_RS_BTW_CENTRALITY[d]      = np.mean(bct.betweenness_bin(tvb_rs_bin[d]))/((lores_ROIs-1.0)*(lores_ROIs-2.0))
-#    TVB_LSNM_RS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_wei(tvb_lsnm_rs_hr_w[d]))/((hires_ROIs-1.0)*(hires_ROIs-2.0))
-#    TVB_LSNM_PV_BTW_CENTRALITY[d] = np.mean(bct.betweenness_wei(tvb_lsnm_pv_hr_w[d]))/((hires_ROIs-1.0)*(hires_ROIs-2.0))
-#    TVB_LSNM_DMS_BTW_CENTRALITY[d] = np.mean(bct.betweenness_wei(tvb_lsnm_dms_hr_w[d]))/((hires_ROIs-1.0)*(hires_ROIs-2.0))
+    TVB_LSNM_PF_NODAL_BC = bct.betweenness_wei(tvb_lsnm_rs_hr_w[d])/((hires_ROIs-1.0)*(hires_ROIs-2.0))
+    TVB_LSNM_PV_NODAL_BC = bct.betweenness_wei(tvb_lsnm_pv_hr_w[d])/((hires_ROIs-1.0)*(hires_ROIs-2.0))
+    TVB_LSNM_DMS_NODAL_BC = bct.betweenness_wei(tvb_lsnm_dms_hr_w[d])/((hires_ROIs-1.0)*(hires_ROIs-2.0))
+    TVB_LSNM_RS_BTW_CENTRALITY[d] = np.mean(TVB_LSNM_PF_NODAL_BC)
+    TVB_LSNM_PV_BTW_CENTRALITY[d] = np.mean(TVB_LSNM_PV_NODAL_BC)
+    TVB_LSNM_DMS_BTW_CENTRALITY[d] = np.mean(TVB_LSNM_DMS_NODAL_BC)
 
     # calculate average participation coefficient using Brain Connectivity Toolbox
 #    EMP_RS_PARTICIPATION[d]      = np.mean(bct.participation_coef(emp_rs_w[d], CI, degree='undirected'))
@@ -1016,14 +1008,14 @@ for d in range(num_of_densities):
     # calculate modularity using Brain Connectivity Toolbox
 #    emp_modularity             = bct.modularity_und(emp_rs_bin[d], gamma=1, kci=None)
 #    tvb_rs_modularity          = bct.modularity_und(tvb_rs_bin[d], gamma=1, kci=None)
-    tvb_lsnm_rs_modularity     = bct.modularity_und(tvb_lsnm_rs_hr_w[d], gamma=1, kci=None)
-    tvb_lsnm_pv_modularity     = bct.modularity_und(tvb_lsnm_pv_hr_w[d], gamma=1, kci=None)
-    tvb_lsnm_dms_modularity    = bct.modularity_und(tvb_lsnm_dms_hr_w[d], gamma=1, kci=None)
+#    tvb_lsnm_rs_modularity     = bct.modularity_und(tvb_lsnm_rs_hr_w[d], gamma=1, kci=None)
+#    tvb_lsnm_pv_modularity     = bct.modularity_und(tvb_lsnm_pv_hr_w[d], gamma=1, kci=None)
+#    tvb_lsnm_dms_modularity    = bct.modularity_und(tvb_lsnm_dms_hr_w[d], gamma=1, kci=None)
 #    EMP_RS_MODULARITY[d]       = emp_modularity[1]
 #    TVB_RS_MODULARITY[d]       = tvb_rs_modularity[1]
-    TVB_LSNM_RS_MODULARITY[d]  = tvb_lsnm_rs_modularity[1]
-    TVB_LSNM_PV_MODULARITY[d]  = tvb_lsnm_pv_modularity[1]
-    TVB_LSNM_DMS_MODULARITY[d] = tvb_lsnm_dms_modularity[1]
+#    TVB_LSNM_RS_MODULARITY[d]  = tvb_lsnm_rs_modularity[1]
+#    TVB_LSNM_PV_MODULARITY[d]  = tvb_lsnm_pv_modularity[1]
+#    TVB_LSNM_DMS_MODULARITY[d] = tvb_lsnm_dms_modularity[1]
 
     # print the modules resulting from the modularity calculation above
 #    print "Empirical RS modules: ", emp_modularity[0]
@@ -1103,7 +1095,31 @@ for d in range(num_of_densities):
 #    TVB_LSNM_PV_BW_RATIO[d]   = avg_btw_cxn[2] / avg_wth_cxn[2]
 #    TVB_LSNM_DMS_BW_RATIO[d]  = avg_btw_cxn[3] / avg_wth_cxn[3]
 #    EMP_RS_BW_RATIO[d]        = avg_btw_cxn[4] / avg_wth_cxn[4]
-    
+
+    # save weighted undirected matrix at the given sparsity level
+    # then, convert the matrix to an edge table and save that as well.
+    # Also save a table w membership of each node to one of six communities defined by Hagmann et al
+    # Also save eigenvector centrality value of each node at this density
+    if threshold_array[d] == 0.1:
+        indexes = map(str, range(1, hires_ROIs+1))     # convert list of 1-998 to strings
+        indexes = ['i'+ e for e in indexes]            # append a string to hack it into CSV
+        print 'Saving adjacency and edge tables...'
+        df = pd.DataFrame(tvb_lsnm_rs_hr_w[d], index=indexes, columns=indexes)
+        df.to_csv(PF_csv_file)
+#        adj_to_list('subject_11_tvb_lsnm_pf_graph_w_0.05.csv',
+#                    'subject_11_tvb_lsnm_pf_edge_table_w_0.05.csv', ',')
+        df = pd.DataFrame(tvb_lsnm_pv_hr_w[d], index=indexes, columns=indexes)
+        df.to_csv(PV_csv_file)
+#        adj_to_list('subject_11_tvb_lsnm_pv_graph_w_0.05.csv',
+#                    'subject_11_tvb_lsnm_pv_edge_table_w_0.05.csv', ',')
+        df = pd.DataFrame(tvb_lsnm_dms_hr_w[d], index=indexes, columns=indexes)
+        df.to_csv(DMS_csv_file)
+#        adj_to_list('subject_11_tvb_lsnm_dms_graph_w_0.05.csv',
+#                    'subject_11_tvb_lsnm_dms_edge_table_w_0.05.csv', ',')
+        
+        np.save('pf_nodal_bc_w_0.1_density.npy', TVB_LSNM_PF_NODAL_BC)
+        np.save('pv_nodal_bc_w_0.1_density.npy', TVB_LSNM_PV_NODAL_BC)
+        np.save('dms_nodal_bc_w_0.1_density.npy', TVB_LSNM_DMS_NODAL_BC)
     
 # generate a number of random matrices corresponding to each density threshold, to be used
 # to normalize network metrics. The randomized matrices have same number of nodes and edges
@@ -1253,7 +1269,7 @@ fig = plt.figure('Mean TVB/LSNM PF FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_rs_mean,
-                #vmin=-0.53, vmax=0.53,
+                vmin=-0.8, vmax=0.8,
                 interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
@@ -1275,7 +1291,7 @@ fig = plt.figure('Mean TVB/LSNM PV FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_pv_mean,
-                #vmin=-0.53, vmax=0.53,
+                vmin=-0.8, vmax=0.8,
                 interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
@@ -1297,7 +1313,7 @@ fig = plt.figure('Mean TVB/LSNM DMS FC')
 ax = fig.add_subplot(111)
 # plot correlation matrix as a heatmap
 cax = ax.imshow(tvb_lsnm_dms_mean,
-                #vmin=-0.53, vmax=0.53,
+                vmin=-0.8, vmax=0.8,
                 interpolation='nearest', cmap='bwr')
 ax.grid(False)
 color_bar=plt.colorbar(cax)
