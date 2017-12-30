@@ -387,6 +387,10 @@ class TaskThread(QtCore.QThread):
         # weights given by a random amount of between the number given and 1.0
         subject_variation = 0.98
 
+        # define random seed for TVB, LSNM (gaussian weights and noise)
+        r_seed = 1239
+        rdm.seed(r_seed)
+
         # define how many milliseconds there are in each simulation timestep
         timesteps_to_time_constant = 5.0
         
@@ -717,7 +721,7 @@ class TaskThread(QtCore.QThread):
         t = 0
 
         # declare random number generator
-        random_state = np.random.RandomState(1233)
+        random_state = np.random.RandomState(r_seed)
 
         # import the experimental script given by user's script file
         exec(experiment_script)

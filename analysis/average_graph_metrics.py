@@ -38,7 +38,7 @@
 #
 #   Author: Antonio Ulloa
 #
-#   Last updated by Antonio Ulloa on December 13 2017
+#   Last updated by Antonio Ulloa on December 30 2017
 #
 # **************************************************************************/
 #
@@ -58,6 +58,10 @@ import math as m
 
 from matplotlib import cm as CM
 
+import pandas as pd
+
+import seaborn as sns
+
 # declare number of graph metrics
 num_of_graphs = 8
 
@@ -65,7 +69,7 @@ num_of_graphs = 8
 num_of_densities = 8
 
 # declare number of subjects
-num_of_subs = 5
+num_of_subs = 6
 
 # declare number of conditions
 num_of_conds = 3
@@ -77,23 +81,26 @@ num_sparsity = num_of_densities
 threshold_array = np.linspace(min_sparsity, max_sparsity, num_sparsity)
 
 # define the names of the input files where the correlation coefficients were stored
-TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_w_incl_mod.npy']
+TVB_LSNM_PF = ['subject_11/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy',
+               'subject_12/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy',
+               'subject_13/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy',
+               'subject_14/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy',
+               'subject_15/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy',
+               'subject_16/output.Fixation_dot_incl_PreSMA_3.0_0.15/graph_metrics_wei.npy']
 
-TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy']
+TVB_LSNM_PV = ['subject_11/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+               'subject_12/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+               'subject_13/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+               'subject_14/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+               'subject_15/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+               'subject_16/output.PV_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy']
 
-TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy',
-                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_w_incl_mod.npy']
+TVB_LSNM_DMS = ['subject_11/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+                'subject_12/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+                'subject_13/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+                'subject_14/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+                'subject_15/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy',
+                'subject_16/output.DMSTask_incl_PreSMA_w_Fixation_3.0_0.15/graph_metrics_wei.npy']
 
 #################################################################################
 # Open all of the graph metrics for all subjects and conditions into numpy arrays
@@ -286,6 +293,17 @@ plt.legend(loc='best')
 plt.tight_layout()
 fig.savefig('avg_RE.png')
 
+##############################################################################
+# try seaborn plots using above data
+##############################################################################
+fig, ax = plt.subplots()
+df=pd.DataFrame(data = RE[1],                
+                index = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
+                columns = ['GE', 'LE', 'CC', 'CP', 'EC', 'BC', 'PC', 'M']
+)
+
+ax=sns.violinplot(data=df, scale='count')
+ax=sns.swarmplot(data=df, color='black')
 
 
 ##############################################################################
